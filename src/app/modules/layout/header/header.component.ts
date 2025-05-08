@@ -1,43 +1,46 @@
 import { Component, OnInit } from '@angular/core';
-import { PrincipalService } from '../../../services/principal.service';
-
-///***import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
+import { Usuario } from '../../../models/auth.interface';
+import { Subscription } from 'rxjs';
 @Component({
-  selector: 'app-header',
+  selector: 'app-header', 
+  standalone: true, 
   imports: [],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-/**export class HeaderComponent {
-constructor(private readonly router: Router) {}
-
-  logout() {
-    localStorage.removeItem('tkn-boletas');
-    localStorage.removeItem('tkn-refresh');
-    this.router.navigate(['/login']);
-  }
-} */  
 
 export class HeaderComponent implements OnInit {
   usuario: any = null;
 
-  constructor(private principalService: PrincipalService) {}
+  public dataUsuario: Usuario = {} as Usuario;
+  private usuarioSubscriptor: Subscription | undefined;
+
+  constructor(
+    private readonly router: Router,
+    private readonly authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    this.principalService.getDatosUsuario().subscribe({
-      next: (res) => this.usuario = res,
-      error: (err) => console.error('Error al obtener datos del usuario:', err)
+    this.getUserProfile();
+  }
+
+  public getUserProfile(){
+    this.usuarioSubscriptor = this.authService.getProfile().subscribe({
+      next: (response) => {
+        this.dataUsuario = response;
+      }, error: (err) => {
+        console.log(err);
+      }
     });
   }
 
   logout() {
-    localStorage.clear();
-    window.location.href = '/login';
-  }
-  /*logout() {
     localStorage.removeItem('tkn-boletas');
     localStorage.removeItem('tkn-refresh');
     this.router.navigate(['/login']);
-  }*/
+  }
 }
 
+  

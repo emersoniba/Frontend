@@ -12,7 +12,5 @@ export class PrincipalService {
 
   constructor(private http: HttpClient) {}
 
-  getDatosUsuario(): Observable<any> {
-    return this.http.get<any>(`${this.url}/usuario-logeado/`);
-  }
+  
 }

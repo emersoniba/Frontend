@@ -9,7 +9,6 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class NavbarComponent {
   //*onint
-  constructor(
-    private router: Router
-  ) { }
+  constructor( ) { }
 }
+

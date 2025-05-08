@@ -1,4 +1,12 @@
 <header>
-  <span>Bienvenido</span>
-  <button (click)="logout()">Cerrar sesión</button>
+  <div class="header-info">
+    @if(dataUsuario){
+    <span>Bienvenido, {{ dataUsuario.nombres }} {{ dataUsuario.apellido_paterno }} {{ dataUsuario.apellido_materno
+      }}</span>
+    <span>Cargo: {{ dataUsuario.cargo }}</span>
+    } @else {
+    <span>Anonimus</span>
+    }
+    <button (click)="logout()">Cerrar sesión</button>
+  </div>
 </header>
