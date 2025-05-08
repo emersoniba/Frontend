@@ -4,6 +4,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { routes } from './app.routes';
 
+import { AuthGuard } from './guards/auth.guard'; 
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }), 
@@ -12,6 +14,9 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(
       //FormsModule,
       //ReactiveFormsModule,
-    )
+      //aqui
+    ),
+    AuthGuard 
   ]
 };
+

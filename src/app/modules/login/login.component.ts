@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule} from '@angular/common';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-login',
@@ -35,23 +36,20 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
+
   public onActionClickLogin(){
     this.formLoginSubscriptor = this.loginService.login(this.formLogin.value).subscribe({
       next: (response) => {
-
         console.log(response);
         localStorage.setItem('tkn-boletas', response.access);
         localStorage.setItem('tkn-refresh', response.refresh);
-        //*localStorage.removeItem('tkn-boletas')
-        console.log(localStorage.getItem('tkn-boletas'));
-          this.router.navigate(['/principal']);
-        //*this.router.navigate(['/dashboard']);
-      }, error: (err) => {
+        const decodedToken: any = jwtDecode(response.access);
+        console.log('Token decodificado:', decodedToken);
+        this.router.navigate(['/persona']);
+      }, 
+      error: (err) => {
         console.log(err);
         console.log(err.error.detail);
-
-        //toastr
-        //sweetalert
       }
     });
   }
