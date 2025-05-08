@@ -7,5 +7,10 @@ import { Component } from '@angular/core';
   styleUrl: './footer.component.css'
 })
 export class FooterComponent {
-
+gestion : number=0;
+constructor() {
+  this.gestion=(new Date()).getFullYear();
 }
+}
+
+/*generar año*/ 
