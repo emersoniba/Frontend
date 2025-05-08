@@ -8,14 +8,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class LoginService {
-
   private url:string = environment.apiUrl;
-
   constructor(
     private http: HttpClient,
   ) {}
   public login (data:Login): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(this.url, data);
+    return this.http.post<LoginResponse>(`${this.url}/token/`, data);
   }
 }
 

@@ -44,6 +44,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         localStorage.setItem('tkn-refresh', response.refresh);
         //*localStorage.removeItem('tkn-boletas')
         console.log(localStorage.getItem('tkn-boletas'));
+          this.router.navigate(['/principal']);
         //*this.router.navigate(['/dashboard']);
       }, error: (err) => {
         console.log(err);
