@@ -3,7 +3,8 @@
     @if(dataUsuario){
     <span>Bienvenido, {{ dataUsuario.nombres }} {{ dataUsuario.apellido_paterno }} {{ dataUsuario.apellido_materno
       }}</span>
-    <span>Cargo: {{ dataUsuario.cargo }}</span>
+      <span>Cargo: {{ dataUsuario.cargo }}</span>
+      <span>Unidad: {{ dataUsuario.unidad }}</span>
     } @else {
     <span>Anonimus</span>
     }

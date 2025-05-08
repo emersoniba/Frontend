@@ -23,7 +23,7 @@ export const routes: Routes = [
         loadComponent: () => import('./modules/boletas/proyecto/proyecto.component').then(m => m.ProyectoComponent)
       },
     ]
-  }, 
+  },
   { path: '**', redirectTo: 'login' },
 ];
 

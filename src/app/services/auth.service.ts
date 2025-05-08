@@ -36,12 +36,9 @@ export class AuthService {
    * Funcion para obtener datos del usuario
    * @returns 
    */
+
   getProfile(): Observable<Usuario>{
-    const tkn = localStorage.getItem('tkn-boletas');
-    const headers = new HttpHeaders({
-      'Authorization':  `Bearer ${tkn}`
-    });
-    return this.http.get<Usuario>(`${this.url}/personas/profile_user/`,  {headers: headers});
+    return this.http.get<Usuario>(`${this.url}/personas/profile_user/`);
   }
 
   logout(): void {
