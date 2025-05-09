@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { LoginService } from '../../services/login.service';
+import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   public formLogin: FormGroup;
   public dataDepartamentos: any[] = []; 
   constructor(
-    private loginService: LoginService,
+    private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
   ){
@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
   public onActionClickLogin(){
-    this.formLoginSubscriptor = this.loginService.login(this.formLogin.value).subscribe({
+    this.formLoginSubscriptor = this.authService.login(this.formLogin.value).subscribe({
       next: (response) => {
         console.log(response);
         localStorage.setItem('tkn-boletas', response.access);

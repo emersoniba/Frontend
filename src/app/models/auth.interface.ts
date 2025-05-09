@@ -11,3 +11,11 @@ export interface Usuario {
     unidad: string;
     roles: Rol[];
 }
+export interface Login{
+    username: string,
+    password: string
+}
+export interface LoginResponse{
+    access: string,
+    refresh: string
+}
