@@ -30,7 +30,10 @@ export class BoletaService {
   deleteBoleta(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${id}/`);
   }
-
+  // En boleta.service.ts
+  getBoletasByProyecto(proyectoId: number): Observable<Boleta[]> {
+    return this.http.get<Boleta[]>(`${this.apiUrl}?proyecto=${proyectoId}`);
+  }
 }
 export class EstadoService {
   private apiUrl = 'http://127.0.0.1:8000/api/'; // Ajusta tu URL
@@ -47,7 +50,7 @@ export class EstadoService {
   }
 }
 export class EntidadService {
-  private apiUrl = 'http://127.0.0.1:8000/api/'; // Ajusta tu URL
+  private apiUrl = 'http://127.0.0.1:8000/api/'; 
 
   constructor(private http: HttpClient) { }
 

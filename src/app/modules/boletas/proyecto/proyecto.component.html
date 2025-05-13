@@ -12,19 +12,19 @@
   </div>
   
   <ng-template #listaProyectos>
+  <div class="grid-container">
     <div *ngFor="let proyecto of proyectos" class="proyecto-card mat-elevation-z2">
       <h3>{{ proyecto.nombre }}</h3>
       <p><strong>Descripción:</strong> {{ proyecto.descripcion }}</p>
-
-
       <p><strong>Entidad:</strong> {{ proyecto.entidad?.denominacion || proyecto.entidad }}</p>
-  
       <p><strong>Departamento:</strong> {{ proyecto.departamento?.nombre }}</p>
-
       <p><strong>Fecha Creación:</strong> {{ proyecto.fecha_creado | date:'mediumDate' }}</p>
       <p><strong>Fecha Finalización:</strong> {{ proyecto.fecha_finalizacion | date:'mediumDate' }}</p>
-      
       <div class="actions">
+      <!-- Esto está correcto -->
+       <button mat-button (click)="abrirModalBoletas(proyecto)">Ver Boletas</button>
+
+
         <button mat-icon-button color="primary" (click)="abrirModalEditar(proyecto)">
           <mat-icon>edit</mat-icon>
         </button>
@@ -33,9 +33,10 @@
         </button>
       </div>
     </div>
-  </ng-template>
-</div>
+  </div>
+</ng-template>
 
+</div>
 <!-- Modal para crear/editar -->
 <ng-template #modalForm>
   <h2 mat-dialog-title>{{ editingProyecto ? 'Editar Proyecto' : 'Nuevo Proyecto' }}</h2>
@@ -97,6 +98,75 @@
             [disabled]="proyectoForm.invalid" 
             (click)="editingProyecto ? actualizarProyecto() : crearProyecto()">
       {{ editingProyecto ? 'Actualizar' : 'Crear' }}
+    </button>
+  </mat-dialog-actions>
+</ng-template>
+
+
+<!-- Modal de boletas relacionadas -->
+<ng-template #modalBoletasPorProyecto let-data>
+  <h2 mat-dialog-title>Boletas del Proyecto: {{ data.proyecto.nombre }}</h2>
+  <mat-dialog-content>
+    <div *ngIf="boletasDelProyecto.length === 0" class="no-boletas">
+      No hay boletas asociadas a este proyecto.
+    </div>
+    
+    <div *ngIf="boletasDelProyecto.length > 0">
+      <div class="boletas-stats">
+        <p><strong>Total boletas:</strong> {{ boletasDelProyecto.length }}</p>
+        <p><strong>Monto total:</strong> {{ calcularMontoTotal() | currency }}</p>
+      </div>
+
+      <table mat-table [dataSource]="boletasDelProyecto" class="mat-elevation-z8">
+        <!-- Número Column -->
+        <ng-container matColumnDef="numero">
+          <th mat-header-cell *matHeaderCellDef> Número </th>
+          <td mat-cell *matCellDef="let boleta"> {{ boleta.numero }} </td>
+        </ng-container>
+
+        <!-- Tipo Column -->
+        <ng-container matColumnDef="tipo">
+          <th mat-header-cell *matHeaderCellDef> Tipo </th>
+          <td mat-cell *matCellDef="let boleta"> {{ boleta.tipo }} </td>
+        </ng-container>
+
+        <!-- Monto Column -->
+        <ng-container matColumnDef="monto">
+          <th mat-header-cell *matHeaderCellDef> Monto </th>
+          <td mat-cell *matCellDef="let boleta"> {{ boleta.monto | currency }} </td>
+        </ng-container>
+
+        <!-- Estado Column -->
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef> Estado </th>
+          <td mat-cell *matCellDef="let boleta">
+            <span class="badge" [style.backgroundColor]="boleta.estado.color">
+              {{ boleta.estado.nombre }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Fecha Column -->
+        <ng-container matColumnDef="concepto">
+          <th mat-header-cell *matHeaderCellDef> concepto </th>
+          <td mat-cell *matCellDef="let boleta"> 
+            {{ boleta.concepto }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="boletasColumnas"></tr>
+        <tr mat-row *matRowDef="let row; columns: boletasColumnas;"></tr>
+      </table>
+
+      <mat-paginator [pageSize]="5" showFirstLastButtons></mat-paginator>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cerrar</button>
+    <button mat-raised-button color="primary" 
+            (click)="abrirModalCrearBoleta()"
+            *ngIf="proyectoSeleccionado">
+      <mat-icon>add</mat-icon> Nueva Boleta
     </button>
   </mat-dialog-actions>
 </ng-template>

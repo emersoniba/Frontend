@@ -39,4 +39,3 @@ export class ProyectoService {
     return this.http.delete(`${this.apiUrl}${id}/`);
   }
 }
-

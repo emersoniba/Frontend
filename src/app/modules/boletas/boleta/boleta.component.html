@@ -13,7 +13,6 @@
     </mat-card-actions>
     
     <mat-card-content>
-     <!-- ... encabezado y botones anteriores ... -->
 
         <div class="table-responsive">
         <table mat-table [dataSource]="boletas" class="mat-elevation-z8">
@@ -113,6 +112,12 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
         </div>
+    <!-- Agregar un spinner mientras carga -->
+    <div *ngIf="loading" class="loading-overlay">
+      <mat-spinner></mat-spinner>
+    </div>
+      <!-- Agregar después de la tabla -->
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 
 <!-- ... el resto del modal se mantiene igual ... -->
     </mat-card-content>

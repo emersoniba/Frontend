@@ -17,9 +17,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { Proyecto, ProyectoService } from '../../../services/proyecto.service';
 import { EntidadService } from '../../../services/entidad.service';
-import { EntidadFinancieraService } from '../../../services/entidad-financiera.service';
 import { EstadoService } from '../../../services/estado.service';
 import Swal from 'sweetalert2';
+
 //v1
 @Component({
   standalone: true,
@@ -107,16 +107,20 @@ export class BoletaComponent implements OnInit {
     this.cargarEntidadesFinancieras();
     this.cargarProyectos();
   }
+  loading = false;
 
   cargarBoletas(): void {
+    this.loading = true;
     this.boletaService.getBoletas().subscribe({
       next: (data) => {
         this.boletas = data;
-        console.log("xxxxxxxxxx",data);
+        this.loading = false;
 
       },
       error: (err) => {
         console.error('Error cargando boletas:', err);
+        this.loading = false;
+
       }
     });
   }

@@ -16,11 +16,22 @@ import { MatSelectModule } from '@angular/material/select';
 import Swal from 'sweetalert2';
 import { AgGridAngular, AgGridModule } from 'ag-grid-angular';
 import { ColDef, GridReadyEvent, CellClickedEvent } from 'ag-grid-community';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+
 
 @Component({
   standalone: true,
   imports: [
     CommonModule, 
+    MatTableModule,
+    MatPaginatorModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatIconModule,
     FormsModule,
     ReactiveFormsModule,
     MatDialogModule,
@@ -41,10 +52,16 @@ import { ColDef, GridReadyEvent, CellClickedEvent } from 'ag-grid-community';
 export class ProyectoComponent implements OnInit, AfterViewInit {
   @ViewChild('modalForm') modalForm!: TemplateRef<any>;
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
-  
+  @ViewChild('modalBoletasPorProyecto') modalBoletasPorProyecto!: TemplateRef<any>;
+
   proyectos: Proyecto[] = [];
   entidades: any[] = [];
   departamentos: any[] = [];
+  //boletas: Boleta[] = [];
+  boletasColumnas: string[] = ['numero', 'tipo', 'monto', 'estado', 'concepto'];
+  boletasDelProyecto: any[] = [];
+  proyectoSeleccionado: any = null;
+
 
   // Configuración de AG-Grid
   public columnDefs: ColDef[] = [
@@ -71,7 +88,9 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
     private entidadService: EntidadService,
     private departamentoService: DepartamentoService,
     private fb: FormBuilder,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private http: HttpClient // <--- Agrega esto
+
   ) {
     this.proyectoForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -296,4 +315,45 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
       }
     });
   }
+    obtenerBoletasPorProyecto(proyectoId: number): Observable<any[]> {
+      return this.http.get<any[]>('http://localhost:8000/api/entidades/con_proyectos_y_boletas/').pipe(
+        map((entidades: any[]) => {
+            const boletas: any[] = [];
+          entidades.forEach(entidad => {
+            if (entidad.proyectos) {
+              entidad.proyectos.forEach((proyecto: any) => {
+                if (proyecto.id === proyectoId && proyecto.boletas) {
+                  boletas.push(...proyecto.boletas);
+                }
+              });
+            }
+          });
+          return boletas;
+        })
+      );
+    }
+
+    abrirModalBoletas(proyecto: any): void {
+    this.proyectoSeleccionado = proyecto;
+    const proyectoId = proyecto.id;
+
+     this.obtenerBoletasPorProyecto(proyectoId).subscribe({
+      next: (boletas: any[]) => {
+        this.boletasDelProyecto = boletas;
+        this.dialog.open(this.modalBoletasPorProyecto, {
+          data: { proyecto },
+          width: '800px'
+
+        });
+      },
+      error: (error) => {
+        console.error('Error al cargar boletas del proyecto:', error);
+      }
+    });
+  }
+   
+  calcularMontoTotal(): number {
+    return this.boletasDelProyecto.reduce((total, b) => total + parseFloat(b.monto), 0);
+  }
+
 }
