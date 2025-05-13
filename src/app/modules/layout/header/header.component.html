@@ -1,12 +1,11 @@
 <header>
   <div class="header-info">
     @if(dataUsuario){
-    <span>Bienvenido, {{ dataUsuario.nombres }} {{ dataUsuario.apellido_paterno }} {{ dataUsuario.apellido_materno
-      }}</span>
+      <span>Bienvenido, {{ dataUsuario.nombres }} {{ dataUsuario.apellido_paterno }} {{ dataUsuario.apellido_materno }}</span>
       <span>Cargo: {{ dataUsuario.cargo }}</span>
       <span>Unidad: {{ dataUsuario.unidad }}</span>
     } @else {
-    <span>Anonimus</span>
+      <span>Anónimo</span>
     }
     <button (click)="logout()">Cerrar sesión</button>
   </div>

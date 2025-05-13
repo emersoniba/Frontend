@@ -1,0 +1,66 @@
+/* ... estilos anteriores ... */
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    color: #000;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.badge mat-icon {
+    font-size: 14px;
+    height: 14px;
+    width: 14px;
+}
+
+
+/* Ajusta el ancho de las columnas */
+
+.mat-column-numero {
+    width: 100px;
+}
+
+.mat-column-tipo {
+    width: 120px;
+}
+
+.mat-column-monto {
+    width: 100px;
+}
+
+.mat-column-cite {
+    width: 120px;
+}
+
+.mat-column-entidad_financiera {
+    width: 150px;
+}
+
+.mat-column-fecha_inicio,
+.mat-column-fecha_finalizacion {
+    width: 120px;
+}
+
+.mat-column-estado {
+    width: 150px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+}
+
+.mat-column-proyecto {
+    width: 200px;
+}
+
+.mat-column-nota_ejecucion {
+    width: 150px;
+}
+
+.mat-column-acciones {
+    width: 110px;
+    text-align: center;
+}

@@ -1,1 +1,102 @@
-<p>proyecto works!</p>
+<div class="container">
+  <h2>Lista de Proyectos</h2>
+  
+  <!-- Botón para abrir modal de creación -->
+  <button mat-raised-button color="primary" (click)="abrirModalCrear()">
+    <mat-icon>add</mat-icon> Nuevo Proyecto
+  </button>
+
+  <!-- Lista de proyectos -->
+  <div *ngIf="proyectos.length === 0; else listaProyectos">
+    No hay proyectos disponibles.
+  </div>
+  
+  <ng-template #listaProyectos>
+    <div *ngFor="let proyecto of proyectos" class="proyecto-card mat-elevation-z2">
+      <h3>{{ proyecto.nombre }}</h3>
+      <p><strong>Descripción:</strong> {{ proyecto.descripcion }}</p>
+
+
+      <p><strong>Entidad:</strong> {{ proyecto.entidad?.denominacion || proyecto.entidad }}</p>
+  
+      <p><strong>Departamento:</strong> {{ proyecto.departamento?.nombre }}</p>
+
+      <p><strong>Fecha Creación:</strong> {{ proyecto.fecha_creado | date:'mediumDate' }}</p>
+      <p><strong>Fecha Finalización:</strong> {{ proyecto.fecha_finalizacion | date:'mediumDate' }}</p>
+      
+      <div class="actions">
+        <button mat-icon-button color="primary" (click)="abrirModalEditar(proyecto)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="eliminarProyecto(proyecto.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Modal para crear/editar -->
+<ng-template #modalForm>
+  <h2 mat-dialog-title>{{ editingProyecto ? 'Editar Proyecto' : 'Nuevo Proyecto' }}</h2>
+  <mat-dialog-content>
+    <form [formGroup]="proyectoForm">
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="nombre" required>
+        <mat-error *ngIf="proyectoForm.get('nombre')?.invalid">Nombre es requerido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput formControlName="descripcion" required></textarea>
+        <mat-error *ngIf="proyectoForm.get('descripcion')?.invalid">Descripción es requerida</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Entidad</mat-label>
+        <mat-select formControlName="entidad_id" required>
+          <mat-option *ngFor="let entidad of entidades" [value]="entidad.id">
+            {{ entidad.denominacion }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="proyectoForm.get('entidad_id')?.invalid">Entidad es requerida</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Departamento</mat-label>
+        <mat-select formControlName="departamento_id" required>
+          <mat-option *ngFor="let depto of departamentos" [value]="depto.id">
+            {{ depto.nombre }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="proyectoForm.get('departamento_id')?.invalid">Departamento es requerido</mat-error>
+      </mat-form-field>
+
+
+      <mat-form-field appearance="fill">
+        <mat-label>Fecha Creación</mat-label>
+        <input matInput [matDatepicker]="creadoPicker" formControlName="fecha_creado" required>
+        <mat-datepicker-toggle matSuffix [for]="creadoPicker"></mat-datepicker-toggle>
+        <mat-datepicker #creadoPicker></mat-datepicker>
+        <mat-error *ngIf="proyectoForm.get('fecha_creado')?.invalid">Fecha es requerida</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Fecha Finalización</mat-label>
+        <input matInput [matDatepicker]="finalizacionPicker" formControlName="fecha_finalizacion" required>
+        <mat-datepicker-toggle matSuffix [for]="finalizacionPicker"></mat-datepicker-toggle>
+        <mat-datepicker #finalizacionPicker></mat-datepicker>
+        <mat-error *ngIf="proyectoForm.get('fecha_finalizacion')?.invalid">Fecha es requerida</mat-error>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-raised-button color="primary" 
+            [disabled]="proyectoForm.invalid" 
+            (click)="editingProyecto ? actualizarProyecto() : crearProyecto()">
+      {{ editingProyecto ? 'Actualizar' : 'Crear' }}
+    </button>
+  </mat-dialog-actions>
+</ng-template>

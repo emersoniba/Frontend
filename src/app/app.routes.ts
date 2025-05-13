@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
+import { ProyectoComponent } from './modules/boletas/proyecto/proyecto.component';
+import { BoletaComponent } from './modules/boletas/boleta/boleta.component';
 
 export const routes: Routes = [
   { path: 'login', loadComponent: () => import('./modules/login/login.component').then(m => m.LoginComponent) },
@@ -25,5 +27,11 @@ export const routes: Routes = [
     ]
   },
   { path: '**', redirectTo: 'login' },
+
+
+  { path: 'proyectos', component: ProyectoComponent },
+  { path: '', redirectTo: 'proyectos', pathMatch: 'full' },
+  { path: 'boletas', component: BoletaComponent }
+
 ];
 
