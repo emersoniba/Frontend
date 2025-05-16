@@ -2,6 +2,12 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { ProyectoComponent } from './modules/boletas/proyecto/proyecto.component';
 import { BoletaComponent } from './modules/boletas/boleta/boleta.component';
+import { ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule } from 'ag-grid-community';
+import { AllCommunityModule } from 'ag-grid-community';
+
+// Registra todos los módulos necesarios
+ModuleRegistry.registerModules([ClientSideRowModelModule, AllCommunityModule]);
 
 export const routes: Routes = [
   { path: 'login', loadComponent: () => import('./modules/login/login.component').then(m => m.LoginComponent) },

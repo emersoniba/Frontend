@@ -94,7 +94,14 @@
                 {{boleta.nota_ejecucion || 'N/A'}}
             </td>
             </ng-container>
-            
+            <!--file
+            <ng-container matColumnDef="archivo_adjunto">
+            <th mat-header-cell *matHeaderCellDef> archivo adjunto </th>
+            <td mat-cell *matCellDef="let boleta"> 
+                {{boleta.archivo_adjunto || 'N/A'}}
+            </td>
+            </ng-container>
+            -->
             <!-- Acciones Column -->
             <ng-container matColumnDef="acciones">
             <th mat-header-cell *matHeaderCellDef> Acciones </th>
@@ -148,7 +155,7 @@
       
       <mat-form-field appearance="fill" class="w-100">
         <mat-label>Entidad Financiera</mat-label>
-        <mat-select formControlName="entidad_financiera">
+        <mat-select formControlName="entidad_financiera_id">
           <mat-option *ngFor="let entidad of entidadesFinancieras" [value]="entidad.id">
             {{entidad.nombre}}
           </mat-option>
@@ -157,7 +164,7 @@
       
       <mat-form-field appearance="fill" class="w-100">
         <mat-label>Proyecto</mat-label>
-        <mat-select formControlName="proyecto" required>
+        <mat-select formControlName="proyecto_id" required>
           <mat-option *ngFor="let proyecto of proyectos" [value]="proyecto.id">
             {{proyecto.nombre}}
           </mat-option>
@@ -167,7 +174,7 @@
       
       <mat-form-field appearance="fill" class="w-100">
         <mat-label>Estado</mat-label>
-        <mat-select formControlName="estado" required>
+        <mat-select formControlName="estado_id" required>
           <mat-option *ngFor="let estado of estados" [value]="estado.id">
             {{estado.nombre}}
           </mat-option>
@@ -218,8 +225,10 @@
         <mat-label>Nota de Ejecución</mat-label>
         <input matInput formControlName="nota_ejecucion">
       </mat-form-field>
+
     </form>
   </mat-dialog-content>
+  
   
   <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancelar</button>

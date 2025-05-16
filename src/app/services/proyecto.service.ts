@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
+import { Boleta } from '../models/boleta.model';
 
 export interface Proyecto {
   id?: number;
@@ -35,7 +36,17 @@ export class ProyectoService {
   updateProyecto(id: number, proyecto: Proyecto): Observable<Proyecto> {
   return this.http.put<Proyecto>(`${this.apiUrl}${id}/`, proyecto);
 }
+  // proyecto.service.ts
   deleteProyecto(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}${id}/`);
+    return this.http.delete(`${this.apiUrl}${id}/`).pipe(
+      catchError(error => {
+        console.error('Error en servicio al eliminar:', error);
+        return throwError(() => error);
+      })
+    );
   }
+  //boletasbyproyecto (id_proyecto: number):Observable<Boleta[]>{
+   // return this.http.get<Boleta[]>(`api/entidades/con_proyectos_y_boletas/`);
+ // }
 }
+

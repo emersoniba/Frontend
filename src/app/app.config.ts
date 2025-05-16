@@ -1,10 +1,12 @@
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 
 import { AuthGuard } from './guards/auth.guard';
 import { tokenInterceptor } from './interceptors/token.interceptor';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,7 +16,9 @@ export const appConfig: ApplicationConfig = {
     ),
     provideRouter(routes),
     importProvidersFrom(),
-    AuthGuard
+    AuthGuard,
+    importProvidersFrom(BrowserModule, HttpClientModule),
+    provideAnimations()
   ]
 };
 

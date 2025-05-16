@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Boleta, Estado, EntidadFinanciera } from '../models/boleta.model';
 
 @Injectable({
@@ -31,9 +31,17 @@ export class BoletaService {
     return this.http.delete<void>(`${this.apiUrl}${id}/`);
   }
   // En boleta.service.ts
-  getBoletasByProyecto(proyectoId: number): Observable<Boleta[]> {
-    return this.http.get<Boleta[]>(`${this.apiUrl}?proyecto=${proyectoId}`);
+    getBoletasPorProyecto(proyectoId: number): Observable<Boleta[]> {
+    const url = `boleta_proyecto/?proyecto_id=${proyectoId}`;
+    return this.http.get<Boleta[]>(url).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error cargando boletas: ', error);
+        return throwError(() => new Error('Error al cargar boletas'));
+      })
+    );
   }
+
+
 }
 export class EstadoService {
   private apiUrl = 'http://127.0.0.1:8000/api/'; // Ajusta tu URL

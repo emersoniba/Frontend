@@ -1,0 +1,105 @@
+<mat-dialog-content>
+  <form [formGroup]="boletaForm">
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Tipo de Boleta</mat-label>
+      <input matInput formControlName="tipo" required>
+      <mat-error *ngIf="boletaForm.get('tipo')?.invalid">Este campo es requerido</mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Número</mat-label>
+      <input matInput formControlName="numero" required>
+      <mat-error *ngIf="boletaForm.get('numero')?.invalid">Este campo es requerido</mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Concepto</mat-label>
+      <textarea matInput formControlName="concepto" required rows="3"></textarea>
+      <mat-error *ngIf="boletaForm.get('concepto')?.invalid">Este campo es requerido</mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Entidad Financiera</mat-label>
+      <mat-select formControlName="entidad_financiera_id">
+        <mat-option *ngFor="let entidad of entidadesFinancieras" [value]="entidad.id">
+          {{entidad.nombre}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Proyecto</mat-label>
+      <mat-select formControlName="proyecto_id" required>
+        <mat-option *ngFor="let proyecto of proyectos" [value]="proyecto.id">
+          {{proyecto.nombre}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="boletaForm.get('proyecto_id')?.invalid">Este campo es requerido</mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Estado</mat-label>
+      <mat-select formControlName="estado_id" required>
+        <mat-option *ngFor="let estado of estados" [value]="estado.id">
+          {{estado.nombre}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="boletaForm.get('estado_id')?.invalid">Este campo es requerido</mat-error>
+    </mat-form-field>
+    
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Fecha Inicio</mat-label>
+          <input matInput [matDatepicker]="picker1" formControlName="fecha_inicio" required>
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+          <mat-error *ngIf="boletaForm.get('fecha_inicio')?.invalid">Este campo es requerido</mat-error>
+        </mat-form-field>
+      </div>
+      
+      <div class="col-md-6">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Fecha Finalización</mat-label>
+          <input matInput [matDatepicker]="picker2" formControlName="fecha_finalizacion" required>
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+          <mat-error *ngIf="boletaForm.get('fecha_finalizacion')?.invalid">Este campo es requerido</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Monto</mat-label>
+      <input matInput type="number" formControlName="monto" required min="0" step="0.01">
+      <span matPrefix>$&nbsp;</span>
+      <mat-error *ngIf="boletaForm.get('monto')?.invalid">Ingrese un monto válido</mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>CITE</mat-label>
+      <input matInput formControlName="cite">
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Observaciones</mat-label>
+      <input matInput formControlName="observaciones">
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Nota de Ejecución</mat-label>
+      <input matInput formControlName="nota_ejecucion">
+    </mat-form-field>
+    
+    </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="primary" 
+          (click)="onSubmit()"
+          [disabled]="boletaForm.invalid">
+    {{isEditing ? 'Actualizar' : 'Crear'}}
+  </button>
+</mat-dialog-actions>   

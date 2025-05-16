@@ -16,17 +16,18 @@ import { MatSelectModule } from '@angular/material/select';
 import Swal from 'sweetalert2';
 import { AgGridAngular, AgGridModule } from 'ag-grid-angular';
 import { ColDef, GridReadyEvent, CellClickedEvent } from 'ag-grid-community';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { ProyectoModalComponent } from './proyecto-modal/proyecto-modal.component';
+import { BoletaService } from '../../../services/boleta.service';
+import { BoletasProyectoModalComponent } from '../../boletas/proyecto/boletas-proyecto-modal/boletas-proyecto-modal.component';
 
 
 @Component({
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     MatTableModule,
     MatPaginatorModule,
     MatDialogModule,
@@ -53,17 +54,21 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
   @ViewChild('modalForm') modalForm!: TemplateRef<any>;
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
   @ViewChild('modalBoletasPorProyecto') modalBoletasPorProyecto!: TemplateRef<any>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  pageSize = 5;
   proyectos: Proyecto[] = [];
   entidades: any[] = [];
   departamentos: any[] = [];
   //boletas: Boleta[] = [];
-  boletasColumnas: string[] = ['numero', 'tipo', 'monto', 'estado', 'concepto'];
+  //boletasColumnas: string[] = ['numero', 'tipo', 'monto', 'estado', 'concepto'];
   boletasDelProyecto: any[] = [];
   proyectoSeleccionado: any = null;
-
-
-  // Configuración de AG-Grid
+  displayedColumnsProyecto: string[] = [
+    'nombre', 'descripcion', 'entidad', 'departamento',
+    'fecha_creado', 'fecha_finalizacion', 'acciones'
+  ];
+/*
   public columnDefs: ColDef[] = [
     {
       headerName: 'Proyectos',
@@ -74,7 +79,64 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
       resizable: true
     }
   ];
+*/
+public columnDefs: ColDef[] = [
+  { headerName: 'Nombre', field: 'nombre', filter: true },
+  { headerName: 'Descripción', field: 'descripcion', filter: true },
+  { headerName: 'Entidad', field: 'entidad.denominacion', filter: true },
+  { headerName: 'Departamento', field: 'departamento.nombre', filter: true },
+  { headerName: 'Fecha Creación', field: 'fecha_creado', filter: 'agDateColumnFilter' },
+  { headerName: 'Fecha Finalización', field: 'fecha_finalizacion', filter: 'agDateColumnFilter' },
+  {
+    headerName: 'Acciones',
+    cellRenderer: this.accionesRenderer.bind(this),
+    suppressSizeToFit: true,
+    width: 150,
+    cellRendererParams: {
+      onClick: (event: any) => {
+        console.log('Action clicked:', event);
+      },
+    },
+  
+  }
+];
+accionesRenderer(params: any): string {
+  return `
+    <button class="btn-ver" title="Ver Boletas">📄</button>
+    <button class="btn-editar" title="Editar">✏️</button>
+    <button class="btn-eliminar" title="Eliminar">🗑️</button>
+  `;
+}
 
+aplicarBusquedaRapida(event: any): void {
+  const valor = event.target.value;
+  this.agGrid.api.setFilterModel({
+    nombre: { filterType: 'text', type: 'contains', filter: valor }
+    //'entidad.denominacion': { filterType: 'text', type: 'contains', filter: valor },
+    //'departamento.nombre': { filterType: 'text', type: 'contains', filter: valor }
+  });
+}
+onCellClicked(event: any): void {
+  const proyecto = event.data;
+  const targetClass = event.event.target.className;
+
+  if (targetClass.includes('btn-ver')) {
+    this.verBoletas(proyecto);
+  } else if (targetClass.includes('btn-editar')) {
+    this.abrirModalEditar(proyecto);  
+  } else if (targetClass.includes('btn-eliminar')) {
+    this.eliminarProyecto(proyecto.id);
+  }
+}
+
+  verBoletas(proyecto: Proyecto): void {
+    this.dialog.open(BoletasProyectoModalComponent, {
+      width: '800px',
+      data: { proyecto },
+      disableClose: false
+    });
+  }
+  
   public defaultColDef: ColDef = {
     sortable: true,
     filter: true,
@@ -88,9 +150,10 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
     private entidadService: EntidadService,
     private departamentoService: DepartamentoService,
     private fb: FormBuilder,
-    private dialog: MatDialog,
-    private http: HttpClient // <--- Agrega esto
-
+    //private dialog: MatDialog,
+    private http: HttpClient,
+    private dialog: MatDialog, 
+    private boletaService: BoletaService,
   ) {
     this.proyectoForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -110,27 +173,10 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     // Manejador de eventos corregido
-    this.agGrid.api.addEventListener('cellClicked', (event: CellClickedEvent) => {
-      const target = event.event?.target as HTMLElement; // Usamos optional chaining
-      if (!target) return;
-      
-      const button = target.closest('.ag-card-button');
-      
-      if (button) {
-        const id = button.getAttribute('data-id');
-        if (id) {
-          if (button.classList.contains('edit')) {
-            const proyecto = this.proyectos.find(p => p.id === +id);
-            if (proyecto) this.abrirModalEditar(proyecto);
-          } else if (button.classList.contains('delete')) {
-            this.eliminarProyecto(+id);
-          }
-        }
-      }
-    });
-  }
+    //this.dataSource.paginator = this.paginator;
 
-  // Renderizador personalizado para las cards
+  }
+/*
   private cardRenderer(params: any): string {
     const proyecto = params.data;
     return `
@@ -156,10 +202,34 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
       </div>
     `;
   }
-
+*/
   onGridReady(params: GridReadyEvent) {
     this.agGrid.api.sizeColumnsToFit();
+    //
+    // Configuración inicial del grid
+    params.api.sizeColumnsToFit();
+
+    // Manejador de eventos para los botones en las celdas
+    params.api.addEventListener('cellClicked', (event: CellClickedEvent) => {
+      const target = event.event?.target as HTMLElement;
+      if (!target) return;
+
+      const button = target.closest('.ag-card-button');
+      
+      if (button) {
+        const id = button.getAttribute('data-id');
+        if (id) {
+          if (button.classList.contains('edit')) {
+            const proyecto = this.proyectos.find(p => p.id === +id);
+            if (proyecto) this.abrirModalEditar(proyecto);
+          } else if (button.classList.contains('delete')) {
+            this.eliminarProyecto(+id);
+          }
+        }
+      }
+    });
   }
+  
 
   // Resto de tus métodos existentes se mantienen igual...
   cargarEntidades(): void {
@@ -184,14 +254,14 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
     });
   }
 
- cargarProyectos(): void {
+  cargarProyectos(): void {
     this.proyectoService.getProyectos().subscribe({
       next: (data) => {
         this.proyectos = data;
         if (this.agGrid?.api) {
           // Forma moderna de actualizar los datos
           this.agGrid.api.setGridOption('rowData', data);
-          this.agGrid.api.sizeColumnsToFit(); 
+          this.agGrid.api.sizeColumnsToFit();
         }
       },
       error: (err) => {
@@ -201,62 +271,106 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
   }
 
   abrirModalCrear(): void {
-    this.editingProyecto = null;
-    this.proyectoForm.reset({
-      entidad_id: 1,
-      departamento_id: 1,
-      fecha_creado: new Date(),
-      fecha_finalizacion: new Date()
+    const dialogRef = this.dialog.open(ProyectoModalComponent, {
+      data: { proyecto: null }
     });
-    
-    const dialogRef = this.dialog.open(this.modalForm);
-    
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.cargarProyectos();
+        this.proyectoService.addProyecto(result).subscribe({
+          next: () => {
+            this.cargarProyectos();
+            Swal.fire({
+              icon: 'success',
+              title: 'Proyecto creado',
+              text: 'El proyecto fue registrado exitosamente',
+              timer: 2000,
+              showConfirmButton: false
+            });
+          },
+          error: (err) => {
+            console.error('Error creando proyecto:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo crear el proyecto'
+            });
+          }
+        });
       }
     });
   }
 
   abrirModalEditar(proyecto: Proyecto): void {
-    this.editingProyecto = proyecto;
-    this.proyectoForm.patchValue({
-      ...proyecto,
-      fecha_creado: new Date(proyecto.fecha_creado),
-      fecha_finalizacion: new Date(proyecto.fecha_finalizacion)
+    const dialogRef = this.dialog.open(ProyectoModalComponent, {
+      data: { proyecto }
     });
-    
-    const dialogRef = this.dialog.open(this.modalForm);
-    
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.cargarProyectos();
+        this.proyectoService.updateProyecto(proyecto.id ?? 0, result).subscribe({
+          next: () => {
+            this.cargarProyectos();
+            Swal.fire({
+              icon: 'success',
+              title: 'Proyecto actualizado',
+              text: 'El proyecto fue modificado exitosamente',
+              timer: 2000,
+              showConfirmButton: false
+            });
+          },
+          error: (err) => {
+            console.error('Error actualizando proyecto:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo actualizar el proyecto'
+            });
+          }
+        });
       }
     });
   }
 
   crearProyecto(): void {
     if (this.proyectoForm.invalid) return;
-    
+
     const proyectoData = {
       ...this.proyectoForm.value,
       fecha_creado: this.proyectoForm.value.fecha_creado.toISOString().split('T')[0],
       fecha_finalizacion: this.proyectoForm.value.fecha_finalizacion.toISOString().split('T')[0],
       creado_por_id: 1,
-      departamento_id: this.proyectoForm.value.departamento_id,  
-      entidad_id: this.proyectoForm.value.entidad_id 
+      departamento_id: this.proyectoForm.value.departamento_id,
+      entidad_id: this.proyectoForm.value.entidad_id
     };
-    
+
     this.proyectoService.addProyecto(proyectoData).subscribe({
       next: () => {
         this.dialog.closeAll();
         this.cargarProyectos();
+
+        // ✅ SweetAlert de confirmación
+        Swal.fire({
+          icon: 'success',
+          title: 'Proyecto creado',
+          text: 'El proyecto fue registrado exitosamente',
+          timer: 2000,
+          showConfirmButton: false
+        });
       },
       error: (err) => {
         console.error('Error creando proyecto:', err);
+
+        // ✅ SweetAlert de error opcional
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo crear el proyecto'
+        });
       }
     });
   }
+
 
   actualizarProyecto(): void {
     if (this.proyectoForm.invalid || !this.editingProyecto?.id) {
@@ -266,94 +380,79 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
 
     const proyectoData = {
       ...this.proyectoForm.value,
-      id: this.editingProyecto.id, 
+      id: this.editingProyecto.id,
       fecha_creado: new Date(this.proyectoForm.value.fecha_creado).toISOString().split('T')[0],
       fecha_finalizacion: new Date(this.proyectoForm.value.fecha_finalizacion).toISOString().split('T')[0],
     };
-   
+
     this.proyectoService.updateProyecto(this.editingProyecto.id, proyectoData)
       .subscribe({
         next: (updatedProyecto) => {
           console.log('Proyecto actualizado:', updatedProyecto);
           this.dialog.closeAll();
-          this.cargarProyectos(); 
-          this.editingProyecto = null; 
+          this.cargarProyectos();
+          this.editingProyecto = null;
         },
         error: (err) => {
           console.error('Error al actualizar:', {
             status: err.status,
             message: err.message,
-            errorDetails: err.error 
+            errorDetails: err.error
           });
         }
       });
   }
 
   eliminarProyecto(id?: number): void {
-    if (!id) return;
+    if (!id) {
+      console.error('ID de proyecto no proporcionado');
+      return;
+    }
 
     Swal.fire({
       title: '¿Eliminar proyecto?',
-      text: 'No podrás deshacer esta acción',
+      text: 'Esta acción no se puede deshacer',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, eliminar'
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
         this.proyectoService.deleteProyecto(id).subscribe({
           next: () => {
-            Swal.fire('Eliminado', 'El proyecto ha sido eliminado.', 'success');
+            Swal.fire({
+              title: '¡Eliminado!',
+              text: 'El proyecto ha sido eliminado correctamente.',
+              icon: 'success',
+              timer: 2000,
+              showConfirmButton: false
+            });
+            // Actualizar los datos del grid
             this.cargarProyectos();
           },
           error: (err) => {
-            console.error('Error eliminando proyecto:', err);
-            Swal.fire('Error', 'Hubo un problema al eliminar el proyecto.', 'error');
+            console.error('Error completo al eliminar:', err);
+            Swal.fire({
+              title: 'Error',
+              text: this.obtenerMensajeError(err),
+              icon: 'error'
+            });
           }
         });
       }
     });
   }
-    obtenerBoletasPorProyecto(proyectoId: number): Observable<any[]> {
-      return this.http.get<any[]>('http://localhost:8000/api/entidades/con_proyectos_y_boletas/').pipe(
-        map((entidades: any[]) => {
-            const boletas: any[] = [];
-          entidades.forEach(entidad => {
-            if (entidad.proyectos) {
-              entidad.proyectos.forEach((proyecto: any) => {
-                if (proyecto.id === proyectoId && proyecto.boletas) {
-                  boletas.push(...proyecto.boletas);
-                }
-              });
-            }
-          });
-          return boletas;
-        })
-      );
+
+  private obtenerMensajeError(err: any): string {
+    if (err.status === 404) {
+      return 'El proyecto no fue encontrado.';
+    } else if (err.status === 500) {
+      return 'Error del servidor al intentar eliminar.';
+    } else if (err.error?.message) {
+      return err.error.message;
     }
-
-    abrirModalBoletas(proyecto: any): void {
-    this.proyectoSeleccionado = proyecto;
-    const proyectoId = proyecto.id;
-
-     this.obtenerBoletasPorProyecto(proyectoId).subscribe({
-      next: (boletas: any[]) => {
-        this.boletasDelProyecto = boletas;
-        this.dialog.open(this.modalBoletasPorProyecto, {
-          data: { proyecto },
-          width: '800px'
-
-        });
-      },
-      error: (error) => {
-        console.error('Error al cargar boletas del proyecto:', error);
-      }
-    });
+    return 'Ocurrió un error al intentar eliminar el proyecto.';
   }
-   
-  calcularMontoTotal(): number {
-    return this.boletasDelProyecto.reduce((total, b) => total + parseFloat(b.monto), 0);
-  }
-
 }

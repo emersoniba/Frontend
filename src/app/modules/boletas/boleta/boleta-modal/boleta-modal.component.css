@@ -1,0 +1,21 @@
+.w-100 {
+    width: 100%;
+}
+
+.row {
+    display: flex;
+    gap: 15px;
+}
+
+.col-md-6 {
+    flex: 1;
+}
+
+mat-form-field {
+    margin-bottom: 15px;
+}
+
+mat-dialog-actions {
+    padding: 15px 0;
+    justify-content: flex-end;
+}

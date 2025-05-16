@@ -19,14 +19,14 @@ export interface Proyecto {
 }
 
 export interface Boleta {
-  id: number;
-  tipo: string;
-  numero: string;
-  concepto: string;
+  id?: number;
+  tipo?: string;
+  numero?: string;
+  concepto?: string;
   entidad_financiera: EntidadFinanciera | null;
   fecha_inicio: string;
   fecha_finalizacion: string;
-  monto: number;
+  monto?: number;
   cite: string | null;
   estado: Estado;
   proyecto: Proyecto;
@@ -36,4 +36,6 @@ export interface Boleta {
   actualizado_por?: number;
   fecha_creado?: string;
   fecha_actualizado?: string;
+  archivo_adjunto?: string;
+  archivo_adjunto_url?: string;
 }

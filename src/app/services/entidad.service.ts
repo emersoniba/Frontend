@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class EntidadService {
   private apiUrl = 'http://127.0.0.1:8000/api/entidades/';
+  //private apiUrl = 'http://localhost:8000/api/entidad_financiera/';
 
   constructor(private http: HttpClient) {}
 
