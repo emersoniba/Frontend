@@ -5,14 +5,6 @@
   </mat-card-header>
 
   <mat-card-actions style="display: flex; justify-content: space-between; align-items: center;">
-    <div style="display: flex; align-items: center; gap: 16px;">
-      <mat-form-field appearance="outline" style="width: 250px;">
-        <mat-icon matPrefix>search</mat-icon>
-        <input matInput 
-               (input)="aplicarBusquedaRapida($event)" 
-               placeholder="Buscar proyectos">
-      </mat-form-field>
-    </div>
     
     <button mat-raised-button color="primary" (click)="abrirModalCrear()">
       <mat-icon>add</mat-icon> Nuevo Proyecto
@@ -32,3 +24,9 @@
     </ag-grid-angular>
   </mat-card-content>
 </mat-card>
+
+      <mat-paginator [pageSizeOptions]="[3, 5, 10, 20]" 
+                    [pageSize]="5"
+                    showFirstLastButtons
+                    aria-label="Seleccionar página de boletas">
+      </mat-paginator>

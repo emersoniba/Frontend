@@ -26,7 +26,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    
+    <!-- ANTIGUO
     <mat-form-field appearance="fill" class="w-100">
       <mat-label>Proyecto</mat-label>
       <mat-select formControlName="proyecto_id" required>
@@ -36,7 +36,36 @@
       </mat-select>
       <mat-error *ngIf="boletaForm.get('proyecto_id')?.invalid">Este campo es requerido</mat-error>
     </mat-form-field>
-    
+  -->
+    <!--NUEVO-->
+    <mat-form-field appearance="fill" class="w-100">
+    <mat-label>Proyecto</mat-label>
+    <mat-select formControlName="proyecto_id" required>
+      <!-- Campo de búsqueda -->
+      <mat-option>
+        <input
+          matInput
+          placeholder="Buscar..."
+          [formControl]="proyectoFilterCtrl"
+          (click)="$event.stopPropagation()"
+          (keydown)="$event.stopPropagation()"
+        />
+      </mat-option>
+
+      <!-- Lista filtrada de proyectos -->
+      <mat-option
+        *ngFor="let proyecto of filteredProyectos"
+        [value]="proyecto.id"
+      >
+        {{ proyecto.nombre }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="boletaForm.get('proyecto_id')?.invalid">
+      Este campo es requerido
+    </mat-error>
+  </mat-form-field>
+
+<!--end-->
     <mat-form-field appearance="fill" class="w-100">
       <mat-label>Estado</mat-label>
       <mat-select formControlName="estado_id" required>
@@ -90,11 +119,28 @@
       <mat-label>Nota de Ejecución</mat-label>
       <input matInput formControlName="nota_ejecucion">
     </mat-form-field>
-    
-    </form>
+<mat-form-field appearance="fill" class="w-100">
+  <mat-label>Archivo PDF</mat-label>
+  <input
+    type="text"
+    matInput
+    [value]="archivoNombre"
+    placeholder="Selecciona un archivo PDF"
+    readonly
+    (click)="fileInput.click()"
+  >
+  <button mat-icon-button matSuffix (click)="fileInput.click()" type="button">
+    <mat-icon>attach_file</mat-icon>
+  </button>
+</mat-form-field>
 
-</mat-dialog-content>
-
+<input
+  #fileInput
+  type="file"
+  style="display: none"
+  accept=".pdf"
+  (change)="onFileSelected($event)"
+>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancelar</button>
   <button mat-raised-button color="primary" 

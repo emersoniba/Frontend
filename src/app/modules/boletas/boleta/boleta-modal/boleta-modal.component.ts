@@ -1,16 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { Estado } from '../../../../models/boleta.model';
-import { EntidadFinanciera } from '../../../../models/boleta.model';
-import { ProyectoService } from '../../../../services/proyecto.service';
-import Swal from 'sweetalert2';
-import { Boleta } from '../../../../models/boleta.model';
+import { Estado, EntidadFinanciera, Boleta } from '../../../../models/boleta.model';
 import { Proyecto } from '../../../../services/proyecto.service';
+import { ProyectoService } from '../../../../services/proyecto.service';
 import { BoletaService } from '../../../../services/boleta.service';
 import { EntidadFinancieraService } from '../../../../services/entidad-financiera.service';
-import { environment } from '../../../../../environment/environment';
 import { EstadoService } from '../../../../services/estado.service';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,8 +15,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
-
-
+import { Subject, takeUntil, debounceTime, distinctUntilChanged, startWith, map } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   standalone: true,
@@ -42,13 +37,18 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule
   ]
 })
-export class BoletaModalComponent implements OnInit {
+export class BoletaModalComponent implements OnInit, OnDestroy {
   boletaForm: FormGroup;
   isEditing: boolean = false;
   estados: Estado[] = [];
   entidadesFinancieras: EntidadFinanciera[] = [];
   proyectos: Proyecto[] = [];
-  selectedFile: File | null = null;
+  filteredProyectos: Proyecto[] = [];
+  archivoSeleccionado: File | null = null;
+
+  // Control para el filtro de proyectos
+  proyectoFilterCtrl = new FormControl('');
+  private _onDestroy = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -72,24 +72,45 @@ export class BoletaModalComponent implements OnInit {
       proyecto_id: [null, Validators.required],
       observaciones: [''],
       nota_ejecucion: [''],
-      //archivo_adjunto: [null]
-      
+      archivo: [null]
     });
   }
 
   ngOnInit(): void {
     this.loadData();
-    
+
     if (this.data.boleta) {
       this.isEditing = true;
       this.loadBoletaData(this.data.boleta);
     }
+
+    // Configuración del filtro de proyectos con debounce
+    this.proyectoFilterCtrl.valueChanges
+      .pipe(
+        takeUntil(this._onDestroy),
+        debounceTime(300),
+        distinctUntilChanged(),
+        startWith('')
+      )
+      .subscribe(search => {
+        this.filterProyectos(search || '');
+      });
   }
 
   loadData(): void {
     this.loadEstados();
     this.loadEntidadesFinancieras();
     this.loadProyectos();
+  }
+
+  loadProyectos(): void {
+    this.proyectoService.getProyectos().subscribe({
+      next: (data) => {
+        this.proyectos = data;
+        this.filteredProyectos = [...this.proyectos]; // Copia inicial
+      },
+      error: (err) => console.error('Error cargando proyectos:', err)
+    });
   }
 
   loadEstados(): void {
@@ -106,13 +127,6 @@ export class BoletaModalComponent implements OnInit {
     });
   }
 
-  loadProyectos(): void {
-    this.proyectoService.getProyectos().subscribe({
-      next: (data) => this.proyectos = data,
-      error: (err) => console.error('Error cargando proyectos:', err)
-    });
-  }
-
   loadBoletaData(boleta: Boleta): void {
     this.boletaForm.patchValue({
       ...boleta,
@@ -124,16 +138,62 @@ export class BoletaModalComponent implements OnInit {
     });
   }
 
+  filterProyectos(search: string): void {
+    if (!search) {
+      this.filteredProyectos = [...this.proyectos];
+      return;
+    }
+    
+    const searchLower = search.toLowerCase();
+    this.filteredProyectos = this.proyectos.filter(p =>
+      p.nombre.toLowerCase().includes(searchLower)
+    );
+  }
+  
+ isUploading = false;
+archivoNombre: string = '';
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    this.archivoSeleccionado = input.files[0];
+    this.archivoNombre = this.archivoSeleccionado.name; // Mostramos el nombre en el input visible
+
+    this.isUploading = true;
+    const file = input.files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const base64String = reader.result as string;
+      this.boletaForm.patchValue({
+        archivo: base64String
+      });
+      this.isUploading = false;
+    };
+
+    reader.onerror = () => {
+      this.isUploading = false;
+      Swal.fire('Error', 'No se pudo leer el archivo', 'error');
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+
   onSubmit(): void {
-    if (this.boletaForm.invalid) return;
+    if (this.boletaForm.invalid) {
+      Swal.fire('Error', 'Por favor complete todos los campos requeridos', 'error');
+      return;
+    }
 
     const formValue = this.boletaForm.value;
     const boletaData = {
       ...formValue,
       fecha_inicio: new Date(formValue.fecha_inicio).toISOString(),
       fecha_finalizacion: new Date(formValue.fecha_finalizacion).toISOString(),
-      creado_por_id: 1, 
-      actualizado_por_id: 1 
+      creado_por_id: 1,
+      actualizado_por_id: 1
     };
 
     if (this.isEditing && this.data.boleta?.id) {
@@ -166,40 +226,44 @@ export class BoletaModalComponent implements OnInit {
     });
   }
 
- updateBoleta(id: number, boletaData: any): void {
-  Swal.fire({
-    title: '¿Está seguro?',
-    text: '¿Desea actualizar esta boleta?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Sí, actualizar',
-    cancelButtonText: 'Cancelar'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.boletaService.updateBoleta(id, boletaData).subscribe({
-        next: () => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Boleta actualizada',
-            text: 'La boleta fue actualizada exitosamente',
-            timer: 2000,
-            showConfirmButton: false
-          });
-          this.dialogRef.close(true);
-        },
-        error: (err) => {
-          console.error('Error actualizando boleta:', err);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudo actualizar la boleta'
-          });
-        }
-      });
-    }
-  });
-}
+  updateBoleta(id: number, boletaData: any): void {
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: '¿Desea actualizar esta boleta?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, actualizar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.boletaService.updateBoleta(id, boletaData).subscribe({
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Boleta actualizada',
+              text: 'La boleta fue actualizada exitosamente',
+              timer: 2000,
+              showConfirmButton: false
+            });
+            this.dialogRef.close(true);
+          },
+          error: (err) => {
+            console.error('Error actualizando boleta:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo actualizar la boleta'
+            });
+          }
+        });
+      }
+    });
+  }
 
+  ngOnDestroy(): void {
+    this._onDestroy.next();
+    this._onDestroy.complete();
+  }
 }

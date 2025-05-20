@@ -1,159 +1,264 @@
-/* ... estilos anteriores ... */
-
-.badge {
-    padding: 5px 10px;
-    border-radius: 20px;
-    color: #000;
-    font-size: 12px;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.badge mat-icon {
-    font-size: 14px;
-    height: 14px;
-    width: 14px;
-}
-
-
-/* Ajusta el ancho de las columnas */
-
-.mat-column-numero {
-    width: 100px;
-}
-
-.mat-column-tipo {
-    width: 120px;
-}
-
-.mat-column-monto {
-    width: 100px;
-}
-
-.mat-column-cite {
-    width: 120px;
-}
-
-.mat-column-entidad_financiera {
-    width: 150px;
-}
-
-.mat-column-fecha_inicio,
-.mat-column-fecha_finalizacion {
-    width: 120px;
-}
-
-.mat-column-estado {
-    width: 150px;
-    text-align: center;
-    font-size: 14px;
-    font-weight: bold;
-    color: #000;
-}
-
-.mat-column-proyecto {
-    width: 200px;
-}
-
-.mat-column-nota_ejecucion {
-    width: 150px;
-}
-
-.mat-column-acciones {
-    width: 110px;
-    text-align: center;
-}
-
-
-/* boleta.component.css */
+/* Estilos para el contenedor principal */
 
 .container {
     padding: 20px;
+    background-color: #f8f9fa;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+
+/* Estilos para la tarjeta contenedora */
+
+mat-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-.loading {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 20px 0;
-}
+
+/* Estilos para el grid */
 
 .ag-theme-alpine {
-    --ag-grid-size: 8px;
-    --ag-list-item-height: 30px;
+    --ag-border-color: #e0e0e0;
+    --ag-row-border-width: 1px;
+    --ag-row-border-color: #e0e0e0;
+    --ag-cell-horizontal-border: 1px dashed #e0e0e0;
+    --ag-header-background-color: #f5f5f5;
+    --ag-odd-row-background-color: rgba(242, 242, 242, 0.5);
     --ag-font-size: 14px;
 }
 
 
-/* Estilos para el detalle */
-
-.ag-theme-alpine .ag-details-row {
-    padding: 20px;
-    background-color: #f9f9f9;
-}
-
-.btn-edit,
-.btn-delete {
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-
-/*
-*/
-
-.ag-theme-quartz {
-    --ag-font-family: 'Roboto';
-    --ag-border-radius: 8px;
-    --ag-grid-size: 6px;
-}
-
-
-/* ... (estilos anteriores se mantienen) ... */
-
-
-/* Estilos para el detalle expandido */
-
-.ag-theme-alpine .ag-details-row {
-    padding: 0 !important;
-}
-
-.ag-theme-alpine .ag-details-row .ag-details-grid {
-    height: 100% !important;
-}
-
-
-/* Estilo para el ícono de expandir/colapsar */
-
-.ag-theme-alpine .ag-row .ag-cell .ag-group-expanded,
-.ag-theme-alpine .ag-row .ag-cell .ag-group-contracted {
-    margin-right: 8px;
-}
-
-
-/* Estilo para las filas maestras */
+/* Estilos para filas alternas */
 
 .ag-theme-alpine .ag-row {
-    cursor: pointer;
+    border-bottom: 2px solid #e0e0e0;
 }
 
 
-/* Estilo para el contenedor del detalle */
+/* Estilos para fila seleccionada */
 
-.detail-container {
+.ag-theme-alpine .ag-row-selected {
+    background-color: #e3f2fd !important;
+}
+
+
+/* Estilos para hover */
+
+.ag-theme-alpine .ag-row:hover {
+    background-color: #f5f5f5;
+}
+
+
+/* Estilos para celdas */
+
+.ag-theme-alpine .ag-cell {
+    padding: 12px 15px;
+    display: flex;
+    align-items: center;
+}
+
+
+/* Estilos para el detalle de cada boleta */
+
+.ag-theme-alpine .ag-details-row {
+    background-color: #f9f9f9;
+    border-top: 2px dashed #e0e0e0;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+
+/* Estilos para los botones de acción */
+
+.ag-icon-button {
+    transition: all 0.2s ease;
+}
+
+.ag-icon-button:hover {
+    transform: scale(1.1);
+}
+
+
+/* Estilos para el encabezado */
+
+.ag-theme-alpine .ag-header-cell {
+    font-weight: 600;
+    color: #333;
+}
+
+
+/* Separación visual entre grupos */
+
+.boleta-separator {
+    height: 15px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+
+/* Estilos para el overlay de carga */
+
+.loading-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.9);
     padding: 20px;
-    background: #f9f9f9;
     border-radius: 8px;
-    margin: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Estilos para los controles de la tabla */
+
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+}
+
+
+/* Estilos para el contenedor del grid */
+
+.grid-container {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+
+/* Estilos para los botones de acción */
+
+.ag-icon-button {
+    margin: 0 4px;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: transparent;
+    transition: all 0.2s ease;
+}
+
+.ag-icon-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+
+/* Contenedor de controles */
+
+.controls-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+
+/* Campo de búsqueda */
+
+.search-field {
+    flex: 1;
+    min-width: 250px;
+}
+
+
+/* Botón de nueva boleta */
+
+.new-button {
+    white-space: nowrap;
+}
+
+
+/* Paginador personalizado */
+
+.custom-paginator {
+    margin-top: 20px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    padding: 10px 0;
+}
+
+
+/* Estilos para el grid */
+
+.grid-container {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+
+/* Estilos para filtros */
+
+.ag-theme-alpine .ag-header-cell {
+    padding-top: 10px;
+}
+
+.ag-theme-alpine .ag-filter-toolpanel-header,
+.ag-theme-alpine .ag-filter-toolpanel-search {
+    padding: 10px;
+}
+
+
+/* Estilos responsive */
+
+@media (max-width: 768px) {
+    .controls-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .search-field {
+        width: 100%;
+    }
+    .new-button {
+        width: 100%;
+    }
+}
+
+.pdf-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px 8px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.pdf-btn:hover {
+    background-color: rgba(229, 57, 53, 0.1);
+}
+
+.pdf-icon {
+    color: #e53935;
+    font-size: 22px;
+}
+
+.pdf-text {
+    color: #e53935;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.no-file {
+    color: #999;
+    font-style: italic;
 }

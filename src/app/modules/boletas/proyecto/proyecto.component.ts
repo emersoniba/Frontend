@@ -32,11 +32,8 @@ import { BoletasProyectoModalComponent } from '../../boletas/proyecto/boletas-pr
     MatPaginatorModule,
     MatDialogModule,
     MatButtonModule,
-    MatIconModule,
     FormsModule,
     ReactiveFormsModule,
-    MatDialogModule,
-    MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
     MatDatepickerModule,
@@ -60,8 +57,6 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
   proyectos: Proyecto[] = [];
   entidades: any[] = [];
   departamentos: any[] = [];
-  //boletas: Boleta[] = [];
-  //boletasColumnas: string[] = ['numero', 'tipo', 'monto', 'estado', 'concepto'];
   boletasDelProyecto: any[] = [];
   proyectoSeleccionado: any = null;
   displayedColumnsProyecto: string[] = [
@@ -81,10 +76,11 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
   ];
 */
 public columnDefs: ColDef[] = [
-  { headerName: 'Nombre', field: 'nombre', filter: true },
-  { headerName: 'Descripción', field: 'descripcion', filter: true },
-  { headerName: 'Entidad', field: 'entidad.denominacion', filter: true },
-  { headerName: 'Departamento', field: 'departamento.nombre', filter: true },
+  { headerName: 'Nombre', field: 'nombre' ,filter:true,
+      floatingFilter:true},
+  { headerName: 'Descripción', field: 'descripcion', filter: true,floatingFilter:true },
+  { headerName: 'Entidad', field: 'entidad.denominacion', filter: true ,floatingFilter:true},
+  { headerName: 'Departamento', field: 'departamento.nombre', filter: true ,floatingFilter:true},
   { headerName: 'Fecha Creación', field: 'fecha_creado', filter: 'agDateColumnFilter' },
   { headerName: 'Fecha Finalización', field: 'fecha_finalizacion', filter: 'agDateColumnFilter' },
   {
@@ -108,14 +104,6 @@ accionesRenderer(params: any): string {
   `;
 }
 
-aplicarBusquedaRapida(event: any): void {
-  const valor = event.target.value;
-  this.agGrid.api.setFilterModel({
-    nombre: { filterType: 'text', type: 'contains', filter: valor }
-    //'entidad.denominacion': { filterType: 'text', type: 'contains', filter: valor },
-    //'departamento.nombre': { filterType: 'text', type: 'contains', filter: valor }
-  });
-}
 onCellClicked(event: any): void {
   const proyecto = event.data;
   const targetClass = event.event.target.className;
@@ -150,7 +138,6 @@ onCellClicked(event: any): void {
     private entidadService: EntidadService,
     private departamentoService: DepartamentoService,
     private fb: FormBuilder,
-    //private dialog: MatDialog,
     private http: HttpClient,
     private dialog: MatDialog, 
     private boletaService: BoletaService,
@@ -205,11 +192,7 @@ onCellClicked(event: any): void {
 */
   onGridReady(params: GridReadyEvent) {
     this.agGrid.api.sizeColumnsToFit();
-    //
-    // Configuración inicial del grid
     params.api.sizeColumnsToFit();
-
-    // Manejador de eventos para los botones en las celdas
     params.api.addEventListener('cellClicked', (event: CellClickedEvent) => {
       const target = event.event?.target as HTMLElement;
       if (!target) return;
@@ -229,9 +212,6 @@ onCellClicked(event: any): void {
       }
     });
   }
-  
-
-  // Resto de tus métodos existentes se mantienen igual...
   cargarEntidades(): void {
     this.entidadService.getEntidades().subscribe({
       next: (data) => {

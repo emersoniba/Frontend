@@ -31,11 +31,13 @@ export class BoletaService {
     return this.http.delete<void>(`${this.apiUrl}${id}/`);
   }
   // En boleta.service.ts
-    getBoletasPorProyecto(proyectoId: number): Observable<Boleta[]> {
-    const url = `boleta_proyecto/?proyecto_id=${proyectoId}`;
+  getBoletasPorProyecto(proyectoId: number): Observable<Boleta[]> {
+    //const url = `boleta_proyecto/?proyecto_id=${proyectoId}`;
+    const url = `http://127.0.0.1:8000/api/boleta_proyecto/?proyecto_id=${proyectoId}`;
+
     return this.http.get<Boleta[]>(url).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.error('Error cargando boletas: ', error);
+        console.error('Error cargando boletaaaaaas: ', error);
         return throwError(() => new Error('Error al cargar boletas'));
       })
     );

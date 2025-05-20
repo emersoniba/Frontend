@@ -1,241 +1,50 @@
-<p>boleta works!</p>
 <div class="container">
   <mat-card>
-    <mat-card-header>
+    <mat-card-header class="header">
       <mat-card-title>Gestión de Boletas</mat-card-title>
       <mat-card-subtitle>Listado de todas las boletas registradas</mat-card-subtitle>
     </mat-card-header>
     
-    <mat-card-actions>
-      <button mat-raised-button color="primary" (click)="abrirModalCrear()">
-        <mat-icon>add</mat-icon> Nueva Boleta
-      </button>
-    </mat-card-actions>
-    
     <mat-card-content>
+      <!-- Controles de búsqueda y filtrado -->
+      <div class="controls-container">
+        <!-- Botón para nueva boleta -->
+        <button mat-raised-button color="primary" (click)="abrirModalCrear()" class="new-button">
+          <mat-icon>add</mat-icon> Nueva Boleta
+        </button>
+      </div>
+      
+      <!-- AG-Grid -->
+      <div class="grid-container">
+        <ag-grid-angular
+          style="width: 100%; height: 600px;"
+          class="ag-theme-alpine"
+          [rowData]="rowData"
+          [columnDefs]="columnDefs"
+          [gridOptions]="gridOptions"
+          [animateRows]="true"
+          [suppressCellFocus]="true"
+          (rowClicked)="onRowClicked($event)"
+          (cellClicked)="onCellClicked($event)"
+          (gridReady)="onGridReady($event)">
+        </ag-grid-angular>
+      </div>
+      
+      <!-- Paginador -->
+      <mat-paginator [length]="totalRecords"
+                     [pageSize]="pageSize"
+                     [pageSizeOptions]="pageSizeOptions"
+                     [pageIndex]="pageIndex"
+                     (page)="onPageChange($event)"
+                     showFirstLastButtons
+                     class="custom-paginator">
+      </mat-paginator>
 
-        <div class="table-responsive">
-        <table mat-table [dataSource]="boletas" class="mat-elevation-z8">
-            <!-- Número Column -->
-            <ng-container matColumnDef="numero">
-            <th mat-header-cell *matHeaderCellDef> Número </th>
-            <td mat-cell *matCellDef="let boleta"> {{boleta.numero}} </td>
-            </ng-container>
-            
-            <!-- Tipo Column -->
-            <ng-container matColumnDef="tipo">
-            <th mat-header-cell *matHeaderCellDef> Tipo </th>
-            <td mat-cell *matCellDef="let boleta"> {{boleta.tipo}} </td>
-            </ng-container>
-            
-            <!-- Concepto Column -->
-            <ng-container matColumnDef="concepto">
-            <th mat-header-cell *matHeaderCellDef> Concepto </th>
-            <td mat-cell *matCellDef="let boleta"> {{boleta.concepto | slice:0:50}}... </td>
-            </ng-container>
-            
-            <!-- Monto Column -->
-            <ng-container matColumnDef="monto">
-            <th mat-header-cell *matHeaderCellDef> Monto </th>
-            <td mat-cell *matCellDef="let boleta"> {{boleta.monto | currency}} </td>
-            </ng-container>
-            
-            <!-- CITE Column -->
-            <ng-container matColumnDef="cite">
-            <th mat-header-cell *matHeaderCellDef> CITE </th>
-            <td mat-cell *matCellDef="let boleta"> 
-                {{boleta.cite || 'N/A'}}
-            </td>
-            </ng-container>
-            
-            <!-- Entidad Financiera Column -->
-            <ng-container matColumnDef="entidad_financiera">
-            <th mat-header-cell *matHeaderCellDef> Entidad Financiera </th>
-            <td mat-cell *matCellDef="let boleta"> 
-                {{boleta.entidad_financiera?.nombre || 'N/A'}}
-            </td>
-            </ng-container>
-            
-            <!-- Fecha Inicio Column -->
-            <ng-container matColumnDef="fecha_inicio">
-            <th mat-header-cell *matHeaderCellDef> Fecha Inicio </th>
-            <td mat-cell *matCellDef="let boleta"> {{boleta.fecha_inicio | date:'short'}} </td>
-            </ng-container>
-            
-            <!-- Fecha Finalización Column -->
-            <ng-container matColumnDef="fecha_finalizacion">
-            <th mat-header-cell *matHeaderCellDef> Fecha Fin </th>
-            <td mat-cell *matCellDef="let boleta"> {{boleta.fecha_finalizacion | date:'short'}} </td>
-            </ng-container>
-            
-            <!-- Estado Column -->
-            <ng-container matColumnDef="estado">
-            <th mat-header-cell *matHeaderCellDef> Estado </th>
-            <td mat-cell *matCellDef="let b">
-                <span class="badge" [style.backgroundColor]="b.estado.color">
-                <mat-icon>{{b.estado.icono}}</mat-icon>
-                {{b.estado.nombre}}
-                </span>
-            </td>
-            </ng-container>
-            
-            <!-- Proyecto Column -->
-            <ng-container matColumnDef="proyecto">
-            <th mat-header-cell *matHeaderCellDef> Proyecto </th>
-            <td mat-cell *matCellDef="let boleta"> 
-                {{boleta.proyecto.nombre}}
-            </td>
-            </ng-container>
-            
-            <!-- Nota Ejecución Column -->
-            <ng-container matColumnDef="nota_ejecucion">
-            <th mat-header-cell *matHeaderCellDef> Nota Ejecución </th>
-            <td mat-cell *matCellDef="let boleta"> 
-                {{boleta.nota_ejecucion || 'N/A'}}
-            </td>
-            </ng-container>
-            <!--file
-            <ng-container matColumnDef="archivo_adjunto">
-            <th mat-header-cell *matHeaderCellDef> archivo adjunto </th>
-            <td mat-cell *matCellDef="let boleta"> 
-                {{boleta.archivo_adjunto || 'N/A'}}
-            </td>
-            </ng-container>
-            -->
-            <!-- Acciones Column -->
-            <ng-container matColumnDef="acciones">
-            <th mat-header-cell *matHeaderCellDef> Acciones </th>
-            <td mat-cell *matCellDef="let boleta">
-                <button mat-icon-button color="primary" (click)="abrirModalEditar(boleta)">
-                <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button color="warn" (click)="eliminarBoleta(boleta.id)">
-                <mat-icon>delete</mat-icon>
-                </button>
-            </td>
-            </ng-container>
-            
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-        </div>
-    <!-- Agregar un spinner mientras carga -->
-    <div *ngIf="loading" class="loading-overlay">
-      <mat-spinner></mat-spinner>
-    </div>
-      <!-- Agregar después de la tabla -->
-      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-
-<!-- ... el resto del modal se mantiene igual ... -->
+      <!-- Loading spinner -->
+      <div *ngIf="loading" class="loading-overlay">
+        <mat-spinner></mat-spinner>
+        <p>Cargando boletas...</p>
+      </div>
     </mat-card-content>
   </mat-card>
 </div>
-
-<!-- Modal Formulario -->
-<ng-template #modalForm>
-  <mat-dialog-content>
-    <form [formGroup]="boletaForm">
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Tipo de Boleta</mat-label>
-        <input matInput formControlName="tipo" required>
-        <mat-error *ngIf="boletaForm.get('tipo')?.invalid">Este campo es requerido</mat-error>
-      </mat-form-field>
-      
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Número</mat-label>
-        <input matInput formControlName="numero" required>
-        <mat-error *ngIf="boletaForm.get('numero')?.invalid">Este campo es requerido</mat-error>
-      </mat-form-field>
-      
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Concepto</mat-label>
-        <textarea matInput formControlName="concepto" required rows="3"></textarea>
-        <mat-error *ngIf="boletaForm.get('concepto')?.invalid">Este campo es requerido</mat-error>
-      </mat-form-field>
-      
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Entidad Financiera</mat-label>
-        <mat-select formControlName="entidad_financiera_id">
-          <mat-option *ngFor="let entidad of entidadesFinancieras" [value]="entidad.id">
-            {{entidad.nombre}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Proyecto</mat-label>
-        <mat-select formControlName="proyecto_id" required>
-          <mat-option *ngFor="let proyecto of proyectos" [value]="proyecto.id">
-            {{proyecto.nombre}}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="boletaForm.get('proyecto')?.invalid">Este campo es requerido</mat-error>
-      </mat-form-field>
-      
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Estado</mat-label>
-        <mat-select formControlName="estado_id" required>
-          <mat-option *ngFor="let estado of estados" [value]="estado.id">
-            {{estado.nombre}}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="boletaForm.get('estado')?.invalid">Este campo es requerido</mat-error>
-      </mat-form-field>
-      
-      <div class="row">
-        <div class="col-md-6">
-          <mat-form-field appearance="fill" class="w-100">
-            <mat-label>Fecha Inicio</mat-label>
-            <input matInput [matDatepicker]="picker1" formControlName="fecha_inicio" required>
-            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-            <mat-datepicker #picker1></mat-datepicker>
-            <mat-error *ngIf="boletaForm.get('fecha_inicio')?.invalid">Este campo es requerido</mat-error>
-          </mat-form-field>
-        </div>
-        
-        <div class="col-md-6">
-          <mat-form-field appearance="fill" class="w-100">
-            <mat-label>Fecha Finalización</mat-label>
-            <input matInput [matDatepicker]="picker2" formControlName="fecha_finalizacion" required>
-            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-            <mat-datepicker #picker2></mat-datepicker>
-            <mat-error *ngIf="boletaForm.get('fecha_finalizacion')?.invalid">Este campo es requerido</mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-      
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Monto</mat-label>
-        <input matInput type="number" formControlName="monto" required min="0" step="0.01">
-        <span matPrefix>$&nbsp;</span>
-        <mat-error *ngIf="boletaForm.get('monto')?.invalid">Ingrese un monto válido</mat-error>
-      </mat-form-field>
-      
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label>CITE</mat-label>
-        <input matInput formControlName="cite">
-      </mat-form-field>
-      
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Observaciones</mat-label>
-        <input matInput formControlName="observaciones">
-      </mat-form-field>
-      
-      <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Nota de Ejecución</mat-label>
-        <input matInput formControlName="nota_ejecucion">
-      </mat-form-field>
-
-    </form>
-  </mat-dialog-content>
-  
-  
-  <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancelar</button>
-    <button mat-raised-button color="primary" 
-            (click)="editingBoleta ? actualizarBoleta() : crearBoleta()"
-            [disabled]="boletaForm.invalid">
-      {{editingBoleta ? 'Actualizar' : 'Crear'}}
-    </button>
-  </mat-dialog-actions>
-</ng-template>

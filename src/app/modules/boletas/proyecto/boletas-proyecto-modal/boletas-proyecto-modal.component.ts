@@ -45,7 +45,7 @@ export class BoletasProyectoModalComponent {
       error: (err) => {
         console.error('Error cargando boletas:', err);
         this.loading = false;
-      }
+      } 
     });
   }
 
