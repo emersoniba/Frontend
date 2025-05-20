@@ -1,8 +1,5 @@
-/* Contenedor principal del panel lateral */
-
 nav {
     background-color: #2c3e50;
-    /* Mismo color que el header */
     width: 250px;
     height: 100vh;
     position: fixed;
@@ -15,31 +12,20 @@ nav {
     overflow-y: auto;
 }
 
-
-/* Lista de navegación */
-
 nav ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-
-/* Elementos del menú */
-
 nav li {
     border-bottom: 1px solid #34495e;
-    /* Borde sutil entre elementos */
     transition: background-color 0.3s ease;
 }
 
 nav li:hover {
     background-color: #34495e;
-    /* Color de fondo al hacer hover */
 }
-
-
-/* Enlaces del menú */
 
 nav a {
     color: #ecf0f1;
@@ -53,11 +39,7 @@ nav a {
 nav a:hover {
     color: #3498db;
     padding-left: 25px;
-    /* Efecto de desplazamiento */
 }
-
-
-/* Enlace activo */
 
 nav a.router-link-active {
     background-color: #3498db;
@@ -65,16 +47,10 @@ nav a.router-link-active {
     border-left: 4px solid #ecf0f1;
 }
 
-
-/* Iconos (opcional) */
-
 nav a mat-icon {
     margin-right: 10px;
     vertical-align: middle;
 }
-
-
-/* Responsive */
 
 @media (max-width: 768px) {
     nav {
@@ -83,7 +59,6 @@ nav a mat-icon {
     }
     nav a span {
         display: none;
-        /* Ocultar texto en móvil */
     }
     nav a mat-icon {
         margin-right: 0;

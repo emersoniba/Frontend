@@ -1,21 +1,13 @@
-/* Estilos para el contenedor principal */
-
 .container {
     padding: 20px;
     background-color: #f8f9fa;
 }
-
-
-/* Estilos para la tarjeta contenedora */
 
 mat-card {
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
-
-
-/* Estilos para el grid */
 
 .ag-theme-alpine {
     --ag-border-color: #e0e0e0;
@@ -27,29 +19,17 @@ mat-card {
     --ag-font-size: 14px;
 }
 
-
-/* Estilos para filas alternas */
-
 .ag-theme-alpine .ag-row {
     border-bottom: 2px solid #e0e0e0;
 }
-
-
-/* Estilos para fila seleccionada */
 
 .ag-theme-alpine .ag-row-selected {
     background-color: #e3f2fd !important;
 }
 
-
-/* Estilos para hover */
-
 .ag-theme-alpine .ag-row:hover {
     background-color: #f5f5f5;
 }
-
-
-/* Estilos para celdas */
 
 .ag-theme-alpine .ag-cell {
     padding: 12px 15px;
@@ -57,17 +37,11 @@ mat-card {
     align-items: center;
 }
 
-
-/* Estilos para el detalle de cada boleta */
-
 .ag-theme-alpine .ag-details-row {
     background-color: #f9f9f9;
     border-top: 2px dashed #e0e0e0;
     border-bottom: 2px solid #e0e0e0;
 }
-
-
-/* Estilos para los botones de acción */
 
 .ag-icon-button {
     transition: all 0.2s ease;
@@ -77,16 +51,10 @@ mat-card {
     transform: scale(1.1);
 }
 
-
-/* Estilos para el encabezado */
-
 .ag-theme-alpine .ag-header-cell {
     font-weight: 600;
     color: #333;
 }
-
-
-/* Separación visual entre grupos */
 
 .boleta-separator {
     height: 15px;
@@ -94,9 +62,6 @@ mat-card {
     border-top: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
 }
-
-
-/* Estilos para el overlay de carga */
 
 .loading-overlay {
     position: absolute;
@@ -114,9 +79,6 @@ mat-card {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-
-/* Estilos para los controles de la tabla */
-
 .table-controls {
     display: flex;
     justify-content: space-between;
@@ -127,17 +89,11 @@ mat-card {
     border-radius: 6px;
 }
 
-
-/* Estilos para el contenedor del grid */
-
 .grid-container {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     overflow: hidden;
 }
-
-
-/* Estilos para los botones de acción */
 
 .ag-icon-button {
     margin: 0 4px;
@@ -155,9 +111,6 @@ mat-card {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
-
-/* Contenedor de controles */
-
 .controls-container {
     display: flex;
     justify-content: space-between;
@@ -167,23 +120,14 @@ mat-card {
     flex-wrap: wrap;
 }
 
-
-/* Campo de búsqueda */
-
 .search-field {
     flex: 1;
     min-width: 250px;
 }
 
-
-/* Botón de nueva boleta */
-
 .new-button {
     white-space: nowrap;
 }
-
-
-/* Paginador personalizado */
 
 .custom-paginator {
     margin-top: 20px;
@@ -192,18 +136,12 @@ mat-card {
     padding: 10px 0;
 }
 
-
-/* Estilos para el grid */
-
 .grid-container {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: 20px;
 }
-
-
-/* Estilos para filtros */
 
 .ag-theme-alpine .ag-header-cell {
     padding-top: 10px;
@@ -213,9 +151,6 @@ mat-card {
 .ag-theme-alpine .ag-filter-toolpanel-search {
     padding: 10px;
 }
-
-
-/* Estilos responsive */
 
 @media (max-width: 768px) {
     .controls-container {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { BoletaService } from '../../../services/boleta.service';
 import { Boleta } from '../../../models/boleta.model';
 import { CommonModule } from '@angular/common';
@@ -40,6 +40,8 @@ ModuleRegistry.registerModules([
   ],
   selector: 'app-boleta',
   templateUrl: './boleta.component.html',
+  encapsulation: ViewEncapsulation.None,
+
   styleUrls: ['./boleta.component.css'],
   providers: [DatePipe]
 })
@@ -49,14 +51,10 @@ export class BoletaComponent implements OnInit {
   loading = false;
   private gridApi!: GridApi;
   
-  // Paginación
   pageSize = 10;
   pageIndex = 0;
   pageSizeOptions = [3,5, 10, 25, 100];
   totalRecords = 0;
-  
-  // Búsqueda global
-  //searchText = '';
   
   // Configuración de columnas principales
   columnDefs: ColDef[] = [
@@ -143,8 +141,8 @@ export class BoletaComponent implements OnInit {
       headerName: 'Acciones',
       cellRenderer: (params: ICellRendererParams) => {
          return `
-        <button class="ag-icon-button edit-btn" title="Editar">✏️</button>
-        <button class="ag-icon-button delete-btn" title="Eliminar">🗑️</button>
+        <button class="edit-btn btn btn-warning btn-sm" title="Editar">✏️</button>
+        <button class="delete-btn btn btn-danger btn-sm" title="Eliminar">🗑️</button>
         `;
       },
       width: 100
@@ -353,6 +351,8 @@ export class BoletaComponent implements OnInit {
 
   abrirModalCrear(): void {
     const dialogRef = this.dialog.open(BoletaModalComponent, {
+      width: '800px',
+      panelClass: 'custom-mat-dialog',
       data: { boleta: null }
     });
     dialogRef.afterClosed().subscribe(result => {

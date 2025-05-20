@@ -7,40 +7,46 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { EmpresaService } from '../../../../services/empresa.service';
+import { MatIconModule } from '@angular/material/icon';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-empresa-form-dialog',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatDialogModule,
-    MatButtonModule, MatSelectModule],
+    MatButtonModule, MatSelectModule, MatIconModule],
   templateUrl: './empresa-form-dialog.component.html',
 })
 
 export class EmpresaFormDialogComponent {
   formEmpresa!: FormGroup;
   esEdicion: boolean = false; // edicion adicon
+  actividades: any[] = [];
 
-  constructor(
-    private fb: FormBuilder,
-    private dialogRef: MatDialogRef<EmpresaFormDialogComponent>,
-   // private empresaService: EmpresaService,
-    @Inject(MAT_DIALOG_DATA) public data: { actividades: any[], empresa?: any }
-  ) {
-    this.getFormBuilder();
+ constructor(
+  private fb: FormBuilder,
+  private dialogRef: MatDialogRef<EmpresaFormDialogComponent>,
+  private empresaService: EmpresaService,
+  @Inject(MAT_DIALOG_DATA) public data: { actividades: any[], empresa?: any }
+) {
+  this.actividades = data.actividades;
 
-    if (data.empresa) {
-      this.esEdicion = true;
-      this.formEmpresa.patchValue({
-        id: data.empresa.id,
-        denominacion: data.empresa.denominacion,
-        nit: data.empresa.nit,
-        actividad_id: data.empresa.actividad?.id,
-        contacto: data.empresa.contacto,
-        correo: data.empresa.correo,
-        representante_legal: data.empresa.representante_legal
-      });
-    }
+  this.getFormBuilder();
+
+  if (data.empresa) {
+    this.esEdicion = true;
+    this.formEmpresa.patchValue({
+      id: data.empresa.id,
+      denominacion: data.empresa.denominacion,
+      nit: data.empresa.nit,
+      actividad_id: data.empresa.actividad?.id,
+      contacto: data.empresa.contacto,
+      correo: data.empresa.correo,
+      representante_legal: data.empresa.representante_legal
+    });
   }
+}
+
 
   public getFormBuilder(): void {
     this.formEmpresa = this.fb.group({
@@ -53,12 +59,59 @@ export class EmpresaFormDialogComponent {
       representante_legal: ['', [Validators.required, Validators.minLength(5)]]
     });
   }
+  verificarCorreoAntesDeGuardar(): void {
+    const correo = this.formEmpresa.get('correo')?.value;
+    const id = this.formEmpresa.get('id')?.value;
 
- registrar(): void {
+    this.empresaService.verificarCorreo(correo, id).subscribe((res: any) => {
+      if (res.existe) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Correo duplicado',
+          text: 'Ya existe este correo registrado.'
+        });
+      } else {
+        this.registrar();  // Llama al método de guardado solo si no existe
+      }
+    });
+  }
+
+  registrar(): void {
     if (this.formEmpresa.valid) {
-      this.dialogRef.close(this.formEmpresa.value);
+      const mensaje = this.esEdicion
+        ? '¿Está seguro que desea actualizar esta empresa?'
+        : '¿Está seguro que desea registrar esta empresa?';
+
+      Swal.fire({
+        title: 'Confirmación',
+        text: mensaje,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: this.esEdicion ? 'Actualizar' : 'Registrar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.dialogRef.close(this.formEmpresa.value);
+          Swal.fire({
+            title: this.esEdicion ? 'Actualizado' : 'Registrado',
+            text: this.esEdicion
+              ? 'La empresa se actualizó correctamente.'
+              : 'La empresa fue registrada exitosamente.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+          });
+        }
+      });
+    } else {
+      Swal.fire({
+        title: 'Formulario inválido',
+        text: 'Por favor, complete todos los campos obligatorios.',
+        icon: 'error'
+      });
     }
   }
+
  
   cancelar(): void {
     this.dialogRef.close();

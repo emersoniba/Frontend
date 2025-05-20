@@ -11,7 +11,11 @@ body {
 
 html,
 body {
-    height: 100%;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 30px;
 }
 
 body {
@@ -32,4 +36,8 @@ body {
     direction: ltr;
     -webkit-font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
+}
+
+.custom-mat-dialog .mat-mdc-dialog-container {
+    border-radius: 0px !important;
 }

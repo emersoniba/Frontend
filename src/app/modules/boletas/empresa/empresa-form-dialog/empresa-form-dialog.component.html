@@ -1,80 +1,91 @@
 <h2 mat-dialog-title color="primary">Registrar Empresa</h2>
 <hr />
 <mat-dialog-content>
-    <form [formGroup]="formEmpresa" class="empresa-form">
+    <form [formGroup]="formEmpresa">
+        <div class="row">
 
-        <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Denominación</mat-label>
-            <input matInput formControlName="denominacion" />
-            <mat-error *ngIf="formEmpresa.get('denominacion')?.hasError('required')">
-                La denominación es obligatoria
-            </mat-error>
-            <mat-error *ngIf="formEmpresa.get('denominacion')?.hasError('minlength')">
-                La denominación debe tener al menos 5 caracteres
-            </mat-error>
-        </mat-form-field>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Denominación</mat-label>
+                    <mat-icon matIconPrefix>reorder</mat-icon>
+                    <input matInput formControlName="denominacion" />
+                    <mat-error *ngIf="formEmpresa.get('denominacion')?.hasError('required')">
+                        La denominación es obligatoria
+                    </mat-error>
+                    <mat-error *ngIf="formEmpresa.get('denominacion')?.hasError('minlength')">
+                        La denominación debe tener al menos 5 caracteres
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>NIT</mat-label>
+                    <mat-icon matIconPrefix>record_voice_over</mat-icon>
+                    <input matInput formControlName="nit" />
+                    <mat-error *ngIf="formEmpresa.get('nit')?.hasError('required')">
+                        El NIT es obligatorio
+                    </mat-error>
+                    <mat-error *ngIf="formEmpresa.get('nit')?.hasError('pattern')">
+                        El NIT debe contener solo números
+                    </mat-error>
+                </mat-form-field>
+            </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-            <mat-label>NIT</mat-label>
-            <input matInput formControlName="nit" />
-            <mat-error *ngIf="formEmpresa.get('nit')?.hasError('required')">
-                El NIT es obligatorio
-            </mat-error>
-            <mat-error *ngIf="formEmpresa.get('nit')?.hasError('pattern')">
-                El NIT debe contener solo números
-            </mat-error>
-        </mat-form-field>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Representante Legal</mat-label>
+                    <input matInput formControlName="representante_legal" />
+                    <mat-error *ngIf="formEmpresa.get('representante_legal')?.hasError('required')">
+                        El representante legal es obligatorio
+                    </mat-error>
+                    <mat-error *ngIf="formEmpresa.get('representante_legal')?.hasError('minlength')">
+                        El nombre es demasiado corto (mínimo 5 caracteres)
+                    </mat-error>
+                </mat-form-field>
+            </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Representante Legal</mat-label>
-            <input matInput formControlName="representante_legal" />
-            <mat-error *ngIf="formEmpresa.get('representante_legal')?.hasError('required')">
-                El representante legal es obligatorio
-            </mat-error>
-            <mat-error *ngIf="formEmpresa.get('representante_legal')?.hasError('minlength')">
-                El nombre es demasiado corto (mínimo 5 caracteres)
-            </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Correo</mat-label>
-            <input matInput type="email" formControlName="correo" />
-            <mat-error *ngIf="formEmpresa.get('correo')?.hasError('required')">
-                El correo es obligatorio
-            </mat-error>
-            <mat-error *ngIf="formEmpresa.get('correo')?.hasError('email')">
-                Formato de correo inválido
-            </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Contacto</mat-label>
-            <input matInput formControlName="contacto" />
-            <mat-error *ngIf="formEmpresa.get('contacto')?.hasError('required')">
-                El contacto es obligatorio
-            </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Actividad</mat-label>
-            <mat-select formControlName="actividad_id">
-                @for (ac of data.actividades; track ac.id) {
-                <mat-option [value]="ac.id">{{ ac.descripcion }}</mat-option>
-                }
-            </mat-select>
-            <mat-error *ngIf="formEmpresa.get('actividad_id')?.hasError('required')">
-                Debe seleccionar una actividad
-            </mat-error>
-        </mat-form-field>
-
-
-
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Correo</mat-label>
+                    <input matInput type="email" formControlName="correo" />
+                    <mat-error *ngIf="formEmpresa.get('correo')?.hasError('required')">
+                        El correo es obligatorio
+                    </mat-error>
+                    <mat-error *ngIf="formEmpresa.get('correo')?.hasError('email')">
+                        Formato de correo inválido
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-md-12 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-icon matIconPrefix> phone </mat-icon>
+                    <mat-label>Contacto</mat-label>
+                    <input matInput formControlName="contacto" />
+                    <mat-error *ngIf="formEmpresa.get('contacto')?.hasError('required')">
+                        El contacto es obligatorio
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-md-12 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Actividad</mat-label>
+                    <mat-select formControlName="actividad_id">
+                        @for (ac of data.actividades; track ac.id) {
+                        <mat-option [value]="ac.id">{{ ac.descripcion }}</mat-option>
+                        }
+                    </mat-select>
+                    <mat-error *ngIf="formEmpresa.get('actividad_id')?.hasError('required')">
+                        Debe seleccionar una actividad
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
     </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
     <button mat-button (click)="cancelar()">Cancelar</button>
-    <button mat-raised-button color="primary" (click)="registrar()">
+    <button mat-raised-button color="primary" (click)="registrar()" (click)="verificarCorreoAntesDeGuardar()">
         {{ esEdicion ? 'Guardar cambios' : 'Registrar' }}
     </button>
 </mat-dialog-actions>

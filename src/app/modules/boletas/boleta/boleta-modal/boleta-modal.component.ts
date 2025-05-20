@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Estado, EntidadFinanciera, Boleta } from '../../../../models/boleta.model';
@@ -21,6 +21,7 @@ import Swal from 'sweetalert2';
 @Component({
   standalone: true,
   selector: 'app-boleta-modal',
+  encapsulation: ViewEncapsulation.None,
   templateUrl: './boleta-modal.component.html',
   styleUrls: ['./boleta-modal.component.css'],
   imports: [

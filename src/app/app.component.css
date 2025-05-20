@@ -6,7 +6,6 @@
 main {
     flex: 1;
     margin-left: 250px;
-    /* Igual al ancho del navbar */
     padding: 20px;
 }
 

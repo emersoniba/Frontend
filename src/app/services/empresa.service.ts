@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Empresa } from '../models/empresa.interface';
 import { Observable } from 'rxjs';
 @Injectable({
@@ -42,15 +42,8 @@ export class EmpresaService {
   getEmpresasConProyectos(): Observable<Empresa[]> {
     return this.http.get<Empresa[]>(`${this.url}/entidades/con_proyectos`);
   }
-
-
-
-  /*
- deleteEmpresa(empresa: any): Observable<any> {
-   return this.http.delete(`${this.url}/entidades/`, empresa);
- }
- putreactivarEmpresa(id: number, body: any): Observable<any> {
-   return this.http.put(`${this.url}/entidades/${id}/confirmar_habilitacion/`, body);
- }
-*/
+  verificarCorreo(correo: string, id?: number) {
+    const params = new HttpParams().set('correo', correo).set('id', id || '');
+    return this.http.get('/api/verificar-correo/', { params });
+  }
 }

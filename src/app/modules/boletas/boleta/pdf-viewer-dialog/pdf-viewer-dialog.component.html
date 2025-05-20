@@ -1,8 +1,22 @@
-<h2>Vista previa del PDF</h2>
-<iframe
-  [src]="safePdfUrl"
-  width="100%"
-  height="500px"
-  frameborder="0">
-</iframe>
-<button mat-button (click)="dialogRef.close()">Cerrar</button>
+<div class="pdf-modal-content">
+  <h2 class="pdf-modal-header">Vista previa del PDF</h2>
+
+  <div *ngIf="safePdfUrl; else noPdf" class="pdf-container">
+    <iframe
+      class="pdf-iframe"
+      [src]="safePdfUrl"
+      frameborder="0"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <ng-template #noPdf>
+    <div class="no-pdf-message">
+      No hay un PDF disponible para visualizar.
+    </div>
+  </ng-template>
+
+  <div class="pdf-modal-footer">
+    <button class="pdf-close-button" mat-button (click)="dialogRef.close()">Cerrar</button>
+  </div>
+</div>

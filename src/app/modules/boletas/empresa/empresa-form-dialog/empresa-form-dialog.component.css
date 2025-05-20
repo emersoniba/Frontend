@@ -2,3 +2,6 @@
   padding: 1rem;
   margin-bottom: 2rem;
 }
+.mat-form-white {
+  background-color: white;
+}

@@ -20,13 +20,9 @@
       [columnDefs]="columnDefs"
       [defaultColDef]="defaultColDef"
       (gridReady)="onGridReady($event)"
+      [pagination]="true"
+      [paginationPageSize]="10"
       (cellClicked)="onCellClicked($event)">
     </ag-grid-angular>
   </mat-card-content>
 </mat-card>
-
-      <mat-paginator [pageSizeOptions]="[3, 5, 10, 20]" 
-                    [pageSize]="5"
-                    showFirstLastButtons
-                    aria-label="Seleccionar página de boletas">
-      </mat-paginator>

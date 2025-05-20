@@ -1,16 +1,23 @@
 <h2 mat-dialog-title>Boletas del Proyecto</h2>
-<!-- NUEVO: Nombre del proyecto 
-<div style="margin: 4px 0 10px 0;">
+
+<!-- Información del proyecto
+<div class="project-info" *ngIf="data.proyecto">
   <strong>Proyecto:</strong> {{ data.proyecto.nombre }}
 </div>
--->
-<!-- NUEVO: Total de boletas -->
-<div *ngIf="!loading && boletas.length > 0" style="margin-bottom: 8px;">
-  <strong>Total de boletas:</strong> {{ boletas.length }} <br>
-  <strong>Monto total:</strong> {{ calcularTotal() | currency:'BOB' }}
+
+Totales -->
+<div *ngIf="!loading && boletas.length > 0" class="total-info">
+  <div><strong>Total de boletas:</strong> {{ boletas.length }}</div>
+  <div><strong>Monto total:</strong> {{ calcularTotal() | currency:'Bs. ' }}</div>
 </div>
+
 <mat-dialog-content>
-  <ng-container *ngIf="loading">Cargando...</ng-container>
+  <!-- Spinner de carga -->
+  <div *ngIf="loading" class="loading-spinner">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <!-- Tabla de boletas -->
   <table *ngIf="!loading && boletas.length > 0" class="boletas-table">
     <thead>
       <tr>
@@ -22,15 +29,18 @@
     </thead>
     <tbody>
       <tr *ngFor="let boleta of boletas">
-        <td>{{ boleta.numero }}</td>
-        <td>{{ boleta.tipo }}</td>
-        <td>{{ boleta.concepto }}</td>
-        <td>{{ boleta.monto }}</td>
+        <td>{{ boleta.numero || '-' }}</td>
+        <td>{{ boleta.tipo || '-' }}</td>
+        <td>{{ boleta.concepto || '-' }}</td>
+        <td>{{ boleta.monto | currency:'Bs. ' }}</td>
       </tr>
     </tbody>
   </table>
 
-  <p *ngIf="!loading && boletas.length === 0">No hay boletas registradas.</p>
+  <!-- Mensaje cuando no hay boletas -->
+  <p *ngIf="!loading && boletas.length === 0" class="no-data-message">
+    No hay boletas registradas para este proyecto.
+  </p>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

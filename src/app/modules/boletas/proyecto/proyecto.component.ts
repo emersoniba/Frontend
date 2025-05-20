@@ -23,7 +23,6 @@ import { ProyectoModalComponent } from './proyecto-modal/proyecto-modal.componen
 import { BoletaService } from '../../../services/boleta.service';
 import { BoletasProyectoModalComponent } from '../../boletas/proyecto/boletas-proyecto-modal/boletas-proyecto-modal.component';
 
-
 @Component({
   standalone: true,
   imports: [
@@ -51,9 +50,10 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
   @ViewChild('modalForm') modalForm!: TemplateRef<any>;
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
   @ViewChild('modalBoletasPorProyecto') modalBoletasPorProyecto!: TemplateRef<any>;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  pageSize = 5;
+  pagination = true;
+  paginationPageSize = 5;
+
   proyectos: Proyecto[] = [];
   entidades: any[] = [];
   departamentos: any[] = [];
@@ -63,18 +63,6 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
     'nombre', 'descripcion', 'entidad', 'departamento',
     'fecha_creado', 'fecha_finalizacion', 'acciones'
   ];
-/*
-  public columnDefs: ColDef[] = [
-    {
-      headerName: 'Proyectos',
-      field: 'nombre',
-      flex: 1,
-      cellRenderer: this.cardRenderer.bind(this),
-      autoHeight: true,
-      resizable: true
-    }
-  ];
-*/
 public columnDefs: ColDef[] = [
   { headerName: 'Nombre', field: 'nombre' ,filter:true,
       floatingFilter:true},
@@ -98,9 +86,9 @@ public columnDefs: ColDef[] = [
 ];
 accionesRenderer(params: any): string {
   return `
-    <button class="btn-ver" title="Ver Boletas">📄</button>
-    <button class="btn-editar" title="Editar">✏️</button>
-    <button class="btn-eliminar" title="Eliminar">🗑️</button>
+    <button class="btn-ver btn btn-info btn-sm"  title="Ver Boletas">📄</button>
+    <button class="btn-editar btn btn-warning btn-sm" title="Editar">✏️</button>
+    <button class="btn-eliminar btn btn-danger btn-sm" title="Eliminar">🗑️</button>
   `;
 }
 
@@ -138,9 +126,9 @@ onCellClicked(event: any): void {
     private entidadService: EntidadService,
     private departamentoService: DepartamentoService,
     private fb: FormBuilder,
-    private http: HttpClient,
+   /// private http: HttpClient,
     private dialog: MatDialog, 
-    private boletaService: BoletaService,
+    //private boletaService: BoletaService,
   ) {
     this.proyectoForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -163,33 +151,7 @@ onCellClicked(event: any): void {
     //this.dataSource.paginator = this.paginator;
 
   }
-/*
-  private cardRenderer(params: any): string {
-    const proyecto = params.data;
-    return `
-      <div class="ag-card">
-        <div class="ag-card-header">
-          <h3>${proyecto.nombre}</h3>
-        </div>
-        <div class="ag-card-content">
-          <p><strong>Descripción:</strong> ${proyecto.descripcion?.substring(0, 50) || ''}...</p>
-          <p><strong>Entidad:</strong> ${proyecto.entidad?.denominacion || 'N/A'}</p>
-          <p><strong>Depto:</strong> ${proyecto.departamento?.nombre || 'N/A'}</p>
-          <p><strong>Inicio:</strong> ${new Date(proyecto.fecha_creado).toLocaleDateString()}</p>
-          <p><strong>Fin:</strong> ${new Date(proyecto.fecha_finalizacion).toLocaleDateString()}</p>
-        </div>
-        <div class="ag-card-footer">
-          <button class="ag-card-button edit" data-id="${proyecto.id}">
-            <i class="material-icons">edit</i>
-          </button>
-          <button class="ag-card-button delete" data-id="${proyecto.id}">
-            <i class="material-icons">delete</i>
-          </button>
-        </div>
-      </div>
-    `;
-  }
-*/
+
   onGridReady(params: GridReadyEvent) {
     this.agGrid.api.sizeColumnsToFit();
     params.api.sizeColumnsToFit();
@@ -368,7 +330,6 @@ onCellClicked(event: any): void {
     this.proyectoService.updateProyecto(this.editingProyecto.id, proyectoData)
       .subscribe({
         next: (updatedProyecto) => {
-          console.log('Proyecto actualizado:', updatedProyecto);
           this.dialog.closeAll();
           this.cargarProyectos();
           this.editingProyecto = null;

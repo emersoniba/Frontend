@@ -13,9 +13,6 @@ export class ActividadService {
 
   getActividades(): Observable<Actividad[]> {
     return this.http.get<Actividad[]>(`${this.url}/actividad/`);
-  }/*
-  putActividades(): Observable<Actividad[]> {
-    return this.http.put<Actividad[]>(`${this.url}/actividad/`);
-  }*/
+  }
  
 }

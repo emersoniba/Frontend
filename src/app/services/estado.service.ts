@@ -4,7 +4,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
-//import { environment } from '../../../environments/environment';
 
 export interface Estado {
   id: number;
@@ -25,22 +24,18 @@ export class EstadoService {
   getEstados(): Observable<Estado[]> {
     return this.http.get<Estado[]>(this.apiUrl);
   }
-  // Obtener un estado por ID
   getEstadoById(id: number): Observable<Estado> {
     return this.http.get<Estado>(`${this.apiUrl}/${id}`);
   }
 
-  // Crear un nuevo estado
   createEstado(estado: Omit<Estado, 'id'>): Observable<Estado> {
     return this.http.post<Estado>(this.apiUrl, estado);
   }
 
-  // Actualizar un estado existente
   updateEstado(id: number, estado: Partial<Estado>): Observable<Estado> {
     return this.http.put<Estado>(`${this.apiUrl}/${id}`, estado);
   }
 
-  // Eliminar un estado
   deleteEstado(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }

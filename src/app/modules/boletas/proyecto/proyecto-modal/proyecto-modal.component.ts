@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -28,6 +28,8 @@ import Swal from 'sweetalert2';
     MatSelectModule
   ],
   templateUrl: './proyecto-modal.component.html',
+  encapsulation: ViewEncapsulation.None,
+
   styleUrls: ['./proyecto-modal.component.css']
 })
 export class ProyectoModalComponent implements OnInit {

@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Boleta } from '../models/boleta.model';
 
 export interface Proyecto {
   id?: number;
   nombre: string;
   descripcion: string;
   entidad: { id: number, denominacion: string } | number;
-  //entidad_id?: number;
-  //departamento: { id: number, nombre: string } | number;
   departamento_id?: number;
   fecha_creado: string;
   fecha_finalizacion: string;
@@ -36,7 +33,6 @@ export class ProyectoService {
   updateProyecto(id: number, proyecto: Proyecto): Observable<Proyecto> {
   return this.http.put<Proyecto>(`${this.apiUrl}${id}/`, proyecto);
 }
-  // proyecto.service.ts
   deleteProyecto(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}${id}/`).pipe(
       catchError(error => {
@@ -45,8 +41,6 @@ export class ProyectoService {
       })
     );
   }
-  //boletasbyproyecto (id_proyecto: number):Observable<Boleta[]>{
-   // return this.http.get<Boleta[]>(`api/entidades/con_proyectos_y_boletas/`);
- // }
+
 }
 

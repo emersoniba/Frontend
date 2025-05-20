@@ -1,20 +1,36 @@
 <mat-toolbar color="primary">
-  <span> Empresas</span>
+  <span>Empresas</span>
   <span class="spacer"></span>
   <button mat-raised-button color="accent" (click)="nuevaEmpresa()">Nueva Empresa</button>
 </mat-toolbar>
 
-<div style="margin: 20px 0;">
-  <ag-grid-angular
-    style="width: 100%; height: 0px;"
-    class="ag-theme-alpine"
-    [gridOptions]="gridOptions"
-    [rowData]="dataEmpresas"
-    (gridReady)="onGridReady($event)">
+    
+<div style="margin: 8px 0;">
+
+  <ag-grid-angular style="width: 100%; height: 500px;"
+  class="ag-theme-alpine" 
+  [gridOptions]="gridOptions"
+  [rowData]="dataEmpresas" 
+  (gridReady)="onGridReady($event)" 
+  class="ag-theme-alpine"
+  [columnDefs]="gridOptions.columnDefs"
+  [defaultColDef]="gridOptions.defaultColDef"
+  [detailCellRendererParams]="gridOptions.detailCellRendererParams"
+  [isRowMaster]="gridOptions.isRowMaster"
+  [pagination]="gridOptions.pagination"
+  [paginationPageSize]="gridOptions.paginationPageSize"
+  (cellClicked)="onCellClicked($event)">
   </ag-grid-angular>
 </div>
 
 
+
+
+  
+
+  
+
+<!---
 @if (dataEmpresas.length > 0) {
   <mat-card class="empresa-card">
     <table mat-table [dataSource]="dataEmpresas" class="mat-elevation-z8">
@@ -56,15 +72,14 @@
           <button mat-icon-button color="accent" (click)="editar(empresa.id!)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button *ngIf="gridApi" (click)="proyectos(empresa.id)">Ver proyectos
-          <!--<button mat-icon-button color="primary" (click)="proyectos(empresa.id!)">-->
-            <mat-icon>Folder</mat-icon>
+          <button *ngIf="gridApi" (click)="proyectos(empresa.id)"><mat-icon>folder</mat-icon>
           </button>
           <button mat-icon-button color="warn" (click)="eliminar(empresa.id!)">
             <mat-icon>delete</mat-icon>
           </button>
         </td>
       </ng-container>
+     
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
@@ -73,4 +88,4 @@
   <mat-card class="empresa-card">
     <p>No existen empresas registradas.</p>
   </mat-card>
-}
+}-->
