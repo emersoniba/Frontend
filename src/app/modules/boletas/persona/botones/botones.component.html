@@ -1,0 +1,13 @@
+<button class="btn btn-warning btn-sm" data-action="editar" matTooltip="Editar">
+  <mat-icon class="fs-5">edit</mat-icon>
+</button>
+<button class="btn btn-danger btn-sm" data-action="eliminar" matTooltip="Eliminar">
+  <mat-icon class="fs-5">delete</mat-icon>
+</button>
+<button class="btn btn-primary btn-sm" data-action="crearUsuario" matTooltip="Crear Usuario" *ngIf="sinUsuario">
+  <mat-icon class="fs-5">person_add</mat-icon>
+</button>
+<button class="btn btn-warn btn-sm" data-action="editarRol" matTooltip="Editar Rol" *ngIf="!sinUsuario">
+  <mat-icon class="fs-5">manage_accounts</mat-icon>
+</button>
+<!---how_to_reg-->

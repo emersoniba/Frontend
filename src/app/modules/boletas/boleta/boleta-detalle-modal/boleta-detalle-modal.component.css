@@ -1,0 +1,68 @@
+.modal-container {
+    padding: 16px;
+    max-width: 600px;
+    max-height: 80vh;
+    /* Limita la altura máxima al 80% del viewport */
+    overflow-y: auto;
+    /* Añade scroll si el contenido es muy largo */
+    border-radius: 6px !important;
+    background-color: #fff;
+}
+
+mat-card {
+    margin-bottom: 0;
+    /* Reducimos este margen */
+    box-shadow: none !important;
+    /* Opcional: eliminar sombra si prefieres */
+}
+
+mat-list {
+    padding-top: 0;
+    /* Elimina padding superior por defecto */
+}
+
+mat-list-item {
+    height: 48px !important;
+    /* Altura fija para items (puedes ajustar) */
+    margin: 0;
+    /* Eliminamos margen entre items */
+    padding: 0 8px;
+    /* Padding lateral reducido */
+}
+
+mat-list-item span[matListItemTitle] {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+mat-list-item span[matListItemLine] {
+    white-space: normal;
+    word-wrap: break-word;
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+mat-divider {
+    margin: 8px 0;
+    /* Reducimos margen del divisor */
+}
+
+mat-icon {
+    margin-right: 8px;
+    color: #3f51b5;
+    font-size: 18px;
+    /* Tamaño reducido del icono */
+}
+
+
+/* Opcional: Estilos para el scrollbar */
+
+.modal-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}

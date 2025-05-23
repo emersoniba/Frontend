@@ -1,3 +1,5 @@
+import { Boleta } from "./boleta.model";
+
 export interface Entidad {
   id: number;
   denominacion: string;
@@ -20,4 +22,6 @@ export interface Proyecto {
   departamento: Departamento;
   fecha_creado: string;
   fecha_finalizacion: string;
+  boletas: Boleta[]; // Array de boletas asociadas
+
 }

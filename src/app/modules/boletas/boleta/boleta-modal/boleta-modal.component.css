@@ -1,5 +1,5 @@
 .mat-dialog-container {
-    border-radius: 0px !important;
+    border-radius: 4px !important;
 }
 
 .w-100 {
@@ -38,4 +38,33 @@ mat-option input {
 mat-option input::placeholder {
     color: black !important;
     opacity: 1;
+}
+
+
+/* boleta-modal.component.css */
+
+.boleta-form {
+    padding: 20px;
+}
+
+.row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.col-md-6 {
+    flex: 1;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+mat-datepicker-toggle {
+    cursor: pointer;
+}
+
+input[matInput][readonly] {
+    cursor: pointer;
 }

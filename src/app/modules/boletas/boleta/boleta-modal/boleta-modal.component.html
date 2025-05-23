@@ -14,8 +14,7 @@
     
     <mat-form-field appearance="fill" class="w-100">
       <mat-label>Concepto</mat-label>
-      <textarea matInput formControlName="concepto
-      " required rows="3"></textarea>
+      <textarea matInput formControlName="concepto" required rows="3"></textarea>
       <mat-error *ngIf="boletaForm.get('concepto')?.invalid">Este campo es requerido</mat-error>
     </mat-form-field>
     

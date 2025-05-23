@@ -18,22 +18,31 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import Swal from 'sweetalert2';
 import { ValueGetterParams, GridReadyEvent, GridOptions, AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridModule } from 'ag-grid-angular';
-import { MasterDetailModule } from 'ag-grid-enterprise';
-import { BotonesComponent } from './botones/botones.component';
 
-ModuleRegistry.registerModules([AllCommunityModule, MasterDetailModule]);
+import { BotonesComponent } from './botones/botones.component';
+import { themeMaterial } from 'ag-grid-community';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ReporteEmpresaComponent } from './reporte-empresa/reporte-empresa.component';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-empresa',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, AgGridModule, MatDialogModule, MatCardModule, MatFormFieldModule,
-    MatInputModule, MatSelectModule, MatButtonModule, MatIconModule, MatTableModule, MatToolbarModule],
+  imports: [ReactiveFormsModule, CommonModule, MatDialogModule, MatCardModule, MatFormFieldModule,
+    MatInputModule, MatSelectModule, MatButtonModule, MatIconModule, MatTableModule, MatToolbarModule,
+    MatExpansionModule,
+    AgGridModule,
+  ],
+
   templateUrl: './empresa.component.html',
   styleUrls: ['./empresa.component.css']
+
 })
 
 export class EmpresaComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['denominacion', 'nit', 'actividad', 'representante_legal', 'contacto', 'correo', 'acciones'];
+  public theme = themeMaterial;
   public formEmpresa: FormGroup;
   public dataEmpresas: Empresa[] = [];
   public dataActividad: Actividad[] = [];
@@ -42,78 +51,42 @@ export class EmpresaComponent implements OnInit, OnDestroy {
   private empresaSubscriptor?: Subscription;
   private proyectoSubscriptor?: Subscription;
   public gridApi: any;
+  public columnasProyecto: string[] = ['nombre', 'descripcion', 'fecha_creado', 'fecha_finalizacion', 'departamento'];
+  public empresaSeleccionada: any = null;
+  public frameworkComponents: any = { botonesComponent: BotonesComponent };
+  public expandedEmpresaId: number | null = null;
+  public filaExpandida: number | null = null;//pruebita
 
   constructor(
     private readonly empresaService: EmpresaService,
     private readonly actividadService: ActividadService,
     private dialog: MatDialog,
-    private fb: FormBuilder
+    private fb: FormBuilder,
   ) {
     this.formEmpresa = new FormGroup({});
     this.gridOptions = {
       getRowId: params => params.data.id.toString(),
       pagination: true,
-      paginationPageSize: 8,
-      masterDetail: true,
+      paginationPageSize: 6,
+      paginationPageSizeSelector: [6, 10, 20, 50, 100],
+
       domLayout: 'autoHeight',
       detailCellRenderer: 'agDetailCellRenderer',
       detailRowAutoHeight: true,
-      detailCellRendererParams: {
-
-        detailGridOptions: {
-          columnDefs: [
-            { field: 'nombre', headerName: 'Proyecto' },
-            { field: 'descripcion', headerName: 'Descripción' },
-            { field: 'fecha_creado', headerName: 'Inicio' },
-            { field: 'fecha_finalizacion', headerName: 'Finalización' },
-            {
-              headerName: 'Departamento',
-              valueGetter: (params: ValueGetterParams) => params.data?.departamento?.nombre
-            }
-          ],
-          defaultColDef: {
-            flex: 1,
-            minWidth: 0,
-            resizable: true,
-            autoHeight: true,
-          },
-          animateRows: true,
-          rowSelection: 'single'
-
-        },
-        getDetailRowData: (params: any) => {
-          if (Array.isArray(params.data?.proyectos)) {
-            params.successCallback(params.data.proyectos);
-          } else {
-            params.successCallback([]);
-          }
-        }
-      },
-      isRowMaster: data => Array.isArray(data?.proyectos) && data.proyectos.length > 0,
 
       columnDefs: [
-        {
-          field: 'denominacion', headerName: 'Empresa', filter: true, floatingFilter: true, cellRenderer: 'agGroupCellRenderer',
-          cellRendererParams: { suppressCount: true, }
-        },
-        {
-          headerName: 'Actividad', filter: true, floatingFilter: true,
-          valueGetter: (params: ValueGetterParams) => params.data?.actividad?.descripcion
-        },
+        { field: 'denominacion', headerName: 'Empresa', filter: true, floatingFilter: true },
+        { headerName: 'Actividad', filter: true, floatingFilter: true, valueGetter: (params: ValueGetterParams) => params.data?.actividad?.descripcion },
         { field: 'nit', headerName: 'NIT', filter: true, floatingFilter: true },
         { field: 'representante_legal', headerName: 'Representante Legal', filter: true, floatingFilter: true },
         { field: 'contacto', headerName: 'Contacto', filter: true, floatingFilter: true },
         { field: 'correo', headerName: 'Correo', floatingFilter: true, filter: true },
-        {
-          headerName: 'Acciones',
-          cellRenderer: BotonesComponent,
-          width: 130
-        }
+        { headerName: 'Acciones', cellRenderer: BotonesComponent, width: 130 }
       ],
       context: { componentParent: this },
       defaultColDef: {
         flex: 1,
-        minWidth: 80,
+        minWidth: 10,
         resizable: true
       },
       animateRows: true,
@@ -122,10 +95,21 @@ export class EmpresaComponent implements OnInit, OnDestroy {
     };
   }
 
+  public onRowDoubleClickedCerrar(event: any): void {
+    this.empresaSeleccionada = event.data;
+  }
+  public onRowDoubleClicked(event: any): void {
+    if (this.empresaSeleccionada && this.empresaSeleccionada.id === event.data.id) {
+      this.empresaSeleccionada = null;
+    } else {
+      this.empresaSeleccionada = event.data;
+    }
+  }
+
   public ngOnInit(): void {
     this.getEmpresa();
     this.getActividad();
-   // this.getProyecto();
+    this.getProyecto();
 
   }
 
@@ -134,32 +118,34 @@ export class EmpresaComponent implements OnInit, OnDestroy {
     this.proyectoSubscriptor?.unsubscribe();
   }
 
-  public onGridReady(params: GridReadyEvent): void {
-   this.gridApi = params.api;
-}
+  public onGridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+  }
 
   public getEmpresa(): void {
     this.empresaSubscriptor = this.empresaService.getEmpresasConProyectos().subscribe({
       next: (response) => {
         this.dataEmpresas = response;
-        if (this.gridApi) {
-          this.gridApi.setGridOption('rowData', this.dataEmpresas);        
-        }
       },
       error: () => Swal.fire('Error', 'No se cargaron las empresas', 'error')
     });
   }
 
-
   public getActividad(): void {
     this.actividadService.getActividades().subscribe({
       next: (response) => {
+
         this.dataActividad = response;
       },
       error: (err) => console.error(err)
     });
   }
-
+    public abrirDialogoReporte(): void {
+  this.dialog.open(ReporteEmpresaComponent, {
+    width: '450px',
+    data: { empresas: this.dataEmpresas }
+  });
+}
   public getProyecto(): void {
     this.proyectoSubscriptor = this.empresaService.getEmpresasConProyectos().subscribe({
       next: (response) => {
@@ -175,27 +161,13 @@ export class EmpresaComponent implements OnInit, OnDestroy {
   public nuevaEmpresa(empresa?: Empresa): void {
     const dialogRef = this.dialog.open(EmpresaFormDialogComponent, {
       width: '650px',
-      data: { actividades: this.dataActividad, empresa }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const save$ = empresa
-          ? this.empresaService.putEmpresa(result.id!, result)
-          : this.empresaService.postEmpresa(result);
-
-        save$.subscribe({
-          next: () => this.getEmpresa(),
-          error: (error) => {
-            if (error.status === 400 && error.error.nit) {
-              Swal.fire('NIT duplicado', error.error.nit[0], 'error');
-            } else {
-              Swal.fire('Error', 'No se pudo guardar la empresa.', 'error');
-            }
-          }
-        });
+      disableClose: true,
+      data: {
+        actividades: this.dataActividad,
+        empresa
       }
     });
+
   }
 
   public eliminar(id: number): void {
@@ -238,8 +210,9 @@ export class EmpresaComponent implements OnInit, OnDestroy {
     const empresa = this.dataEmpresas.find(e => e.id === id);
     if (empresa) {
       this.nuevaEmpresa(empresa);
+
     } else {
-      Swal.fire('Error', 'Hubo un errror al encotrar la empresa.')
+      Swal.fire('Error', 'Hubo un error al encotrar la empresa.')
     }
   }
 
@@ -264,5 +237,6 @@ export class EmpresaComponent implements OnInit, OnDestroy {
       this.gridApi.setQuickFilter(value);
     }
   }
+
 
 }

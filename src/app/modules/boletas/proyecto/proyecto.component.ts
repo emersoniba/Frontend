@@ -16,12 +16,13 @@ import { MatSelectModule } from '@angular/material/select';
 import Swal from 'sweetalert2';
 import { AgGridAngular, AgGridModule } from 'ag-grid-angular';
 import { ColDef, GridReadyEvent, CellClickedEvent } from 'ag-grid-community';
-import { HttpClient } from '@angular/common/http';
 import { MatTableModule } from '@angular/material/table';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { ProyectoModalComponent } from './proyecto-modal/proyecto-modal.component';
-import { BoletaService } from '../../../services/boleta.service';
 import { BoletasProyectoModalComponent } from '../../boletas/proyecto/boletas-proyecto-modal/boletas-proyecto-modal.component';
+import { ReporteProyectoComponent} from './reporte-proyecto/reporte-proyecto.component';
+import { BoletaService } from '../../../services/boleta.service';
+
 
 @Component({
   standalone: true,
@@ -53,6 +54,7 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
 
   pagination = true;
   paginationPageSize = 5;
+  //paginationPageSizeSelector: [6, 10, 20, 50, 100];
 
   proyectos: Proyecto[] = [];
   entidades: any[] = [];
@@ -64,6 +66,7 @@ export class ProyectoComponent implements OnInit, AfterViewInit {
     'fecha_creado', 'fecha_finalizacion', 'acciones'
   ];
 public columnDefs: ColDef[] = [
+
   { headerName: 'Nombre', field: 'nombre' ,filter:true,
       floatingFilter:true},
   { headerName: 'Descripción', field: 'descripcion', filter: true,floatingFilter:true },
@@ -105,13 +108,7 @@ onCellClicked(event: any): void {
   }
 }
 
-  verBoletas(proyecto: Proyecto): void {
-    this.dialog.open(BoletasProyectoModalComponent, {
-      width: '800px',
-      data: { proyecto },
-      disableClose: false
-    });
-  }
+
   
   public defaultColDef: ColDef = {
     sortable: true,
@@ -120,15 +117,14 @@ onCellClicked(event: any): void {
 
   proyectoForm: FormGroup;
   editingProyecto: Proyecto | null = null;
-
+  rowData: Proyecto[] = [];
   constructor(
     private proyectoService: ProyectoService,
     private entidadService: EntidadService,
     private departamentoService: DepartamentoService,
     private fb: FormBuilder,
-   /// private http: HttpClient,
     private dialog: MatDialog, 
-    //private boletaService: BoletaService,
+    private boletaService: BoletaService,
   ) {
     this.proyectoForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -195,13 +191,13 @@ onCellClicked(event: any): void {
       }
     });
   }
-
+//
   cargarProyectos(): void {
     this.proyectoService.getProyectos().subscribe({
       next: (data) => {
         this.proyectos = data;
+        this.rowData = data; 
         if (this.agGrid?.api) {
-          // Forma moderna de actualizar los datos
           this.agGrid.api.setGridOption('rowData', data);
           this.agGrid.api.sizeColumnsToFit();
         }
@@ -210,8 +206,29 @@ onCellClicked(event: any): void {
         console.error('Error cargando proyectos:', err);
       }
     });
+  } 
+  
+   abrirDialogoReporte(): void {
+    this.boletaService.getBoletas().subscribe((boletas :any) => {
+      this.dialog.open(ReporteProyectoComponent, {
+        width: '600px',
+        
+        data: { 
+          proyectos: this.rowData,
+          boletas: boletas
+        }
+      });
+    });
+    }
+    verBoletas(proyecto: Proyecto): void {
+    this.dialog.open(BoletasProyectoModalComponent, {
+      width: '50vw',
+      maxWidth:'90vw',
+      maxHeight:'90vh',
+      data: { proyecto },
+      disableClose: false
+    });
   }
-
   abrirModalCrear(): void {
     const dialogRef = this.dialog.open(ProyectoModalComponent, {
       data: { proyecto: null }

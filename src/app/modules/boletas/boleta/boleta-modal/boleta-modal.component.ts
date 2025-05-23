@@ -17,7 +17,21 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Subject, takeUntil, debounceTime, distinctUntilChanged, startWith, map } from 'rxjs';
 import Swal from 'sweetalert2';
+import moment from 'moment';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
 
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 @Component({
   standalone: true,
   selector: 'app-boleta-modal',
@@ -35,7 +49,14 @@ import Swal from 'sweetalert2';
     MatDialogModule,
     MatButtonModule,
     MatNativeDateModule,
+    MatMomentDateModule ,
     MatIconModule
+  ],
+   providers: [
+    { provide: DateAdapter, useClass: NativeDateAdapter },
+    { provide: MAT_DATE_LOCALE, useValue: 'es-BO' }, // o el locale que necesites
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+
   ]
 })
 export class BoletaModalComponent implements OnInit, OnDestroy {
@@ -43,7 +64,7 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
   isEditing: boolean = false;
   estados: Estado[] = [];
   entidadesFinancieras: EntidadFinanciera[] = [];
-  proyectos: Proyecto[] = [];
+  proyectos: Proyecto[] = []; 
   filteredProyectos: Proyecto[] = [];
   archivoSeleccionado: File | null = null;
 
@@ -65,8 +86,10 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
       numero: ['', Validators.required],
       concepto: ['', Validators.required],
       entidad_financiera_id: [null, Validators.required],
-      fecha_inicio: [new Date(), Validators.required],
-      fecha_finalizacion: [new Date(), Validators.required],
+      //fecha_inicio: [new Date(), Validators.required],
+     // fecha_finalizacion: [new Date(), Validators.required],
+      fecha_inicio: [moment(), Validators.required],
+      fecha_finalizacion: [moment(), Validators.required],
       monto: [0, [Validators.required, Validators.min(0)]],
       cite: [''],
       estado_id: [null, Validators.required],
@@ -79,7 +102,6 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadData();
-
     if (this.data.boleta) {
       this.isEditing = true;
       this.loadBoletaData(this.data.boleta);
@@ -129,15 +151,24 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
   }
 
   loadBoletaData(boleta: Boleta): void {
-    this.boletaForm.patchValue({
-      ...boleta,
-      fecha_inicio: new Date(boleta.fecha_inicio),
-      fecha_finalizacion: new Date(boleta.fecha_finalizacion),
-      entidad_financiera_id: boleta.entidad_financiera?.id,
-      estado_id: boleta.estado.id,
-      proyecto_id: boleta.proyecto.id
-    });
-  }
+  // Si las fechas vienen como strings en formato ISO
+  const fechaInicio = moment(boleta.fecha_inicio, moment.ISO_8601).isValid() 
+    ? moment(boleta.fecha_inicio) 
+    : moment(boleta.fecha_inicio, 'DD-MM-YYYY:mm:ss');//'YYYY-MM-DD HH:mm:ss');
+  
+  const fechaFin = moment(boleta.fecha_finalizacion, moment.ISO_8601).isValid() 
+    ? moment(boleta.fecha_finalizacion) 
+    : moment(boleta.fecha_finalizacion, 'DD-MM-YYYY:mm:ss');
+
+  this.boletaForm.patchValue({
+    ...boleta,
+    fecha_inicio: fechaInicio.toDate(),
+    fecha_finalizacion: fechaFin.toDate(),
+    entidad_financiera_id: boleta.entidad_financiera?.id,
+    estado_id: boleta.estado.id,
+    proyecto_id: boleta.proyecto.id
+  });
+}
 
   filterProyectos(search: string): void {
     if (!search) {
@@ -191,11 +222,13 @@ archivoNombre: string = '';
     const formValue = this.boletaForm.value;
     const boletaData = {
       ...formValue,
-      fecha_inicio: new Date(formValue.fecha_inicio).toISOString(),
-      fecha_finalizacion: new Date(formValue.fecha_finalizacion).toISOString(),
+      fecha_inicio: moment(formValue.fecha_inicio).toISOString(),
+      fecha_finalizacion: moment(formValue.fecha_finalizacion).toISOString(),
+      
       creado_por_id: 1,
       actualizado_por_id: 1
     };
+      console.log('Datos a enviar:', boletaData); // <-- Agrega esto para depuración
 
     if (this.isEditing && this.data.boleta?.id) {
       this.updateBoleta(this.data.boleta.id, boletaData);

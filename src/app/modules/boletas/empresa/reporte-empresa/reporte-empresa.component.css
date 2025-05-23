@@ -1,0 +1,51 @@
+.modal-container {
+    padding: 1rem;
+    background-color: #f9f9f9;
+}
+
+.card-custom {
+    border-radius: 16px;
+    padding: 1rem;
+}
+
+.mat-card-title {
+    font-weight: 600;
+}
+
+
+/* Botón Excel */
+
+.btn-exportar-excel {
+    background-color: #4caf50 !important;
+    color: white !important;
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    border-radius: 8px;
+    margin-right: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-exportar-excel:hover {
+    background-color: #388e3c !important;
+}
+
+
+/* Botón PDF */
+
+.btn-exportar-pdf {
+    background-color: #f44336 !important;
+    color: white !important;
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-exportar-pdf:hover {
+    background-color: #d32f2f !important;
+}
+
+.btn-exportar i {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+}

@@ -1,12 +1,7 @@
+.mat-mdc-dialog-surface
+{
+    border-radius: 2px !important;
+}
 .mdc-text-field--filled:not(.mdc-text-field--disabled) {
     background-color: #ffffff00;
-}
-
-.spacer {
-    flex: 1 1 auto;
-}
-/*PERSONAS*/
-.mat-toolbar {
-    background: #3c07db00;
-
 }

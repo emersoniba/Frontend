@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
+import { Boleta } from '../models/boleta.model';
 
 export interface Proyecto {
   id?: number;
@@ -41,6 +42,8 @@ export class ProyectoService {
       })
     );
   }
-
+  getProyectosConBoletas(): Observable<Proyecto[]> {
+    return this.http.get<Proyecto[]>(`${this.apiUrl}?includeBoletas=true`);
+  }
 }
 
