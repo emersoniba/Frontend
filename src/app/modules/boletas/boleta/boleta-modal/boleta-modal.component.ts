@@ -190,7 +190,7 @@ archivoNombre: string = '';
     if (!input.files || input.files.length === 0) return;
 
     this.archivoSeleccionado = input.files[0];
-    this.archivoNombre = this.archivoSeleccionado.name; // Mostramos el nombre en el input visible
+    this.archivoNombre = this.archivoSeleccionado.name; 
 
     this.isUploading = true;
     const file = input.files[0];
@@ -228,7 +228,7 @@ archivoNombre: string = '';
       creado_por_id: 1,
       actualizado_por_id: 1
     };
-      console.log('Datos a enviar:', boletaData); // <-- Agrega esto para depuración
+      
 
     if (this.isEditing && this.data.boleta?.id) {
       this.updateBoleta(this.data.boleta.id, boletaData);

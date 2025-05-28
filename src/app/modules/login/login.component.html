@@ -1,17 +1,40 @@
 <div class="login-container">
   <form [formGroup]="formLogin" (ngSubmit)="onActionClickLogin()">
-    <h2>Inicio sesión</h2>
+    <h2> Inicio de sesion</h2>
 
     <div class="form-group">
-      <label for="username">Usuario</label>
-      <input id="username" formControlName="username" type="text" />
+      <label for="username">Usuario: *</label>
+      <input id="username" formControlName="username" type="username" />
     </div>
 
     <div class="form-group">
-      <label for="password">Contraseña</label>
-      <input id="password" formControlName="password" type="password" />
+      <label for="password">Password: *</label>
+      <input id="password" formControlName="password" type="password" placeholder="••••••••" />
     </div>
 
-    <button type="submit" [disabled]="formLogin.invalid">Ingresar</button>
+    <div class="form-options">
+      <label>
+        <input type="checkbox" />
+        Recuerd
+      </label>
+      <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+    </div>
+
+    <button type="submit" [disabled]="formLogin.invalid">Inncio de sesion</button>
+
+    <div class="divider"></div>
+    <!---
+    <button class="create-account" type="button">cree una</button>
+
+    <div class="login-alt">
+      <p>or</p>
+      <button type="button" class="login-google">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" />
+inicia ocn googl      </button>
+      <button type="button" class="login-microsoft">
+        <img src="https://img.icons8.com/color/48/000000/microsoft.png" />
+        Login with Microsoft
+      </button>
+    </div>-->
   </form>
 </div>

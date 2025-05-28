@@ -33,7 +33,7 @@ export class BoletasProyectoModalComponent implements OnInit {
     private boletaService: BoletaService,
     public dialogRef: MatDialogRef<BoletasProyectoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { proyecto: Proyecto },
-    private currencyPipe: CurrencyPipe
+   // private currencyPipe: CurrencyPipe
   ) {}
 
   ngOnInit(): void {
@@ -42,7 +42,7 @@ export class BoletasProyectoModalComponent implements OnInit {
 
   cargarBoletas(): void {
     this.boletaService.getBoletasPorProyecto(this.data.proyecto.id!).subscribe({
-      next: (boletas) => {
+      next: (boletas) => { 
         this.boletas = boletas;
         this.loading = false;
       },

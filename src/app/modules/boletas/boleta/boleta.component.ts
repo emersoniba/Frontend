@@ -42,80 +42,67 @@ export class BoletaComponent implements OnInit {
   filteredBoletas: Boleta[] = [];
   loading = false;
   private gridApi!: GridApi;
-  
+
   pageSize = 10;
   pageIndex = 0;
   pageSizeOptions = [3, 5, 10, 25, 100];
   totalRecords = 0;
-  
+
   // Configuración de columnas - ahora con la columna Acciones primero y fija
   columnDefs: ColDef[] = [
-     {
-        headerName: 'Acciones',
-        cellRenderer: (params: ICellRendererParams) => {
-            return `
+    {
+      headerName: 'Acciones',
+      cellRenderer: (params: ICellRendererParams) => {
+        return `
                 <button class="edit-btn" title="Editar">✏️</button>
                 <button class="delete-btn" title="Eliminar">🗑️</button>
             `;
-        },
-        //width: 120,
-        width: 140, // Suficiente para 2 botones
-        minWidth: 120,
-        maxWidth: 160,
-        pinned: 'left',
-        lockPinned: true,
-        suppressMovable: true,
-       // cellStyle: { 'white-space': 'nowrap' },
-       cellStyle: {
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          whiteSpace: 'nowrap'
-        },
-        suppressSizeToFit: true, // No se ajusta al tamaño
+      },
+      //width: 120,
+      width: 140, // Suficiente para 2 botones
+      minWidth: 120,
+      maxWidth: 160,
+      pinned: 'left',
+      lockPinned: true,
+      suppressMovable: true,
+      // cellStyle: { 'white-space': 'nowrap' },
+      cellStyle: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        whiteSpace: 'nowrap'
+      },
+      suppressSizeToFit: true, // No se ajusta al tamaño
     },
     //dias de venciminto
-      {
+    {
       headerName: 'Días para Vencimiento',
-      field: 'fecha_finalizacion',
+      field: 'dias_para_vencimiento',
       width: 150,
       cellRenderer: (params: ICellRendererParams) => {
-        if (!params.value) return '-';
-        
-        const fechaFin = new Date(params.value);
-        const hoy = new Date();
-        hoy.setHours(0, 0, 0, 0); // Normalizamos la fecha actual
-        
-        const diffTime = fechaFin.getTime() - hoy.getTime();
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
+        if (params.value === undefined || params.value === null) return '-';
+
+        const dias = params.value;
         let texto = '';
         let clase = '';
-        
-        if (diffDays > 15) {
-          texto = `Faltan ${diffDays} días`;
+
+        if (dias > 15) {
+          texto = `Faltan ${dias} días hábiles`;
           clase = 'dias-verde';
-        } else if (diffDays > 3) {
-          texto = `Faltan ${diffDays} días`;
+        } else if (dias > 3) {
+          texto = `Faltan ${dias} días hábiles`;
           clase = 'dias-amarillo';
-        } else if (diffDays >= 0) {
-          texto = `Faltan ${diffDays} días`;
+        } else if (dias >= 0) {
+          texto = `Faltan ${dias} días hábiles`;
           clase = 'dias-rojo';
         } else {
-          texto = `Venció hace ${Math.abs(diffDays)} días`;
+          texto = `Venció hace ${Math.abs(dias)} días hábiles`;
           clase = 'dias-vencido';
         }
-        
+
         return `<span class="dias-restantes ${clase}">${texto}</span>`;
-      },
-      comparator: (valueA, valueB) => {
-        // Para ordenar correctamente por esta columna
-        const hoy = new Date();
-        const fechaA = valueA ? new Date(valueA).getTime() - hoy.getTime() : 0;
-        const fechaB = valueB ? new Date(valueB).getTime() - hoy.getTime() : 0;
-        return fechaA - fechaB;
       }
-  },
+    },
     {
       headerName: 'Estado',
       field: 'estado.nombre',
@@ -141,7 +128,7 @@ export class BoletaComponent implements OnInit {
       minWidth: 150, // Ancho mínimo
       flex: 1, // Puede crecer
       autoHeight: true,
-      wrapText: true,  
+      wrapText: true,
       cellStyle: { 'white-space': 'normal' },
       filter: true,
       floatingFilter: true,
@@ -150,53 +137,55 @@ export class BoletaComponent implements OnInit {
         caseSensitive: false,
         debounceMs: 500
       }
-    },      
-    { 
-      headerName: 'Tipo', 
+    },
+    {
+      headerName: 'Tipo',
       field: 'tipo',
       width: 200,
       minWidth: 200, // Ancho mínimo mayor para contenido largo
-        flex: 2, // Más flexible que otras
+      flex: 2, // Más flexible que otras
       autoHeight: true,
       wrapText: true,
       cellStyle: { 'white-space': 'normal' },
       filter: true,
       floatingFilter: true,
     },
-    { 
-      headerName: 'Concepto', 
-      field: 'concepto', 
+    {
+      headerName: 'Concepto',
+      field: 'concepto',
       //width: 500,
-       width: 300,
+      width: 300,
       minWidth: 300, // Ancho mínimo mayor para contenido largo
-        flex: 2, 
+      flex: 2,
       autoHeight: true,
       wrapText: true,
-      cellStyle: { 
+      cellStyle: {
         'white-space': 'normal',
-        'line-height': '1.5' 
+        'line-height': '1.5'
       },
       filter: true,
       floatingFilter: true,
     },
-    { 
-      headerName: 'Entidad Financiera', 
-      field: 'entidad_financiera.nombre', 
+    {
+      headerName: 'Entidad Financiera',
+      field: 'entidad_financiera.nombre',
       width: 300,
       autoHeight: true,
       wrapText: true,
-      cellStyle: { 'white-space': 'normal' },
+      cellStyle: { 'white-space': 'normal', 'line-height': '1.5' },
       filter: true,
       floatingFilter: true,
       valueGetter: (params) => params.data.entidad_financiera?.nombre || ''
     },
-    { 
-      headerName: 'Proyecto', 
+    {
+      headerName: 'Proyecto',
       field: 'proyecto.nombre',
       autoHeight: true,
-      width: 300,
+      //width: 300,
+      minWidth: 600,
+      maxWidth: 600,
       wrapText: true,
-      cellStyle: { 'white-space': 'normal' },
+      cellStyle: { 'white-space': 'normal', 'line-height': '1.5' },
       filter: true,
       floatingFilter: true,
       valueGetter: (params) => params.data.proyecto?.nombre || ''
@@ -214,73 +203,74 @@ export class BoletaComponent implements OnInit {
           : '<span class="no-file">-</span>';
       }
     },
-    { 
-      headerName: 'Observaciones', 
+    {
+      headerName: 'Observaciones',
       field: 'observaciones',
       //width: 300,
       width: 300,
       minWidth: 300, // Ancho mínimo mayor para contenido largo
-        flex: 2, 
+      flex: 2,
       filter: true,
+      cellStyle: { 'white-space': 'normal', 'line-height': '1.5' },
       floatingFilter: true
     },
-    { 
-      headerName: 'Fecha Inicio', 
+    {
+      headerName: 'Fecha Inicio',
       field: 'fecha_inicio',
       width: 120,
       valueFormatter: (params) => this.formatDate(params.value)
     },
-    { 
-      headerName: 'Fecha Fin', 
+    {
+      headerName: 'Fecha Fin',
       field: 'fecha_finalizacion',
       width: 120,
       valueFormatter: (params) => this.formatDate(params.value)
     },
-    { 
-      headerName: 'CITE', 
+    {
+      headerName: 'CITE',
       field: 'cite',
-      width: 100 
+      width: 100
     },
-    { 
-      headerName: 'Monto', 
-      field: 'monto', 
+    {
+      headerName: 'Monto',
+      field: 'monto',
       width: 120,
       valueFormatter: (params) => `$${params.value?.toLocaleString() || '0'}`
     },
-    { 
-      headerName: 'Nota Ejecución', 
+    {
+      headerName: 'Nota Ejecución',
       field: 'nota_ejecucion',
       width: 150
     },
-  
+
   ];
 
   // Configuración del grid
- gridOptions: GridOptions = {
+  gridOptions: GridOptions = {
     rowClassRules: {
-        'boleta-odd-row': (params: any) => params.node.rowIndex % 2 === 0,
-        'boleta-even-row': (params: any) => params.node.rowIndex % 2 !== 0,
+      'boleta-odd-row': (params: any) => params.node.rowIndex % 2 === 0,
+      'boleta-even-row': (params: any) => params.node.rowIndex % 2 !== 0,
     },
     rowSelection: 'single',
     defaultColDef: {
-        resizable: true,
-        sortable: true,
-        filter: true,
-        wrapText: true,
-        autoHeight: true,
-        flex: 1, // Añade flexibilidad a las columnas
-        minWidth: 150, // Ancho mínimo para cada columna
+      resizable: true,
+      sortable: true,
+      filter: true,
+      wrapText: true,
+      autoHeight: true,
+      flex: 1, 
+      minWidth: 150, 
     },
     suppressHorizontalScroll: false,
     alwaysShowHorizontalScroll: true,
-    domLayout: 'normal', // Importante para el scroll
+    domLayout: 'normal', 
     suppressScrollOnNewData: true,
     animateRows: true,
     pagination: true,
     paginationPageSize: 10,
-      ensureDomOrder: true,
-    suppressColumnVirtualisation: true, // Muestra todas las columnas
-};
+    ensureDomOrder: true,
+    suppressColumnVirtualisation: true, 
+  };
 
   rowData: Boleta[] = [];
 
@@ -288,12 +278,12 @@ export class BoletaComponent implements OnInit {
     private boletaService: BoletaService,
     private dialog: MatDialog,
     private datePipe: DatePipe
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.cargarBoletas();
   }
-  
+
   formatDate(dateString: string): string {
     if (!dateString) return '';
     return this.datePipe.transform(dateString, 'dd/MM/yyyy') || '';
@@ -302,6 +292,12 @@ export class BoletaComponent implements OnInit {
   onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
     this.gridApi.sizeColumnsToFit();
+    // Verifica los datos recibidos
+    params.api.addEventListener('modelUpdated', () => {
+      const rowData: Boleta[] = [];
+      params.api.forEachNode(node => rowData.push(node.data));
+      console.log('Datos de la grilla:', rowData);
+    });
   }
 
   cargarBoletas(): void {
@@ -355,7 +351,7 @@ export class BoletaComponent implements OnInit {
       data: { pdfUrl: archivoUrl }
     });
   }
-  
+
   abrirDialogoReporte(): void {
     this.dialog.open(ReporteBoletasComponent, {
       width: '600px',
@@ -366,9 +362,9 @@ export class BoletaComponent implements OnInit {
   abrirModalCrear(): void {
     const dialogRef = this.dialog.open(BoletaModalComponent, {
       //width: '800px',
-         width: '50vw',
-      maxWidth:'90vw',
-      maxHeight:'90vh',
+      width: '50vw',
+      maxWidth: '90vw',
+      maxHeight: '90vh',
       //panelClass: 'custom-mat-dialog',
       disableClose: true,
       data: { boleta: null }
@@ -380,9 +376,9 @@ export class BoletaComponent implements OnInit {
 
   abrirModalEditar(boleta: Boleta): void {
     const dialogRef = this.dialog.open(BoletaModalComponent, {
-         width: '50vw',
-      maxWidth:'90vw',
-      maxHeight:'90vh',
+      width: '50vw',
+      maxWidth: '90vw',
+      maxHeight: '90vh',
       disableClose: true,
       data: { boleta }
     });
@@ -417,5 +413,5 @@ export class BoletaComponent implements OnInit {
     });
   }
 
-  
+
 }

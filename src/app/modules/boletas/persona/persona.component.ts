@@ -90,7 +90,6 @@ export class PersonaComponent implements OnInit, OnDestroy {
 
           if (Array.isArray(params.data?.roles)) {
             params.successCallback(params.data.roles);
-            console.log('roles legads', params.data.roles)
 
           } else {
             params.successCallback([]);

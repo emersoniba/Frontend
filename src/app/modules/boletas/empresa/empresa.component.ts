@@ -167,9 +167,10 @@ export class EmpresaComponent implements OnInit, OnDestroy {
         empresa
       }
     });
-
+    dialogRef.afterClosed().subscribe(result => {
+       this.getEmpresa();
+     });
   }
-
   public eliminar(id: number): void {
     Swal.fire({
       title: '¿Estás seguro?',

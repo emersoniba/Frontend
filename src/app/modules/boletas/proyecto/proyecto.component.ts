@@ -89,7 +89,7 @@ public columnDefs: ColDef[] = [
 ];
 accionesRenderer(params: any): string {
   return `
-    <button class="btn-ver btn btn-info btn-sm"  title="Ver Boletas">📄</button>
+    <button class="btn-ver btn btn-secondary btn-sm"  title="Ver Boletas">📄</button>
     <button class="btn-editar btn btn-warning btn-sm" title="Editar">✏️</button>
     <button class="btn-eliminar btn btn-danger btn-sm" title="Eliminar">🗑️</button>
   `;

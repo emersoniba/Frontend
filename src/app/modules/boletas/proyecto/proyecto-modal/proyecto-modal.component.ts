@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -12,6 +12,14 @@ import { Proyecto } from '../../../../services/proyecto.service';
 import { EntidadService } from '../../../../services/entidad.service';
 import { DepartamentoService } from '../../../../services/departamento.service';
 import Swal from 'sweetalert2';
+import { MatIconModule } from '@angular/material/icon';
+import { map } from 'rxjs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { startWith } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Entidad } from '../../../../models/proyecto.model';
+
 
 @Component({
   standalone: true,
@@ -25,18 +33,22 @@ import Swal from 'sweetalert2';
     MatFormFieldModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSelectModule
+    MatSelectModule,
+    MatIconModule,
+    MatAutocompleteModule,
   ],
   templateUrl: './proyecto-modal.component.html',
   encapsulation: ViewEncapsulation.None,
 
   styleUrls: ['./proyecto-modal.component.css']
 })
-export class ProyectoModalComponent implements OnInit {
+export class ProyectoModalComponent implements OnInit, OnDestroy, AfterViewInit {
   proyectoForm: FormGroup;
   entidades: any[] = [];
   departamentos: any[] = [];
   isEditMode: boolean = false;
+  entidadControl = new FormControl('');
+  entidadesFiltradas!: Observable<Entidad[]>;
 
   constructor(
     private fb: FormBuilder,
@@ -55,7 +67,7 @@ export class ProyectoModalComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+   ngOnInit(): void {
     this.cargarEntidades();
     this.cargarDepartamentos();
 
@@ -82,6 +94,31 @@ export class ProyectoModalComponent implements OnInit {
       error: (err) => console.error('Error cargando departamentos:', err)
     });
   }
+  private _filtrarEntidades(valor: string): any[] {
+    const filtro = valor?.toLowerCase() || '';
+    if (!filtro.trim()) {
+      return this.entidades;
+    }
+    return this.entidades.filter(entidad =>
+      entidad.denominacion.toLowerCase().includes(filtro)
+    );
+  }
+
+
+  onEntidadSelected(event: MatAutocompleteSelectedEvent): void {
+    const entidad = this.entidades.find(e => e.denominacion === event.option.value);
+    if (entidad) {
+      this.proyectoForm.get('entidad_id')?.setValue(entidad.id);
+    }
+  }
+  ngOnDestroy(): void {
+    
+  }
+  ngAfterViewInit(): void {
+    
+  }
+  
+
 
   onCancel(): void {
     this.dialogRef.close();
@@ -95,8 +132,8 @@ export class ProyectoModalComponent implements OnInit {
 
     Swal.fire({
       title: `¿Estás seguro de ${action} el proyecto?`,
-      text: this.isEditMode ? 
-        'Se modificará la información del proyecto.' : 
+      text: this.isEditMode ?
+        'Se modificará la información del proyecto.' :
         'Se creará un nuevo proyecto.',
       icon: 'question',
       showCancelButton: true,

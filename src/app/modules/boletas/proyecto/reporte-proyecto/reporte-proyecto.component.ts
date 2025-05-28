@@ -100,65 +100,57 @@ export class ReporteProyectoComponent {
   const margin = 15;
 
   // Carga de imágenes BASE64 (esperar que terminen)
-  const logo1 = await this.convertImageToBase64('assets/img/bicentenario.png');
-  const logo2 = await this.convertImageToBase64('assets/img/estado.png');
+  const logo1 = await this.convertImageToBase64('assets/img/logomopsv.png');
 
   const fechaActual = new Date();
-  //const fechaHoraTexto = fechaActual.toLocaleDateString();
   const fechaFormateada = `${fechaActual.getDate().toString().padStart(2, '0')}/${
   (fechaActual.getMonth() + 1).toString().padStart(2, '0')}/${
   fechaActual.getFullYear()}`;
   const fecha = new Date();
   const horaFormateada = `${fecha.getHours().toString().padStart(2, '0')}:${fecha.getMinutes().toString().padStart(2, '0')}`;
 
-  // Función para el encabezado que se usará en cada página
-  const drawHeader = () => {
-  const logoSize = 20;
-  const spacing = 2;
+const drawHeader = () => {
+  const logo1Width = 120;
+  const logo2Width = 35;
+  const logoHeight = 20;
+  const spacing = 3;
 
-  // Logos alineados horizontalmente a la izquierda
-  doc.addImage(logo1, 'PNG', margin, 10, logoSize, logoSize);
-  doc.addImage(logo2, 'PNG', margin + logoSize + spacing, 10, logoSize, logoSize);
-
-  // Título más abajo y más pequeño
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Ministerio de Obras Publicas, Servicio y Vivienda', pageWidth / 2, 15 + logoSize, { align: 'center' });
-
-  doc.setFontSize(11);
+  doc.addImage(logo1, 'PNG', margin, 10, logo1Width, logoHeight);
+  
+  const textoX = margin + logo1Width + logo2Width + spacing * 3;
+  doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
-  doc.text('Reporte de Proyectos con Boletas', pageWidth / 2, 21 + logoSize, { align: 'center' });
-
-  // Fecha y hora en la parte derecha, más abajo que antes
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'italic');
-  doc.text(`Fecha: ${fechaFormateada}`, pageWidth - margin, 20 + logoSize, { align: 'right' });
-  doc.text(`Hora: ${horaFormateada}`, pageWidth - margin, 30 + logoSize, { align: 'right' });
+  doc.text(`Fecha: ${fechaFormateada}`, pageWidth - margin, 30, { align: 'right' });
+  doc.text(`Hora: ${horaFormateada}`, pageWidth - margin, 33, { align: 'right' });
 };
 
-  let yPos = 30;
-  drawHeader();
 
+drawHeader();
+let yPos = 45; // Asegura espacio suficiente para los logos y texto
   doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
-  doc.text('Reporte de Proyectos con Boletas', pageWidth / 2, yPos, { align: 'center' });
+  doc.text('REPORTE DE PROYECTOS CON BOLETAS', pageWidth / 2, yPos, { align: 'center' });
   yPos += 15;
 
   for (const proyecto of this.proyectos) {
     const espacioNecesario = 50 + (proyecto.boletas?.length || 0) * 7;
     if (yPos + espacioNecesario > 270) {
-      doc.addPage();
-      yPos = 30;
-      drawHeader(); // encabezado en nueva página
-    }
-
+    doc.addPage();
+    drawHeader();
+    yPos = 45;
+  }
     doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text(`Proyecto: ${proyecto.nombre}`, margin, yPos);
-    yPos += 7;
+    doc.setFont('helvetica', 'normal');
+    const textoProyecto = doc.splitTextToSize(`Proyecto: ${proyecto.nombre}`, 180);
+    doc.text(textoProyecto, margin, yPos);
+    yPos += textoProyecto.length * 5.2; // Ajusta el espacio en función del número de líneas
+
 
     doc.setFont('helvetica', 'normal');
-    doc.text(`Descripción: ${proyecto.descripcion || 'Sin descripción'}`, margin, yPos); yPos += 7;
+  const textodescripcion = doc.splitTextToSize(`Descripción: ${proyecto.descripcion}`, 180);
+    doc.text(textodescripcion, margin, yPos);
+    yPos += textodescripcion.length * 5.2;
+
     doc.text(`Entidad: ${proyecto.entidad?.denominacion || 'Sin entidad'}`, margin, yPos); yPos += 7;
     doc.text(`Departamento: ${proyecto.departamento?.nombre || 'Sin departamento'}`, margin, yPos); yPos += 7;
 
@@ -182,8 +174,8 @@ export class ReporteProyectoComponent {
         head: [['Número', 'Tipo', 'Concepto', 'Monto']],
         body: boletasData,
         margin: { left: margin, right: margin },
-        styles: { fontSize: 8 },
-        headStyles: { fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold' },
+        styles: { fontSize: 9 },
+        headStyles: { fillColor: [101, 110, 113], textColor: 255, fontStyle: 'bold' },
         columnStyles: {
           0: { cellWidth: 20 },
           1: { cellWidth: 20 },

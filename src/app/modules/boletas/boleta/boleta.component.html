@@ -6,9 +6,7 @@
     </mat-card-header>
     
     <mat-card-content>
-      <!-- Controles de búsqueda y filtrado -->
       <div class="controls-container">
-        <!-- Botón para nueva boleta -->
         <button mat-raised-button color="primary" (click)="abrirModalCrear()" class="new-button">
           <mat-icon>add</mat-icon> Nueva Boleta
         </button>
@@ -63,8 +61,10 @@
 
       <!-- Loading spinner -->
       <div *ngIf="loading" class="loading-overlay">
-        <mat-spinner></mat-spinner>
-        <p>Cargando boletas...</p>
+        <mat-spinner>
+               <p>Cargando boletas...</p>
+        </mat-spinner>
+   
       </div>
     </mat-card-content>
   </mat-card>

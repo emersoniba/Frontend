@@ -71,95 +71,137 @@ export class ReporteEmpresaComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  generarPDF(): void {
-    const doc = new jsPDF();
-    let yPos = 20;
-    doc.setFontSize(18);
-    doc.text('Reporte de Empresas y Proyectos', 105, yPos, { align: 'center' });
-    yPos += 15;
+ async generarPDF(): Promise<void> {
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm' });
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const margin = 15;
 
-    this.empresas.forEach((empresa, index) => {
-      /*
-      if (index > 0) {
-        doc.addPage();
-        yPos = 20;
-      }
-      */
-      const espacioNecesario = 50 + (empresa.proyectos?.length || 0) * 7;
+  // Cargar logos
+  const logo1 = await this.convertImageToBase64('assets/img/logomopsv.png');
 
-      if (yPos + espacioNecesario > 270) {
-        doc.addPage();
-        yPos = 20;
-      }
+  const fechaActual = new Date();
+  const fechaFormateada = `${fechaActual.getDate().toString().padStart(2, '0')}/${
+    (fechaActual.getMonth() + 1).toString().padStart(2, '0')}/${fechaActual.getFullYear()}`;
+  const horaFormateada = `${fechaActual.getHours().toString().padStart(2, '0')}:${fechaActual.getMinutes().toString().padStart(2, '0')}`;
 
-      doc.setFontSize(14);
-      doc.text(`Empresa: ${empresa.denominacion}`, 14, yPos);
-      yPos += 10;
-
-      
-      doc.setFontSize(12);
-      doc.text(`Actividad: ${empresa.actividad?.descripcion || 'Sin actividad'}`, 14, yPos);
-      yPos += 7;
-      doc.text(`NIT: ${empresa.nit}`, 14, yPos);
-      yPos += 7;
-      doc.text(`Representante Legal: ${empresa.representante_legal}`, 14, yPos);
-      yPos += 7;
-      doc.text(`Contacto: ${empresa.contacto}`, 14, yPos);
-      yPos += 7;
-      doc.text(`Correo: ${empresa.correo}`, 14, yPos);
-      yPos += 15;
-      if (empresa.proyectos && empresa.proyectos.length > 0) {
-        //doc.setFont('helvetica', 'italic');
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('Proyectos relacionados:', 14, yPos);
-        yPos += 10;
-
-        const proyectosData = empresa.proyectos.map(proyecto => [
-          proyecto.nombre,
-          proyecto.descripcion,
-          proyecto.fecha_creado,
-          proyecto.fecha_finalizacion,
-          proyecto.departamento?.nombre || 'Sin departamento'
-        ]);
-
-        autoTable(doc, {
-          startY: yPos,
-          head: [['Nombre', 'Descripción', 'Inicio', 'Finalización', 'Departamento']],
-          body: proyectosData,
-          theme: 'grid',
-          headStyles: { fillColor: [41, 128, 185], textColor: 255 },
-          styles: { fontSize: 10 }
-        });
-
-        yPos = (doc as any).lastAutoTable.finalY + 10;
-      } else {
-        doc.setFont('helvetica', 'bold');
-        doc.text('Boletas asociadas:', 14, yPos);
-        yPos += 7;
-        doc.setFont('helvetica', 'italic');
-        doc.text('No hay proyectos relacionados', 14, yPos);
-        yPos += 10;
-      }
-    });
-
-   //pie de pagina
-    const pagina = "www.oep.org.bo";
-    const calle = "Av. Mariscal Santa Cruz - esq. Calle Oruro, Edif. Centro de Comunicaciones La Paz, 5to piso.";
-    const telefono = "Tel: (591-2) 2195299 - 2155400";
-
-    const pageCount = doc.getNumberOfPages();
+  // Función de encabezado
+  const drawHeader = () => {
+    const logo1Width = 120;
+  const logo2Width = 35;
+  const logoHeight = 20;
+  const spacing = 3;
+    // Logo
+    doc.addImage(logo1, 'PNG', margin, 10, logo1Width, logoHeight);
+    const textoX = margin + logo1Width + logo2Width + spacing * 3;
+    // Fecha y hora a la derecha
     doc.setFontSize(8);
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Fecha: ${fechaFormateada}`, pageWidth - margin, 30, { align: 'right' });
+    doc.text(`Hora: ${horaFormateada}`, pageWidth - margin, 33, { align: 'right' });
 
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.line(10, 282, 200, 282); 
-      doc.text(pagina, 105, 285, { align: 'center' });
-      doc.text(calle, 105, 290, { align: 'center' });
-      doc.text(telefono, 105, 295, { align: 'center' });
+    };
+
+  // Inicializar documento
+  //let yPos = 40;
+  drawHeader();
+  let yPos = 45; // Asegura espacio suficiente para los logos y texto
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('REPORTE DE EMPRESAS CON PROYECTOS', pageWidth / 2, yPos, { align: 'center' });
+  yPos += 15;
+
+  for (const empresa of this.empresas) {
+    const espacioNecesario = 50 + (empresa.proyectos?.length || 0) * 7;
+
+    if (yPos + espacioNecesario > 270) {
+      doc.addPage();
+      drawHeader();
+      yPos = 40;
     }
-    doc.save('Reporte_Empresas_Proyectos.pdf');
-    this.dialogRef.close();
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Empresa: ${empresa.denominacion}`, margin, yPos); yPos += 10;
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Actividad: ${empresa.actividad?.descripcion || 'Sin actividad'}`, margin, yPos); yPos += 6;
+    doc.text(`NIT: ${empresa.nit}`, margin, yPos); yPos += 6;
+    doc.text(`Representante Legal: ${empresa.representante_legal}`, margin, yPos); yPos += 6;
+    doc.text(`Contacto: ${empresa.contacto}`, margin, yPos); yPos += 6;
+    doc.text(`Correo: ${empresa.correo}`, margin, yPos); yPos += 10;
+
+    if (empresa.proyectos && empresa.proyectos.length > 0) {
+      doc.setFont('helvetica', 'bold');
+      doc.text('Proyectos relacionados:', margin, yPos); yPos += 8;
+
+      const proyectosData = empresa.proyectos.map(proyecto => [
+        proyecto.nombre,
+        proyecto.descripcion,
+        proyecto.fecha_creado,
+        proyecto.fecha_finalizacion,
+        proyecto.departamento?.nombre || 'Sin departamento'
+      ]);
+
+      autoTable(doc, {
+        startY: yPos,
+        head: [['Nombre', 'Descripción', 'Inicio', 'Finalización', 'Departamento']],
+        body: proyectosData,
+        theme: 'grid',
+        headStyles: { fillColor: [101, 110, 113], textColor: 255 },
+        styles: { fontSize: 9 },
+        margin: { left: margin, right: margin }
+      });
+
+      yPos = (doc as any).lastAutoTable.finalY + 10;
+    } else {
+      doc.setFont('helvetica', 'bold');
+      doc.text('Proyectos relacionados:', margin, yPos); yPos += 6;
+      doc.setFont('helvetica', 'italic');
+      doc.text('No hay proyectos relacionados', margin, yPos); yPos += 10;
+    }
+
+    doc.setDrawColor(200);
+    doc.line(margin, yPos, pageWidth - margin, yPos);
+    yPos += 10;
   }
+
+  // Pie de página
+  const pagina = "www.oep.org.bo";
+  const calle = "Av. Mariscal Santa Cruz - esq. Calle Oruro, Edif. Centro de Comunicaciones La Paz, 5to piso.";
+  const telefono = "Tel: (591-2) 2195299 - 2155400";
+
+  const pageCount = doc.getNumberOfPages();
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "normal");
+
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.line(10, 282, 200, 282);
+    doc.text(pagina, 105, 285, { align: 'center' });
+    doc.text(calle, 105, 290, { align: 'center' });
+    doc.text(telefono, 105, 295, { align: 'center' });
+  }
+
+  doc.save('Reporte_Empresas_Proyectos.pdf');
+  this.dialogRef.close();
+}
+  convertImageToBase64(url: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = url;
+
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(img, 0, 0);
+      resolve(canvas.toDataURL('image/png'));
+    };
+
+    img.onerror = error => reject(error);
+  });
+}
 }

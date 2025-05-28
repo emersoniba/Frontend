@@ -38,8 +38,32 @@
         -webkit-font-smoothing: antialiased;
     }
     
-    .modal-container[_ngcontent-ng-c3280536557] {
+    html,
+    body {
+        height: 100%;
+    }
+    
+    body {
+        margin: 0;
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+    }
+    
+    .mat-mdc-dialog-surface {
         border-radius: 6px !important;
     }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+    
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+        background-color: #fdfdfd00 !important;
+    }
+    
+    .mat-mdc-dialog-container .mat-mdc-dialog-title {
+        /*para los modales*/
+        background-color: #4554a8fd;
+        color: #fff !important;
+    }
+    
+    .mat-mdc-dialog-actions.mat-mdc-dialog-actions-align-end,
+    .mat-mdc-dialog-actions[align=end] {
+        justify-content: flex-end;
+        background-color: #fffefe;
+    }
