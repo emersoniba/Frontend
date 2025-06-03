@@ -1,9 +1,21 @@
 <nav>
-  <ul>
-    <li><a routerLink="/principal" routerLinkActive="router-link-active">Dashboard</a></li>
-    <li><a routerLink="/empresa" routerLinkActive="router-link-active">Empresa</a></li>
-    <li><a routerLink="/persona" routerLinkActive="router-link-active">Persona</a></li>
-    <li><a routerLink="/proyecto" routerLinkActive="router-link-active">Proyectos</a></li>
-    <li><a routerLink="/boleta" routerLinkActive="router-link-active">Boletas</a></li>
-  </ul>
+    <ul>
+        @if (tieneAlgunRol([1,4, 2, 3])) {
+        <li><a routerLink="/principal">Dashboard</a></li>
+        }
+        @if (tieneAlgunRol([1, 2 ])) {
+
+        <li><a routerLink="/empresa">Empresa</a></li>}
+        @if (tieneAlgunRol([1])) {
+
+        <li><a routerLink="/persona">Persona</a></li>}
+        @if (tieneAlgunRol([1, 2])) {
+
+        <li><a routerLink="/proyecto">Proyectos</a></li>}
+        @if (tieneAlgunRol([1, 1])) {
+
+        <li><a routerLink="/boleta">Boletas</a></li>}
+    
+    </ul>
+
 </nav>

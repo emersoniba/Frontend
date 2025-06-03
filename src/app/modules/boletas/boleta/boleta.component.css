@@ -218,27 +218,32 @@
     border-radius: 4px;
     display: inline-block;
     text-align: center;
+    line-height: 1.5;
 }
 
 .dias-verde {
     background-color: #d4edda;
     color: #5dca76;
+    line-height: 1.5;
 }
 
 .dias-amarillo {
     background-color: #fff3cd;
     color: #e7b624;
+    line-height: 1.5;
 }
 
 .dias-rojo {
     background-color: #f8d7da;
     color: #e90e24;
+    line-height: 1.5;
 }
 
 .dias-vencido {
     background-color: #f5c6cb;
     color: #705f61;
     text-decoration: line-through;
+    line-height: 1.5;
 }
 
 

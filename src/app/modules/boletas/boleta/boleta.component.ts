@@ -85,7 +85,6 @@ export class BoletaComponent implements OnInit {
         const dias = params.value;
         let texto = '';
         let clase = '';
-
         if (dias > 15) {
           texto = `Faltan ${dias} días hábiles`;
           clase = 'dias-verde';
@@ -103,10 +102,14 @@ export class BoletaComponent implements OnInit {
         return `<span class="dias-restantes ${clase}">${texto}</span>`;
       }
     },
+    //inicio
+     
+    //fin
     {
       headerName: 'Estado',
       field: 'estado.nombre',
       width: 150,
+      cellStyle: { 'white-space': 'normal', 'line-height': '1.5' },
       cellRenderer: (params: ICellRendererParams) => {
         const icon = params.data.estado?.icono || 'info';
         const nombre = params.data.estado?.nombre || '';
@@ -361,11 +364,9 @@ export class BoletaComponent implements OnInit {
 
   abrirModalCrear(): void {
     const dialogRef = this.dialog.open(BoletaModalComponent, {
-      //width: '800px',
       width: '50vw',
       maxWidth: '90vw',
       maxHeight: '90vh',
-      //panelClass: 'custom-mat-dialog',
       disableClose: true,
       data: { boleta: null }
     });

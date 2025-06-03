@@ -1,0 +1,15 @@
+/* components/historial-alertas/historial-alertas.component.scss */
+
+.table {
+    th {
+        white-space: nowrap;
+    }
+    .badge {
+        font-size: 0.85em;
+    }
+}
+
+.tooltip-inner {
+    max-width: 300px;
+    text-align: left;
+}

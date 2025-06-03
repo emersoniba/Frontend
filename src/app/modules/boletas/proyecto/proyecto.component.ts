@@ -230,8 +230,11 @@ onCellClicked(event: any): void {
     });
   }
   abrirModalCrear(): void {
+    
     const dialogRef = this.dialog.open(ProyectoModalComponent, {
+        disableClose: true,
       data: { proyecto: null }
+      
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -262,6 +265,7 @@ onCellClicked(event: any): void {
 
   abrirModalEditar(proyecto: Proyecto): void {
     const dialogRef = this.dialog.open(ProyectoModalComponent, {
+         disableClose: true,
       data: { proyecto }
     });
 

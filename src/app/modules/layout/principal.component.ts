@@ -18,13 +18,16 @@ export class PrincipalComponent implements OnInit {
 
   public user: any;
 
+
   constructor(private readonly authService: AuthService) { }
+
+  rolesUsuario: string[] = [];
 
   ngOnInit(): void {
     const token = localStorage.getItem('tkn-boletas');
     if (token) {
       const decoded: any = jwtDecode(token);
-      console.log('Id de Usuario logueado:', decoded.user_id);
+      
     }
   }
 }

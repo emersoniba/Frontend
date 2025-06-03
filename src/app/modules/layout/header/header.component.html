@@ -1,12 +1,29 @@
 <header>
   <div class="header-info">
     @if(dataUsuario){
-      <span>Bienvenido, {{ dataUsuario.nombres }} {{ dataUsuario.apellido_paterno }} {{ dataUsuario.apellido_materno }}</span>
+    <span>Bienvenido: {{ dataUsuario.nombres }} {{ dataUsuario.apellido_paterno }} {{ dataUsuario.apellido_materno
+      }}</span>
       <span>Cargo: {{ dataUsuario.cargo }}</span>
       <span>Unidad: {{ dataUsuario.unidad }}</span>
     } @else {
-      <span>Anónimo</span>
+    <span>Anonimus</span>
     }
-    <button (click)="logout()">Cerrar sesión</button>
+ 
+
+    
+ 
+
+<div class="btn-group me-3">
+	<div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
+		<button type="button" class="btn btn-primary"> Opciones</button>
+		<button type="button" class="btn btn-primary dropdown-toggle-split" ngbDropdownToggle></button>
+		<div class="dropdown-menu" ngbDropdownMenu>
+			<button  (click)="logout()" ngbDropdownItem>Cerrar sesión</button>
+      <button (click)="PerfilUsuario()" ngbDropdownItem>Mi Perfil</button>
+
+		</div>
+	</div>
+</div>
+
   </div>
 </header>

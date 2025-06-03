@@ -54,7 +54,7 @@ export const MY_DATE_FORMATS = {
   ],
    providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_LOCALE, useValue: 'es-BO' }, // o el locale que necesites
+    { provide: MAT_DATE_LOCALE, useValue: 'es-BO' },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
 
   ]

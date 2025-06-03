@@ -1,0 +1,10 @@
+.mat-dialog-content {
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+.mat-form-white {
+  background-color: white;
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: #ffffff00;
+}

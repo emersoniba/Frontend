@@ -14,17 +14,30 @@
       <textarea matInput formControlName="descripcion" required></textarea>
       <mat-error *ngIf="proyectoForm.get('descripcion')?.invalid">Descripción es requerida</mat-error>
     </mat-form-field>
-
-      <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Entidad</mat-label>
-      <mat-select formControlName="entidad_id" required>
-        <mat-option *ngFor="let entidad of entidades" [value]="entidad.id">
-          {{ entidad.denominacion }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="proyectoForm.get('entidad_id')?.invalid">Entidad es requerida</mat-error>
-    </mat-form-field>
-
+<!--inicio search entidad-->
+ <mat-form-field appearance="fill" class="full-width">
+  <mat-label>Entidad</mat-label>
+  <mat-select formControlName="entidad_id" required>
+    <!-- Input de búsqueda -->
+    <mat-option>
+      <ngx-mat-select-search
+        [formControl]="entidadFilterCtrl"
+        placeholderLabel="Buscar entidad..."
+        noEntriesFoundLabel="No se encontraron entidades"
+        [showNoEntriesFound]="true"
+        [clearSearchInput]="true"
+        [disableInitialFocus]="false"   
+      ></ngx-mat-select-search>
+    </mat-option>
+    
+    <!-- Opciones filtradas -->
+    <mat-option *ngFor="let entidad of entidadesFiltradas | async" [value]="entidad.id">
+      {{ entidad.denominacion }}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="proyectoForm.get('entidad_id')?.invalid">Entidad es requerida</mat-error>
+</mat-form-field>
+<!--fin-->
 
     <mat-form-field appearance="fill" class="full-width">
       <mat-icon matIconPrefix>location_city</mat-icon>

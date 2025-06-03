@@ -65,4 +65,7 @@ export class EntidadService {
   getEntidadesFinancieras(): Observable<EntidadFinanciera[]> {
     return this.http.get<EntidadFinanciera[]>(`${this.apiUrl}entidad_financiera/`);
   }
+  getDashboardData(): Observable<any> {
+  return this.http.get(`${this.apiUrl}dashboard/`); // Asegúrate de que coincide con tu endpoint
+}
 }

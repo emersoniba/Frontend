@@ -1,3 +1,17 @@
 .mat-dialog-container {
     border-radius: 4px !important;
 }
+
+
+/* Para que el buscador ocupe todo el ancho */
+
+.ngx-mat-select-search {
+    width: 100%;
+}
+
+
+/* Para el input de búsqueda */
+
+.ngx-mat-select-search input {
+    padding: 10px;
+}

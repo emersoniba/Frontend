@@ -13,13 +13,11 @@ import { EntidadService } from '../../../../services/entidad.service';
 import { DepartamentoService } from '../../../../services/departamento.service';
 import Swal from 'sweetalert2';
 import { MatIconModule } from '@angular/material/icon';
-import { map } from 'rxjs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { startWith } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { debounceTime, map, Observable, ReplaySubject, startWith, Subject, takeUntil } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Entidad } from '../../../../models/proyecto.model';
-
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 @Component({
   standalone: true,
@@ -36,6 +34,7 @@ import { Entidad } from '../../../../models/proyecto.model';
     MatSelectModule,
     MatIconModule,
     MatAutocompleteModule,
+    NgxMatSelectSearchModule,
   ],
   templateUrl: './proyecto-modal.component.html',
   encapsulation: ViewEncapsulation.None,
@@ -44,11 +43,14 @@ import { Entidad } from '../../../../models/proyecto.model';
 })
 export class ProyectoModalComponent implements OnInit, OnDestroy, AfterViewInit {
   proyectoForm: FormGroup;
+  //
+  entidadFilterCtrl: FormControl = new FormControl();
+  entidadesFiltradas: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  protected _onDestroy = new Subject<void>();
+  //
   entidades: any[] = [];
   departamentos: any[] = [];
   isEditMode: boolean = false;
-  entidadControl = new FormControl('');
-  entidadesFiltradas!: Observable<Entidad[]>;
 
   constructor(
     private fb: FormBuilder,
@@ -79,47 +81,68 @@ export class ProyectoModalComponent implements OnInit, OnDestroy, AfterViewInit 
         fecha_finalizacion: new Date(this.data.proyecto.fecha_finalizacion)
       });
     }
+//
+ // Escuchar cambios en el filtro
+    this.entidadFilterCtrl.valueChanges
+      .pipe(
+        takeUntil(this._onDestroy),
+        debounceTime(200)
+      )
+      .subscribe(() => {
+        this.filtrarEntidades();
+      });
   }
+  filtrarEntidades() {
+    if (!this.entidades) return;
 
-  cargarEntidades(): void {
-    this.entidadService.getEntidades().subscribe({
-      next: (data) => this.entidades = data,
-      error: (err) => console.error('Error cargando entidades:', err)
-    });
+    const searchTerm = (this.entidadFilterCtrl.value || '').toString().toLowerCase();
+    
+    if (!searchTerm) {
+      this.entidadesFiltradas.next([...this.entidades]);
+      return;
+    }
+
+    this.entidadesFiltradas.next(
+      this.entidades.filter(e => 
+        e.denominacion.toLowerCase().includes(searchTerm)
+      )
+    );
   }
+  
+  ngOnDestroy(): void {
+    this._onDestroy.next();
+    this._onDestroy.complete();
+  }
+cargarEntidades(): void {
+  this.entidadService.getEntidades().subscribe({
+    next: (data) => {
+      this.entidades = data;
+      this.entidadesFiltradas.next(this.entidades.slice());
+      this.setupFilter(); 
+    },
+    error: (err) => console.error('Error cargando entidades:', err)
+  });
+}
 
+private setupFilter(): void {
+  this.entidadFilterCtrl.valueChanges
+    .pipe(
+      takeUntil(this._onDestroy),
+      debounceTime(200),
+      startWith('') 
+    )
+    .subscribe(() => this.filtrarEntidades());
+}
   cargarDepartamentos(): void {
     this.departamentoService.getDepartamentos().subscribe({
       next: (data) => this.departamentos = data,
       error: (err) => console.error('Error cargando departamentos:', err)
     });
   }
-  private _filtrarEntidades(valor: string): any[] {
-    const filtro = valor?.toLowerCase() || '';
-    if (!filtro.trim()) {
-      return this.entidades;
-    }
-    return this.entidades.filter(entidad =>
-      entidad.denominacion.toLowerCase().includes(filtro)
-    );
-  }
 
-
-  onEntidadSelected(event: MatAutocompleteSelectedEvent): void {
-    const entidad = this.entidades.find(e => e.denominacion === event.option.value);
-    if (entidad) {
-      this.proyectoForm.get('entidad_id')?.setValue(entidad.id);
-    }
-  }
-  ngOnDestroy(): void {
-    
-  }
   ngAfterViewInit(): void {
     
   }
-  
-
-
   onCancel(): void {
     this.dialogRef.close();
   }
