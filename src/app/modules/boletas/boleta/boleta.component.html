@@ -1,71 +1,59 @@
 <div class="container">
-  <mat-card>
-    <mat-card-header class="header">
-      <mat-card-title>Gestión de Boletas</mat-card-title>
-      <mat-card-subtitle>Listado de todas las boletas registradas</mat-card-subtitle>
-    </mat-card-header>
-    
-    <mat-card-content>
-      <div class="controls-container">
-        <button mat-raised-button color="primary" (click)="abrirModalCrear()" class="new-button">
-          <mat-icon>add</mat-icon> Nueva Boleta
-        </button>
-        <button mat-raised-button color="accent" (click)="abrirDialogoReporte()">
-          <mat-icon>download</mat-icon> Exportar Boletas
-        </button>
-      </div>
-      
-      <!-- AG-Grid -->
-      <div class="grid-container">
-        <ag-grid-angular
-          style="width: 100%; height: 600px;"
-          class="ag-theme-alpine"
-          [rowData]="rowData"
-          [columnDefs]="columnDefs"
-          [gridOptions]="gridOptions"
-          [animateRows]="true"
-          [suppressCellFocus]="true"
-          (cellClicked)="onCellClicked($event)"
-          (gridReady)="onGridReady($event)">
-        </ag-grid-angular>
-      </div>
-      <!--leyenda-->
-      <div class="leyenda-vencimiento">
-      <h4>Dias de vencimiento de Boletas</h4>
-      <div class="leyenda-item">
-        <span class="leyenda-color" style="background-color: #00C851;"></span>
-        <span>Más de 15 días para vencer</span>
-      </div>
-      <div class="leyenda-item">
-        <span class="leyenda-color" style="background-color: #ffbb33;"></span>
-        <span>De 4 a 15 días para vencer</span>
-      </div>
-      <div class="leyenda-item">
-        <span class="leyenda-color" style="background-color: #ff4444;"></span>
-        <span>De 0 a 3 días para vencer</span>
-      </div>
-      <div class="leyenda-item">
-        <span class="leyenda-color" style="background-color: #cc0000;"></span>
-        <span>Boleta vencida</span>
-      </div>
-    </div>
-      <!-- Paginador -->
-      <mat-paginator [length]="totalRecords"
-                     [pageSize]="pageSize"
-                     [pageSizeOptions]="pageSizeOptions"
-                     [pageIndex]="pageIndex"
-                     (page)="onPageChange($event)"
-                     showFirstLastButtons
-                     class="custom-paginator">
-      </mat-paginator>
+	<mat-card>
+		<mat-card-header class="header">
+			<mat-card-title>Gestión de Boletas</mat-card-title>
+			<mat-card-subtitle>Listado de todas las boletas registradas</mat-card-subtitle>
+		</mat-card-header>
 
-      <!-- Loading spinner -->
-      <div *ngIf="loading" class="loading-overlay">
-        <mat-spinner>
-               <p>Cargando boletas...</p>
-        </mat-spinner>
-   
-      </div>
-    </mat-card-content>
-  </mat-card>
+		<mat-card-content>
+			<div class="controls-container">
+				<button mat-raised-button color="primary" (click)="abrirModalCrear()" class="new-button">
+					<mat-icon>add</mat-icon> Nueva Boleta
+				</button>
+				<button mat-raised-button color="accent" (click)="abrirDialogoReporte()">
+					<mat-icon>download</mat-icon> Exportar Boletas
+				</button>
+			</div>
+
+			<!-- AG-Grid -->
+			<div class="grid-container">
+				<ag-grid-angular style="width: 100%; height: 600px;" class="ag-theme-alpine" [rowData]="rowData"
+					[columnDefs]="columnDefs" [gridOptions]="gridOptions" [animateRows]="true"
+					[suppressCellFocus]="true" (cellClicked)="onCellClicked($event)" (gridReady)="onGridReady($event)">
+				</ag-grid-angular>
+			</div>
+			<!--leyenda-->
+			<div class="leyenda-vencimiento">
+				<h4>Dias de vencimiento de Boletas</h4>
+				<div class="leyenda-item">
+					<span class="leyenda-color" style="background-color: #00C851;"></span>
+					<span>Más de 15 días para vencer</span>
+				</div>
+				<div class="leyenda-item">
+					<span class="leyenda-color" style="background-color: #ffbb33;"></span>
+					<span>De 4 a 15 días para vencer</span>
+				</div>
+				<div class="leyenda-item">
+					<span class="leyenda-color" style="background-color: #ff4444;"></span>
+					<span>De 0 a 3 días para vencer</span>
+				</div>
+				<div class="leyenda-item">
+					<span class="leyenda-color" style="background-color: #cc0000;"></span>
+					<span>Boleta vencida</span>
+				</div>
+			</div>
+			<!-- Paginador -->
+			<mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+				[pageIndex]="pageIndex" (page)="onPageChange($event)" showFirstLastButtons class="custom-paginator">
+			</mat-paginator>
+
+			<!-- Loading spinner -->
+			<div *ngIf="loading" class="loading-overlay">
+				<mat-spinner>
+					<p>Cargando boletas...</p>
+				</mat-spinner>
+
+			</div>
+		</mat-card-content>
+	</mat-card>
 </div>

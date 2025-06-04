@@ -28,7 +28,7 @@
                     <mat-label>Departamento</mat-label>
                     <mat-icon matIconPrefix>location_on</mat-icon>
                     <mat-select formControlName="departamento_id">
-                        @for (ac of data.departamentos; track ac.id) {
+                        @for (ac of dataDepartamentos; track ac.id) {
                         <mat-option [value]="ac.id">{{ ac.nombre }}</mat-option>
                         }
                     </mat-select>

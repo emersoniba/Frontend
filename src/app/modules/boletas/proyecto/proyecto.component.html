@@ -1,32 +1,30 @@
 <mat-card>
-  <mat-card-header>
-    <mat-card-title>Gestión de Proyectos</mat-card-title>
-    <mat-card-subtitle>Listado de todos los proyectos</mat-card-subtitle>
-  </mat-card-header>
+	<mat-card-header>
+		<mat-card-title>Gestión de Proyectos</mat-card-title>
+		<mat-card-subtitle>Listado de todos los proyectos</mat-card-subtitle>
+	</mat-card-header>
 
-  <mat-card-actions style="display: flex; justify-content: space-between; align-items: center;">
-    
-    <button mat-raised-button color="primary" (click)="abrirModalCrear()">
-      <mat-icon>add</mat-icon> Nuevo Proyecto
-    </button>
-      <button mat-raised-button color="accent" (click)="abrirDialogoReporte()">
-          <mat-icon>download</mat-icon> Exportar Proyectos
-      </button>
-  </mat-card-actions>
+	<mat-card-actions style="display: flex; justify-content: space-between; align-items: center;">
 
-  <mat-card-content>
-    <ag-grid-angular
-      #agGrid
-      style="width: 100%; height: 500px;"
-      class="ag-theme-alpine"
-      [rowData]="proyectos"
-      [columnDefs]="columnDefs"
-      [defaultColDef]="defaultColDef"
-      (gridReady)="onGridReady($event)"
-      [pagination]="true"
-      [paginationPageSize]="10"
-      (cellClicked)="onCellClicked($event)">
-    </ag-grid-angular>
-  </mat-card-content>
+		<button mat-raised-button color="primary" (click)="abrirModalCrear()">
+			<mat-icon>add</mat-icon> Nuevo Proyecto
+		</button>
+		<button mat-raised-button color="accent" (click)="abrirDialogoReporte()">
+			<mat-icon>download</mat-icon> Exportar Proyectos
+		</button>
+	</mat-card-actions>
+
+	<mat-card-content>
+		<ag-grid-angular
+			style="width: 100%; height: 500px;"
+			class="ag-theme-alpine"
+			[rowData]="proyectos"
+			[columnDefs]="columnDefs"
+			[defaultColDef]="defaultColDef"
+			(gridReady)="onGridReady($event)"
+			[pagination]="true" [paginationPageSize]="10"
+			(cellClicked)="onCellClicked($event)"
+		></ag-grid-angular>
+	</mat-card-content>
 
 </mat-card>

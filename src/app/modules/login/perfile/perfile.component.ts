@@ -19,155 +19,142 @@ import { CambiarPasswordComponent } from './cambiar-password/cambiar-password.co
 import { SubirImagenComponent } from './subir-imagen/subir-imagen.component';
 
 @Component({
-  selector: 'app-perfile',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule, MatGridListModule,
-    CommonModule,
-    MatDialogModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule,
-  ],
-  templateUrl: './perfile.component.html',
-  styleUrl: './perfile.component.css'
+	selector: 'app-perfile',
+	standalone: true,
+	imports: [
+		ReactiveFormsModule, MatGridListModule,
+		CommonModule,
+		MatDialogModule,
+		MatCardModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatSelectModule,
+		MatButtonModule,
+		MatIconModule,
+	],
+	templateUrl: './perfile.component.html',
+	styleUrl: './perfile.component.css'
 })
-
-
 
 export class PerfileComponent implements OnInit, OnDestroy {
 
-  public formPersona: FormGroup;
-  public persona?: Persona;
-  public dataDepartamento: Departamento[] = [];
-  private personaSubscriptor?: Subscription;
+	public formPersona: FormGroup;
+	public persona: Persona = {} as Persona;
+	public dataDepartamento: Departamento[] = [];
+	private personaSubscriptor?: Subscription;
 
-  /*deseaq*/
-  public imagenPreview: string | null = null;
-  public convertido: string | null = null;
+	/*deseaq*/
+	public imagenPreview: string | null = null;
+	public convertido: string | null = null;
 
-  constructor(
-    private readonly personaService: PersonaService,
-    private readonly departamentoService: DepartamentoService,
-    private readonly dialog: MatDialog,
-    private readonly fb: FormBuilder
-  ) {
-    this.formPersona = new FormGroup({});
-  }
+	constructor(
+		private readonly personaService: PersonaService,
+		private readonly departamentoService: DepartamentoService,
+		private readonly dialog: MatDialog,
+		private readonly fb: FormBuilder
+	) {
+		this.formPersona = new FormGroup({});
+	}
 
-  ngOnInit(): void {
-    this.getDepartamento();
-    this.getMiPerfil();
-  }
+	ngOnInit(): void {
+		this.getMiPerfil();
+	}
 
-  ngOnDestroy(): void {
-    this.personaSubscriptor?.unsubscribe();
-  }
+	ngOnDestroy(): void {
+		this.personaSubscriptor?.unsubscribe();
+	}
 
-public getMiPerfil(): void {
-  this.personaSubscriptor = this.personaService.getPerfil().subscribe({
-    next: (response) => {
-      this.persona = {
-        ...response.persona,
-        usuario: response.usuario,
-        roles: response.roles
-      };
+	public getMiPerfil(): void {
+		this.personaSubscriptor = this.personaService.getPerfil().subscribe({
+			next: (response) => {
+				this.persona = {
+					...response.data.persona,
+					usuario: response.data.usuario,
+					roles: response.data.roles
+				};
 
-      if (this.persona.imagen) {
-        this.imagenPreview = 'data:image/png;base64,' + this.persona.imagen;
-      } else {
-        this.imagenPreview = null; 
-      }
-    },
-    error: () => {
-      Swal.fire('Error', 'No se pudo cargar el perfil del usuario.', 'error');
-    }
-  });
-}
+				console.log(this.persona);
 
-  public getDepartamento(): void {
-    this.departamentoService.getDepartamentos().subscribe({
-      next: (response: Departamento[]) => {
-        this.dataDepartamento = response;
-      },
-      error: (err: unknown) => console.error(err)
-    });
-  }
+				if (this.persona?.imagen) {
+					this.imagenPreview = 'data:image/png;base64,' + this.persona.imagen;
+				} else {
+					this.imagenPreview = null;
+				}
+			},
+			error: () => {
+				Swal.fire('Error', 'No se pudo cargar el perfil del usuario.', 'error');
+			}
+		});
+	}
 
-  public editar(): void {
-    if (!this.persona) return;
-    this.dialog.open(UsuarioFormDialogComponent, {
-      width: '40vw',
-      maxWidth: '60vw',
-      disableClose: true,
-      data: {
-        departamentos: this.dataDepartamento,
-        persona: this.persona
-      }
-    }).afterClosed().subscribe(result => {
-      if (result) {
-        this.getMiPerfil();
-        Swal.fire('¡Actualizado!', 'La persona ha sido actualizada correctamente.', 'success');
-      }
-    });
-  }
+	public editar(): void {
+		if (!this.persona) return;
+		this.dialog.open(UsuarioFormDialogComponent, {
+			width: '40vw',
+			maxWidth: '60vw',
+			disableClose: true,
+			data: this.persona
+		}).afterClosed().subscribe(result => {
+			if (result) {
+				this.getMiPerfil();
+				Swal.fire('¡Actualizado!', 'La persona ha sido actualizada correctamente.', 'success');
+			}
+		});
+	}
 
-  public cambiarPassword(): void {
-    const dialogRef = this.dialog.open(CambiarPasswordComponent, {
-      width: '400px',
-      maxWidth: '60vw',//configurar para movils
-      disableClose: true,
-    }
+	public cambiarPassword(): void {
+		const dialogRef = this.dialog.open(CambiarPasswordComponent, {
+			width: '400px',
+			maxWidth: '60vw',//configurar para movils
+			disableClose: true,
+		}
 
-    );
+		);
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        if (!this.persona || !this.persona.ci) {
-          Swal.fire('Error', 'No se encontró la persona o su CI.', 'error');
-          return;
-        }
-        const ciNumber = typeof this.persona.ci === 'number' ? this.persona.ci : Number(this.persona.ci);
-        if (isNaN(ciNumber)) {
-          Swal.fire('Error', 'El CI no es válido.', 'error');
-          return;
-        }
-        const payload = {
-          password_actual: result.currentPassword,
-          nuevo_password: result.newPassword,
-          confirmacion_password: result.confirmPassword
-        };
-        this.personaService.postChangePassword(ciNumber, payload).subscribe({
-          next: (res) => {
-            Swal.fire('¡Éxito!', res.message || 'Contraseña cambiada correctamente.', 'success');
-          },
-          error: (err) => {
-            Swal.fire('Error', err.error?.message || 'No se pudo cambiar la contraseña.', 'error');
-          }
-        });
-      }
-    });
-  }
+		dialogRef.afterClosed().subscribe(result => {
+			if (result) {
+				if (!this.persona || !this.persona.ci) {
+					Swal.fire('Error', 'No se encontró la persona o su CI.', 'error');
+					return;
+				}
+				const ciNumber = typeof this.persona.ci === 'number' ? this.persona.ci : Number(this.persona.ci);
+				if (isNaN(ciNumber)) {
+					Swal.fire('Error', 'El CI no es válido.', 'error');
+					return;
+				}
+				const payload = {
+					password_actual: result.currentPassword,
+					nuevo_password: result.newPassword,
+					confirmacion_password: result.confirmPassword
+				};
+				this.personaService.postChangePassword(ciNumber, payload).subscribe({
+					next: (res) => {
+						Swal.fire('¡Éxito!', res.message || 'Contraseña cambiada correctamente.', 'success');
+					},
+					error: (err) => {
+						Swal.fire('Error', err.error?.message || 'No se pudo cambiar la contraseña.', 'error');
+					}
+				});
+			}
+		});
+	}
 
-  public subirImagen(): void {
-    if (!this.persona || !this.persona.ci) {
-      Swal.fire('Error', 'No se encontró la persona o su CI.', 'error');
-      return;
-    }
-    this.dialog.open(SubirImagenComponent, {
-      disableClose: true,
-      width: '30vw',
-      maxWidth: '30vw',
-      data: { ci: this.persona.ci }
-    }).afterClosed().subscribe((result) => {
-      if (result) {
-        Swal.fire('¡Éxito!', 'Imagen actualizada correctamente.', 'success');
-        this.getMiPerfil(); 
-      }
-    });
-  }
+	public subirImagen(): void {
+		if (!this.persona || !this.persona.ci) {
+			Swal.fire('Error', 'No se encontró la persona o su CI.', 'error');
+			return;
+		}
+		this.dialog.open(SubirImagenComponent, {
+			disableClose: true,
+			width: '30vw',
+			maxWidth: '30vw',
+			data: { ci: this.persona.ci }
+		}).afterClosed().subscribe((result) => {
+			if (result) {
+				Swal.fire('¡Éxito!', 'Imagen actualizada correctamente.', 'success');
+				this.getMiPerfil();
+			}
+		});
+	}
 
 }

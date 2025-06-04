@@ -2,70 +2,67 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Boleta, Estado, EntidadFinanciera } from '../models/boleta.model';
+import { environment } from '../../environment/environment';
+import { ResponseData } from '../models/response.model';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class BoletaService {
-  private apiUrl = 'http://127.0.0.1:8000/api/boletas/'; // Ajusta tu URL
 
-  constructor(private http: HttpClient) { }
+	private apiUrl = `${environment.apiUrl}/boletas/`;
+	private apiUrlBoletas = `${environment.apiUrl}/boletas-por-proyecto/listado-boletas-por-proyecto/`;
 
-  getBoletas(): Observable<Boleta[]> {
-    return this.http.get<Boleta[]>(this.apiUrl);
-  }
+	constructor(private http: HttpClient) { }
 
-  getBoleta(id: number): Observable<Boleta> {
-    return this.http.get<Boleta>(`${this.apiUrl}${id}/`);
-  }
+	getBoletas(): Observable<Boleta[]> {
+		return this.http.get<Boleta[]>(this.apiUrl);
+	}
 
-  createBoleta(boleta: Boleta): Observable<Boleta> {
-    return this.http.post<Boleta>(this.apiUrl, boleta);
-  }
+	getBoleta(id: number): Observable<Boleta> {
+		return this.http.get<Boleta>(`${this.apiUrl}${id}/`);
+	}
 
-  updateBoleta(id: number, boleta: Boleta): Observable<Boleta> {
-    return this.http.put<Boleta>(`${this.apiUrl}${id}/`, boleta);
-  }
+	createBoleta(boleta: Boleta): Observable<Boleta> {
+		return this.http.post<Boleta>(this.apiUrl, boleta);
+	}
 
-  deleteBoleta(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}${id}/`);
-  }
-  getBoletasPorProyecto(proyectoId: number): Observable<Boleta[]> {
-    const url = `http://127.0.0.1:8000/api/boleta_proyecto/?proyecto_id=${proyectoId}`;
+	updateBoleta(id: number, boleta: Boleta): Observable<Boleta> {
+		return this.http.put<Boleta>(`${this.apiUrl}${id}/`, boleta);
+	}
 
-    return this.http.get<Boleta[]>(url).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error('Error cargando boletaaaaaas: ', error);
-        return throwError(() => new Error('Error al cargar boletas'));
-      })
-    );
-  }
+	deleteBoleta(id: number): Observable<void> {
+		return this.http.delete<void>(`${this.apiUrl}${id}/`);
+	}
+	getBoletasPorProyecto(proyectoId: number): Observable<ResponseData> {
+		return this.http.get<ResponseData>(`${this.apiUrlBoletas}?proyecto_id=${proyectoId}`);
+	}
 
 
 }
 export class EstadoService {
-  private apiUrl = 'http://127.0.0.1:8000/api/';
+	private apiUrl = 'http://127.0.0.1:8000/api/';
 
-  constructor(private http: HttpClient) { }
+	constructor(private http: HttpClient) { }
 
 
-  getEstados(): Observable<Estado[]> {
-    return this.http.get<Estado[]>(`${this.apiUrl}estados/`);
-  }
+	getEstados(): Observable<Estado[]> {
+		return this.http.get<Estado[]>(`${this.apiUrl}estados/`);
+	}
 
-  getEntidadesFinancieras(): Observable<EntidadFinanciera[]> {
-    return this.http.get<EntidadFinanciera[]>(`${this.apiUrl}entidad_financiera/`);
-  }
+	getEntidadesFinancieras(): Observable<EntidadFinanciera[]> {
+		return this.http.get<EntidadFinanciera[]>(`${this.apiUrl}entidad_financiera/`);
+	}
 }
 export class EntidadService {
-  private apiUrl = 'http://127.0.0.1:8000/api/'; 
+	private apiUrl = 'http://127.0.0.1:8000/api/';
 
-  constructor(private http: HttpClient) { }
+	constructor(private http: HttpClient) { }
 
-  getEntidadesFinancieras(): Observable<EntidadFinanciera[]> {
-    return this.http.get<EntidadFinanciera[]>(`${this.apiUrl}entidad_financiera/`);
-  }
-  getDashboardData(): Observable<any> {
-  return this.http.get(`${this.apiUrl}dashboard/`); // Asegúrate de que coincide con tu endpoint
-}
+	getEntidadesFinancieras(): Observable<EntidadFinanciera[]> {
+		return this.http.get<EntidadFinanciera[]>(`${this.apiUrl}entidad_financiera/`);
+	}
+	getDashboardData(): Observable<any> {
+		return this.http.get(`${this.apiUrl}dashboard/`); // Asegúrate de que coincide con tu endpoint
+	}
 }

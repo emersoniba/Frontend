@@ -9,42 +9,43 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
-  const token = localStorage.getItem('tkn-boletas');
-  const authService = inject(AuthService);
-  const router = inject(Router);
-  const dialog = inject(MatDialog);
 
-  const authReq = token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
+	const token = localStorage.getItem('tkn-boletas');
+	const authService = inject(AuthService);
+	const router = inject(Router);
+	const dialog = inject(MatDialog);
 
-  return next(authReq).pipe(
-    catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 && !req.url.includes('/refresh/')) {
-        const refresh = localStorage.getItem('tkn-refresh');
-        dialog.closeAll();
-        if (refresh) {
-          return authService.refreshToken().pipe(
-            switchMap((res: any) => {
-              localStorage.setItem('tkn-boletas', res.access);
-              const newReq = req.clone({
-                setHeaders: { Authorization: `Bearer ${res.access}` }
-              });
-              return next(newReq);
-            }),
-            catchError(() => {
-              localStorage.clear();
-              router.navigate(['/login']);
-              Swal.fire('Sesión expirada', 'Por favor vuelve a iniciar sesión.', 'info');
-              return throwError(() => error);
-            })
-          );
-        } else {
-          localStorage.clear();
-          router.navigate(['/login']);
-          Swal.fire('Sesión expirada', 'Por favor vuelve a iniciar sesión.', 'info');
-        }
-      }
+	const authReq = token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
 
-      return throwError(() => error);
-    })
-  );
+	return next(authReq).pipe(
+		catchError((error: HttpErrorResponse) => {
+			if (error.status === 401 && !req.url.includes('/refresh/')) {
+				const refresh = localStorage.getItem('tkn-refresh');
+				dialog.closeAll();
+				if (refresh) {
+					return authService.refreshToken().pipe(
+						switchMap((res: any) => {
+							localStorage.setItem('tkn-boletas', res.access);
+							const newReq = req.clone({
+								setHeaders: { Authorization: `Bearer ${res.access}` }
+							});
+							return next(newReq);
+						}),
+						catchError(() => {
+							localStorage.clear();
+							router.navigate(['/login']);
+							Swal.fire('Sesión expirada', 'Por favor vuelve a iniciar sesión.', 'info');
+							return throwError(() => error);
+						})
+					);
+				} else {
+					localStorage.clear();
+					router.navigate(['/login']);
+					Swal.fire('Sesión expirada', 'Por favor vuelve a iniciar sesión.', 'info');
+				}
+			}
+
+			return throwError(() => error);
+		})
+	);
 };

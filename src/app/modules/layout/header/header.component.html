@@ -1,29 +1,28 @@
-<header>
-  <div class="header-info">
-    @if(dataUsuario){
-    <span>Bienvenido: {{ dataUsuario.nombres }} {{ dataUsuario.apellido_paterno }} {{ dataUsuario.apellido_materno
-      }}</span>
-      <span>Cargo: {{ dataUsuario.cargo }}</span>
-      <span>Unidad: {{ dataUsuario.unidad }}</span>
-    } @else {
-    <span>Anonimus</span>
-    }
- 
-
-    
- 
-
-<div class="btn-group me-3">
-	<div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
-		<button type="button" class="btn btn-primary"> Opciones</button>
-		<button type="button" class="btn btn-primary dropdown-toggle-split" ngbDropdownToggle></button>
-		<div class="dropdown-menu" ngbDropdownMenu>
-			<button  (click)="logout()" ngbDropdownItem>Cerrar sesión</button>
-      <button (click)="PerfilUsuario()" ngbDropdownItem>Mi Perfil</button>
-
+<div class="header-basic">
+	<header class="header-container">
+		<div *ngIf="persona" class="perfil-wrapper">
+			<div class="btn-group me-3">
+				<div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
+					<button type="button" class="btn btn-outline-profile">
+						<img [src]="imagenPreview" alt="Avatar" />
+						{{ persona.usuario?.username || 'Sin usuario' }}
+					</button>
+					<button type="button" class="btn btn-outline-profile dropdown-toggle-split"
+						ngbDropdownToggle></button>
+					<div class="dropdown-menu" ngbDropdownMenu>
+						<button ngbDropdownItem>
+							<p class="nombre">{{ persona.nombres }} {{ persona.apellido_paterno }} {{
+								persona.apellido_materno }}</p>
+							<p class="cargo">{{ persona.cargo }}</p>
+						</button>
+						<hr />
+						<button (click)="logout()" ngbDropdownItem><mat-icon>directions_run</mat-icon>Cerrar
+							sesión</button>
+						<button (click)="PerfilUsuario()" ngbDropdownItem><mat-icon>account_circle</mat-icon>Mi
+							Perfil</button>
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
+	</header>
 </div>
-
-  </div>
-</header>

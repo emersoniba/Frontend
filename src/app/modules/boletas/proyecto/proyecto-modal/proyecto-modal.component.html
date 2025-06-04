@@ -1,77 +1,69 @@
 <h2 mat-dialog-title>{{ isEditMode ? 'Editar Proyecto' : 'Nuevo Proyecto' }}</h2>
 <mat-dialog-content>
-  <form [formGroup]="proyectoForm" class="modal-form">
-    <mat-form-field appearance="fill" class="w-100">
-      <mat-icon matIconPrefix>store</mat-icon>
-      <mat-label>Nombre</mat-label>
-      <input matInput formControlName="nombre" required>
-      <mat-error *ngIf="proyectoForm.get('nombre')?.invalid">Nombre es requerido</mat-error>
-    </mat-form-field>
+	<form [formGroup]="proyectoForm" class="modal-form">
 
-    <mat-form-field appearance="fill" class="w-100">
-      <mat-icon matIconPrefix>description</mat-icon>
-      <mat-label>Descripción</mat-label>
-      <textarea matInput formControlName="descripcion" required></textarea>
-      <mat-error *ngIf="proyectoForm.get('descripcion')?.invalid">Descripción es requerida</mat-error>
-    </mat-form-field>
-<!--inicio search entidad-->
- <mat-form-field appearance="fill" class="full-width">
-  <mat-label>Entidad</mat-label>
-  <mat-select formControlName="entidad_id" required>
-    <!-- Input de búsqueda -->
-    <mat-option>
-      <ngx-mat-select-search
-        [formControl]="entidadFilterCtrl"
-        placeholderLabel="Buscar entidad..."
-        noEntriesFoundLabel="No se encontraron entidades"
-        [showNoEntriesFound]="true"
-        [clearSearchInput]="true"
-        [disableInitialFocus]="false"   
-      ></ngx-mat-select-search>
-    </mat-option>
-    
-    <!-- Opciones filtradas -->
-    <mat-option *ngFor="let entidad of entidadesFiltradas | async" [value]="entidad.id">
-      {{ entidad.denominacion }}
-    </mat-option>
-  </mat-select>
-  <mat-error *ngIf="proyectoForm.get('entidad_id')?.invalid">Entidad es requerida</mat-error>
-</mat-form-field>
-<!--fin-->
+		<mat-form-field appearance="fill" class="w-100">
+			<mat-icon matIconPrefix>store</mat-icon>
+			<mat-label>Nombre</mat-label>
+			<input matInput formControlName="nombre" required>
+			<mat-error *ngIf="proyectoForm.get('nombre')?.invalid">Nombre es requerido</mat-error>
+		</mat-form-field>
 
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-icon matIconPrefix>location_city</mat-icon>
-      <mat-label>Departamento</mat-label>
-      <mat-select formControlName="departamento_id" required>
-        <mat-option *ngFor="let depto of departamentos" [value]="depto.id">
-          {{ depto.nombre }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="proyectoForm.get('departamento_id')?.invalid">Departamento es requerido</mat-error>
-    </mat-form-field>
+		<mat-form-field appearance="fill" class="w-100">
+			<mat-icon matIconPrefix>description</mat-icon>
+			<mat-label>Descripción</mat-label>
+			<textarea matInput formControlName="descripcion" required></textarea>
+			<mat-error *ngIf="proyectoForm.get('descripcion')?.invalid">Descripción es requerida</mat-error>
+		</mat-form-field>
 
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Fecha Creación</mat-label>
-      <input matInput [matDatepicker]="creadoPicker" formControlName="fecha_creado" required>
-      <mat-datepicker-toggle matSuffix [for]="creadoPicker"></mat-datepicker-toggle>
-      <mat-datepicker #creadoPicker></mat-datepicker>
-      <mat-error *ngIf="proyectoForm.get('fecha_creado')?.invalid">Fecha es requerida</mat-error>
-    </mat-form-field>
+		<mat-form-field appearance="fill" class="full-width">
+			<mat-label>Entidad</mat-label>
+			<mat-select formControlName="entidad_id" required>
+				<mat-option>
+					<ngx-mat-select-search [formControl]="entidadFilterCtrl" placeholderLabel="Buscar entidad..."
+						[noEntriesFoundLabel]="'No se encontraron entidades'" [clearSearchInput]="true"
+						[disableInitialFocus]="false"></ngx-mat-select-search>
+				</mat-option>
+				<mat-option *ngFor="let entidad of entidadesFiltradas | async" [value]="entidad.id">
+					{{ entidad.denominacion }}
+				</mat-option>
+			</mat-select>
+			<mat-error *ngIf="proyectoForm.get('entidad_id')?.invalid">Entidad es requerida</mat-error>
+		</mat-form-field>
 
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Fecha Finalización</mat-label>
-      <input matInput [matDatepicker]="finalizacionPicker" formControlName="fecha_finalizacion" required>
-      <mat-datepicker-toggle matSuffix [for]="finalizacionPicker"></mat-datepicker-toggle>
-      <mat-datepicker #finalizacionPicker></mat-datepicker>
-      <mat-error *ngIf="proyectoForm.get('fecha_finalizacion')?.invalid">Fecha es requerida</mat-error>
-    </mat-form-field>
-  </form>
+		<mat-form-field appearance="fill" class="full-width">
+			<mat-icon matIconPrefix>location_city</mat-icon>
+			<mat-label>Departamento</mat-label>
+			<mat-select formControlName="departamento_id" required>
+				<mat-option *ngFor="let depto of departamentos" [value]="depto.id">
+					{{ depto.nombre }}
+				</mat-option>
+			</mat-select>
+			<mat-error *ngIf="proyectoForm.get('departamento_id')?.invalid">Departamento es requerido</mat-error>
+		</mat-form-field>
+
+		<mat-form-field appearance="fill" class="full-width">
+			<mat-label>Fecha de Inicio</mat-label>
+			<input matInput [matDatepicker]="creadoPicker" formControlName="fecha_creado" required>
+			<mat-datepicker-toggle matSuffix [for]="creadoPicker"></mat-datepicker-toggle>
+			<mat-datepicker #creadoPicker></mat-datepicker>
+			<mat-error *ngIf="proyectoForm.get('fecha_creado')?.invalid">Fecha es requerida</mat-error>
+		</mat-form-field>
+
+		<mat-form-field appearance="fill" class="full-width">
+			<mat-label>Fecha de Finalización</mat-label>
+			<input matInput [matDatepicker]="finalizacionPicker" formControlName="fecha_finalizacion" required>
+			<mat-datepicker-toggle matSuffix [for]="finalizacionPicker"></mat-datepicker-toggle>
+			<mat-datepicker #finalizacionPicker></mat-datepicker>
+			<mat-error *ngIf="proyectoForm.get('fecha_finalizacion')?.invalid">Fecha es requerida</mat-error>
+		</mat-form-field>
+
+	</form>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()">Cancelar</button>
-  <button mat-raised-button color="primary" 
-          [disabled]="proyectoForm.invalid" 
-          (click)="onSubmit()">
-    {{ isEditMode ? 'Actualizar' : 'Crear' }}
-  </button>
+	<button mat-button (click)="onCancel()">Cancelar</button>
+	<button mat-raised-button color="primary" [disabled]="proyectoForm.invalid" (click)="onSubmit()">
+		{{ isEditMode ? 'Actualizar' : 'Crear' }}
+	</button>
 </mat-dialog-actions>

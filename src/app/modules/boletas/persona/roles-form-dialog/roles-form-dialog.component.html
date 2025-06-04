@@ -1,26 +1,26 @@
 <h2 mat-dialog-title>Editar Roles</h2>
 <mat-dialog-content [formGroup]="form">
-  <mat-form-field appearance="fill" class="w-100">
-    <mat-label>Roles</mat-label>
-    <mat-select formControlName="roles" multiple>
+	<mat-form-field appearance="fill" class="w-100">
+		<mat-label>Roles</mat-label>
+		<mat-select formControlName="roles" multiple>
 
-      <mat-option disabled>
-        <ngx-mat-select-search placeholderLabel="Buscar roles..." [formControl]="rolFiltroControl"
-          noEntriesFoundLabel="No se encontraron roles ">
-        </ngx-mat-select-search>
-      </mat-option>
-      @for (rol of rolesFiltradosList; track rol.id) {
-      <mat-option [value]="rol.id">{{ rol.nombre }}</mat-option>
-      }
-    </mat-select>
+			<mat-option disabled>
+				<ngx-mat-select-search placeholderLabel="Buscar roles..." [formControl]="rolFiltroControl"
+					noEntriesFoundLabel="No se encontraron roles ">
+				</ngx-mat-select-search>
+			</mat-option>
+			@for (rol of rolesFiltradosList; track rol.id) {
+			<mat-option [value]="rol.id">{{ rol.nombre }}</mat-option>
+			}
+		</mat-select>
 
-    @if (form.get('roles')?.hasError('required') || form.get('roles')?.hasError('minlength')) {
-    <mat-error>Debde seleccionar al mkenos un rol.</mat-error>
-    }
-  </mat-form-field>
+		@if (form.get('roles')?.hasError('required') || form.get('roles')?.hasError('minlength')) {
+		<mat-error>Desde seleccionar al mkenos un rol.</mat-error>
+		}
+	</mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="cancelar()">Cancelar</button>
-  <button mat-raised-button color="primary" (click)="submit()">Guardar cambios</button>
+	<button mat-button (click)="cancelar()">Cancelar</button>
+	<button mat-raised-button color="primary" (click)="submit()">Guardar cambios</button>
 </mat-dialog-actions>

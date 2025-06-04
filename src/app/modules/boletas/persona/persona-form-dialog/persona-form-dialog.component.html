@@ -18,8 +18,6 @@
                     <mat-label>CI</mat-label>
                     <mat-icon matIconPrefix>badge</mat-icon>
                     <input matInput formControlName="ci" [readonly]="esEdicion" />
-
-                    <!---<input matInput formControlName="ci" />--->
                     @if (formPersona.get('ci')?.hasError('required')) {
                     <mat-error>El CI es obligatorio</mat-error>
                     }
@@ -34,7 +32,7 @@
                     <mat-label>Departamento</mat-label>
                     <mat-icon matIconPrefix>location_on</mat-icon>
                     <mat-select formControlName="departamento_id">
-                        @for (ac of data.departamentos; track ac.id) {
+                        @for (ac of dataDepartamento; track ac.id) {
                         <mat-option [value]="ac.id">{{ ac.nombre }}</mat-option>
                         }
                     </mat-select>

@@ -1,49 +1,38 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
-import { Boleta } from '../models/boleta.model';
-
-export interface Proyecto {
-  id?: number;
-  nombre: string;
-  descripcion: string;
-  entidad: { id: number, denominacion: string } | number;
-  departamento_id?: number;
-  fecha_creado: string;
-  fecha_finalizacion: string;
-  creado_por_id?: number;
-}
+import { Proyecto } from '../models/proyecto.model';
+import { ResponseData } from '../models/response.model';
+import { Observable } from 'rxjs';
+import { environment } from '../../environment/environment';
 
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class ProyectoService {
-  private apiUrl = 'http://127.0.0.1:8000/api/proyectos/';
+	private apiUrl = `${environment.apiUrl}/proyectos/`;
 
-  constructor(private http: HttpClient) {}
 
-  getProyectos(): Observable<Proyecto[]> {
-    return this.http.get<Proyecto[]>(this.apiUrl);
-  }
+	constructor(private http: HttpClient) { }
 
-  addProyecto(proyecto: Proyecto): Observable<Proyecto> {
-    return this.http.post<Proyecto>(this.apiUrl, proyecto);
-  }
+	getProyectos(): Observable<Proyecto[]> {
+		return this.http.get<Proyecto[]>(this.apiUrl);
+	}
 
-  updateProyecto(id: number, proyecto: Proyecto): Observable<Proyecto> {
-  return this.http.put<Proyecto>(`${this.apiUrl}${id}/`, proyecto);
-}
-  deleteProyecto(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}${id}/`).pipe(
-      catchError(error => {
-        console.error('Error en servicio al eliminar:', error);
-        return throwError(() => error);
-      })
-    );
-  }
-  getProyectosConBoletas(): Observable<Proyecto[]> {
-    return this.http.get<Proyecto[]>(`${this.apiUrl}?includeBoletas=true`);
-  }
+	addProyecto(proyecto: Proyecto): Observable<ResponseData> {
+		return this.http.post<ResponseData>(this.apiUrl, proyecto);
+	}
+
+	updateProyecto(id: number, proyecto: Proyecto): Observable<ResponseData> {
+		return this.http.put<ResponseData>(`${this.apiUrl}${id}/`, proyecto);
+	}
+
+	deleteProyecto(id: number): Observable<Proyecto> {
+		return this.http.delete<Proyecto>(`${this.apiUrl}${id}/`);
+	}
+
+	getProyectosConBoletas(): Observable<ResponseData> {
+		return this.http.get<ResponseData>(`${this.apiUrl}?includeBoletas=true`);
+	}
 }
 

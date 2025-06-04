@@ -5,14 +5,15 @@ import { Observable } from 'rxjs';
 import { Actividad } from '../models/empresa.interface';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class ActividadService {
-  private url = environment.apiUrl;
-  constructor(private http: HttpClient) {}
+	private url = environment.apiUrl;
 
-  getActividades(): Observable<Actividad[]> {
-    return this.http.get<Actividad[]>(`${this.url}/actividad/`);
-  }
- 
+	constructor(private http: HttpClient) { }
+
+	getActividades(): Observable<Actividad[]> {
+		return this.http.get<Actividad[]>(`${this.url}/actividad/`);
+	}
+
 }

@@ -1,5 +1,5 @@
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withHashLocation } from '@angular/router';
 import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 
@@ -9,16 +9,16 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideHttpClient(
-      withInterceptors([tokenInterceptor,])
-    ),
-    provideRouter(routes),
-    importProvidersFrom(),
-    AuthGuard,
-    importProvidersFrom(BrowserModule, HttpClientModule),
-    provideAnimations()
-  ]
+	providers: [
+		provideZoneChangeDetection({ eventCoalescing: true }),
+		provideHttpClient(
+			withInterceptors([tokenInterceptor,])
+		),
+		provideRouter(routes, withHashLocation()),
+		importProvidersFrom(),
+		AuthGuard,
+		importProvidersFrom(BrowserModule, HttpClientModule),
+		provideAnimations()
+	]
 };
 

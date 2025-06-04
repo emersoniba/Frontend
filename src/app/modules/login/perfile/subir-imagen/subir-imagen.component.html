@@ -1,25 +1,21 @@
 <h2 mat-dialog-title>Subir Imagen de Perfil</h2>
 
 <form [formGroup]="form" (ngSubmit)="enviarImagen()" style="margin: 25px;">
-  <div style="text-align: center; margin-bottom: 16px;">
-    <img
-      *ngIf="imagenBase64 || imagenActual"
-      [src]="imagenBase64 ? imagenBase64 : imagenActual"
-      alt="Vista previa"
-      style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;"
-    />
-  </div>
+	<div style="text-align: center; margin-bottom: 16px;">
+		<img *ngIf="imagenBase64 || imagenActual" [src]="imagenBase64 ? imagenBase64 : imagenActual" alt="Vista previa"
+			style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;" />
+	</div>
 
-  <div style="margin-bottom: 16px; text-align: center;">
-    <input type="file" (change)="convertirImagen($event)" accept="image/*" />
-  </div>
+	<div style="margin-bottom: 16px; text-align: center;">
+		<input type="file" (change)="convertirImagen($event)" accept="image/*" />
+	</div>
 
-  <div style="text-align: right; margin-top: 16px;">
-    <button mat-button type="button" (click)="cancelar()">
-      <mat-icon class="me-1">close</mat-icon>Cancelar
-    </button>
-    <button mat-raised-button color="primary" type="submit">
-      <mat-icon class="me-1">save</mat-icon>Guardar
-    </button>
-  </div>
+	<div style="text-align: right; margin-top: 16px;">
+		<button mat-button type="button" (click)="cancelar()">
+			<mat-icon class="me-1">close</mat-icon>Cancelar
+		</button>
+		<button mat-raised-button color="primary" type="submit">
+			<mat-icon class="me-1">save</mat-icon>Guardar
+		</button>
+	</div>
 </form>

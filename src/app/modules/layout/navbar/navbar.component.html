@@ -1,21 +1,32 @@
-<nav>
+<button class="toggle-button" (click)="toggleNav()">
+    <mat-icon>{{ isNavOpen ? 'chevron_left' : 'menu' }}</mat-icon>
+</button>
+
+<nav [ngClass]="{ 'collapsed': !isNavOpen }">
     <ul>
-        @if (tieneAlgunRol([1,4, 2, 3])) {
-        <li><a routerLink="/principal">Dashboard</a></li>
-        }
-        @if (tieneAlgunRol([1, 2 ])) {
+        @if (persona) {
+        <div class="perfil-contenedor">
+            <div class="form-avatar"><img [src]="imagenPreview" alt="Avatar" class="perfil-foto" /></div>
+            @if (isNavOpen) {
+            <div class="descripcion-perfil">
+                <p><strong>{{ persona.nombres }} {{ persona.apellido_paterno }} </strong></p>
+                <p><strong>{{ persona.cargo }}</strong></p>
+            </div>}
+        </div>}
 
-        <li><a routerLink="/empresa">Empresa</a></li>}
-        @if (tieneAlgunRol([1])) {
+        @if (tieneAlgunRol([4, 2, 3])) {
+        <li><a routerLink="/principal" matTooltip="Dashboard"><mat-icon>ballot</mat-icon>@if (isNavOpen) { <span>Dashboard</span> }</a></li>}
 
-        <li><a routerLink="/persona">Persona</a></li>}
         @if (tieneAlgunRol([1, 2])) {
+        <li><a routerLink="/empresa" matTooltip="Empresa"><mat-icon>domain</mat-icon>@if (isNavOpen) { <span>Empresa</span> }</a></li>}
 
-        <li><a routerLink="/proyecto">Proyectos</a></li>}
-        @if (tieneAlgunRol([1, 1])) {
+        @if (tieneAlgunRol([1])) {
+        <li><a routerLink="/persona" matTooltip="Personas"><mat-icon>people</mat-icon>@if (isNavOpen) { <span>Persona</span> }</a></li> }
 
-        <li><a routerLink="/boleta">Boletas</a></li>}
-    
+        @if (tieneAlgunRol([1, 2])) {
+        <li><a routerLink="/proyecto" matTooltip="Proyectos"><mat-icon>file_copy</mat-icon>@if (isNavOpen) { <span>Proyectos</span> }</a></li>}
+
+        @if (tieneAlgunRol([1])) {
+        <li><a routerLink="/boleta" matTooltip="Boletas"><mat-icon>view_compact</mat-icon> @if (isNavOpen) { <span>Boletas</span> }</a></li>}
     </ul>
-
 </nav>

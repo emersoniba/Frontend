@@ -1,65 +1,71 @@
-/* Estilos generales del header */
-
-header {
-    background-color: #0e095c;
-    color: #072b50;
-    padding: 15px;
-    /* 1rem 2rem;*/
-    /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+.header-basic[_ngcontent-ng-c1690134656] {
+	padding: 6px 0;
+	background-color: #070435;
+	/*#062d53;*/
+	align-items: right;
 }
 
-.header-info {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-    max-width: 1200px;
-    margin: 0 auto;
+.header-container {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	padding: 0 1rem;
+	height: 60px;
+	background-color: #062d53;
+	/*background: linear-gradient(to right, #062d53, #00479e);*/
 }
 
-.header-info span {
-    display: inline-block;
-    margin-right: 1rem;
-    font-size: 0.9rem;
-    color: #bdc3c7;
+.perfil-wrapper {
+	display: flex;
+	justify-content: flex-end;
 }
 
-.header-info span:first-child {
-    font-weight: 600;
-    color: #ecf0f1;
-    font-size: 1rem;
+.btn-outline-profile {
+	padding: 4px 8px;
+	font-size: 0.85rem;
+	height: 45px;
+	display: flex;
+	align-items: center;
+	gap: 22px;
+	background-color: #1b07d400;
+	border: 1px solid #ffffff4b;
+	color: #ffffff;
+	box-shadow: none;
+}
+
+.btn-outline-profile img {
+	width: 35px;
+	height: 35px;
+	border-radius: 50%;
+}
+
+.dropdown-menu {
+	position: absolute;
+	top: 100%;
+	right: 0;
+	background-color: #ffffff;
+	border-radius: 4px;
+	z-index: 100%;
+	padding: 0.5rem;
+	font-size: 0.85rem;
+	line-height: 1.2;
+
 }
 
 
-/*
-.header-info button {
-    background-color: #0a081f;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    margin-left: auto;
+.cargo {
+	font-size: 0.65rem;
+	color: #1f1f1f;
+	margin-left: 0px;
+	line-height: 0.2;
+	font-weight: 200;
+	text-align: center;
 }
 
-.header-info button:hover {
-    background-color: #09147e;
-    transform: translateY(-1px);
-}
-*/
-
-@media (max-width: 768px) {
-    .header-info {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-    .header-info button {
-        margin-left: 0;
-        margin-top: 0.5rem;
-    }
+.nombre {
+	font-size: 0.85rem;
+	color: #000000;
+	margin-left: 0px;
+	line-height: 1.2;
+	text-align: center;
 }

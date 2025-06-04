@@ -9,26 +9,25 @@ import { FooterComponent } from './footer/footer.component';
 
 
 @Component({
-  selector: 'app-principal',
-  templateUrl: './principal.component.html',
-  styleUrl: './principal.component.css',
-  imports: [RouterOutlet, NavbarComponent, HeaderComponent, FooterComponent]
+	selector: 'app-principal',
+	templateUrl: './principal.component.html',
+	styleUrl: './principal.component.css',
+	imports: [RouterOutlet, NavbarComponent, HeaderComponent, FooterComponent]
 })
 export class PrincipalComponent implements OnInit {
 
-  public user: any;
+	public user: any;
 
+	constructor(private readonly authService: AuthService) { }
 
-  constructor(private readonly authService: AuthService) { }
+	rolesUsuario: string[] = [];
 
-  rolesUsuario: string[] = [];
+	ngOnInit(): void {
+		const token = localStorage.getItem('tkn-boletas');
+		if (token) {
+			const decoded: any = jwtDecode(token);
 
-  ngOnInit(): void {
-    const token = localStorage.getItem('tkn-boletas');
-    if (token) {
-      const decoded: any = jwtDecode(token);
-      
-    }
-  }
+		}
+	}
 }
 
