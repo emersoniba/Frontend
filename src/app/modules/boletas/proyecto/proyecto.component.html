@@ -15,16 +15,16 @@
 	</mat-card-actions>
 
 	<mat-card-content>
+
 		<ag-grid-angular
 			style="width: 100%; height: 500px;"
-			class="ag-theme-alpine"
+			[theme]="theme"
+			[gridOptions]="gridOptions"
 			[rowData]="proyectos"
-			[columnDefs]="columnDefs"
-			[defaultColDef]="defaultColDef"
-			(gridReady)="onGridReady($event)"
-			[pagination]="true" [paginationPageSize]="10"
-			(cellClicked)="onCellClicked($event)"
-		></ag-grid-angular>
+			[pagination]="true"
+			(gridReady)="onGridReady($event)">
+		</ag-grid-angular>
+
 	</mat-card-content>
 
 </mat-card>

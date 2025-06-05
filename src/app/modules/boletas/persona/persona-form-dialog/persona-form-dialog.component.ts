@@ -1,30 +1,26 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { PersonaService } from '../../../../services/persona.service';
-import { MatIconModule } from '@angular/material/icon';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
-import { Departamento, Persona } from '../../../../models/auth.interface';
+
+import { PersonaService } from '../../../../services/persona.service';
 import { DepartamentoService } from '../../../../services/departamento.service';
+
+import { Departamento, Persona } from '../../../../models/auth.interface';
+import { MaterialModule } from '../../../../shared/app.material';
+
+
 @Component({
 	selector: 'app-persona-form-dialog',
 	standalone: true,
 	imports: [
 		CommonModule,
-		ReactiveFormsModule,
-		MatFormFieldModule, MatInputModule, MatDialogModule,
-		MatButtonModule, MatSelectModule, MatIconModule
+		MaterialModule,
 	],
 	templateUrl: './persona-form-dialog.component.html',
 	styleUrl: './persona-form-dialog.component.css'
 })
-
-
 export class PersonaFormDialogComponent implements OnInit{
 
 	formPersona!: FormGroup;

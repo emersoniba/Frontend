@@ -1,24 +1,19 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { BoletaService } from '../../../../services/boleta.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 import { CurrencyPipe } from '@angular/common';
+import { BoletaService } from '../../../../services/boleta.service';
 import { Boleta } from '../../../../models/boleta.model';
 import { Proyecto } from '../../../../models/proyecto.model';
+import { MaterialModule } from '../../../../shared/app.material';
+
 
 @Component({
 	standalone: true,
 	imports: [
 		CommonModule,
-		MatDialogModule,
-		MatTableModule,
-		MatButtonModule,
-		MatIconModule,
-		MatProgressSpinnerModule
+		MaterialModule
 	],
 	selector: 'app-boletas-proyecto-modal',
 	templateUrl: './boletas-proyecto-modal.component.html',
@@ -33,7 +28,7 @@ export class BoletasProyectoModalComponent implements OnInit {
 	constructor(
 		private boletaService: BoletaService,
 		public dialogRef: MatDialogRef<BoletasProyectoModalComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: { proyecto: Proyecto },
+		@Inject(MAT_DIALOG_DATA) public data: Proyecto,
 	) { }
 
 	ngOnInit(): void {
@@ -41,7 +36,7 @@ export class BoletasProyectoModalComponent implements OnInit {
 	}
 
 	cargarBoletas(): void {
-		this.boletaService.getBoletasPorProyecto(this.data.proyecto.id!).subscribe({
+		this.boletaService.getBoletasPorProyecto(this.data.id!).subscribe({
 			next: (response) => {
 				this.boletas = response.data as Boleta[];
 				this.loading = false;

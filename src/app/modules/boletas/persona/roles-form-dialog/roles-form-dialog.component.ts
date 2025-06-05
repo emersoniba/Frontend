@@ -1,25 +1,23 @@
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatSelectModule } from '@angular/material/select';
-import { CommonModule } from '@angular/common';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { Persona, Rol } from '../../../../models/auth.interface';
-import { PersonaService } from '../../../../services/persona.service';
 import Swal from 'sweetalert2';
+
+import { PersonaService } from '../../../../services/persona.service';
+import { Persona, Rol } from '../../../../models/auth.interface';
+import { MaterialModule } from '../../../../shared/app.material';
 
 
 @Component({
 	selector: 'app-roles-form-dialog',
 	standalone: true,
 	imports: [
-		CommonModule, ReactiveFormsModule, FormsModule, MatButtonModule, MatDialogModule, MatFormFieldModule,
-		MatInputModule, MatSelectModule, NgxMatSelectSearchModule],
+		CommonModule,
+		FormsModule,
+		MaterialModule,
+	],
 	templateUrl: './roles-form-dialog.component.html',
 	styleUrl: './roles-form-dialog.component.css',
 })

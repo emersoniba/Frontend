@@ -1,42 +1,32 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import Swal from 'sweetalert2';
-
-import { PersonaService } from '../../../services/persona.service';
-import { Persona, Departamento, Rol, Usuario } from '../../../models/auth.interface';
-
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
-import { MatToolbarModule } from '@angular/material/toolbar';
-
-import { AgGridAngular, AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
-import { ValueGetterParams, GridOptions, AllCommunityModule, ModuleRegistry, AgEventListener, AgGlobalEventListener, AgGridEvent } from 'ag-grid-community';
+import { AgGridAngular, AgGridModule } from 'ag-grid-angular';
+import { ValueGetterParams, GridOptions, AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { GridReadyEvent } from 'ag-grid-community';
-import { BotonesComponent } from './botones/botones.component';
-import { PersonaFormDialogComponent } from './persona-form-dialog/persona-form-dialog.component';
-import { DepartamentoService } from '../../../services/departamento.service';
-import { UsuarioFormDialogComponent } from './usuario-form-dialog/usuario-form-dialog.component';
-import { RolesFormDialogComponent } from './roles-form-dialog/roles-form-dialog.component';
-
 import { themeMaterial } from 'ag-grid-community';
 
+import { BotonesComponent } from './botones/botones.component';
+import { PersonaFormDialogComponent } from './persona-form-dialog/persona-form-dialog.component';
+import { UsuarioFormDialogComponent } from './usuario-form-dialog/usuario-form-dialog.component';
+import { RolesFormDialogComponent } from './roles-form-dialog/roles-form-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { PersonaService } from '../../../services/persona.service';
+import { Persona } from '../../../models/auth.interface';
+import { MaterialModule } from '../../../shared/app.material';
+
 ModuleRegistry.registerModules([AllCommunityModule]);
+
 
 @Component({
 	selector: 'app-persona',
 	standalone: true,
 	imports: [
-		ReactiveFormsModule, CommonModule, AgGridModule, MatDialogModule, MatCardModule, MatFormFieldModule,
-		MatInputModule, MatSelectModule, MatButtonModule, MatIconModule, MatTableModule, MatToolbarModule,
+		CommonModule,
+		AgGridModule,
+		MaterialModule,
 	],
 
 	templateUrl: './persona.component.html',
@@ -47,11 +37,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 export class PersonaComponent implements OnInit, OnDestroy {
 
 	public theme = themeMaterial;
-	public formPersona: FormGroup;
-	public dataUsuario: Usuario = {} as Usuario;
 	public dataPersonas: Persona[] = [] as Persona[];
-	public dataRol: Rol[] = [];
-	public dataDepartamento: Departamento[] = [];
 	private personaSubscriptor?: Subscription;
 	public gridApi: any;
 	public gridColumnApi: any;
@@ -96,9 +82,7 @@ export class PersonaComponent implements OnInit, OnDestroy {
 	constructor(
 		private readonly personaService: PersonaService,
 		private readonly dialog: MatDialog,
-
 	) {
-		this.formPersona = new FormGroup({});
 	}
 
 	ngOnInit(): void {

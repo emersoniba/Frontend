@@ -1,23 +1,17 @@
-import { AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatSelectModule } from '@angular/material/select';
+import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { debounceTime, ReplaySubject, startWith, Subject, takeUntil } from 'rxjs';
+
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import Swal from 'sweetalert2';
+
 import { ProyectoService } from '../../../../services/proyecto.service';
 import { EntidadService } from '../../../../services/entidad.service';
 import { DepartamentoService } from '../../../../services/departamento.service';
-import Swal from 'sweetalert2';
-import { MatIconModule } from '@angular/material/icon';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { debounceTime, ReplaySubject, startWith, Subject, takeUntil } from 'rxjs';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { Departamento } from '../../../../models/auth.interface';
 import { Entidad, Proyecto } from '../../../../models/proyecto.model';
+import { MaterialModule } from '../../../../shared/app.material';
 
 
 @Component({
@@ -25,17 +19,7 @@ import { Entidad, Proyecto } from '../../../../models/proyecto.model';
 	imports: [
 		CommonModule,
 		FormsModule,
-		ReactiveFormsModule,
-		MatDialogModule,
-		MatButtonModule,
-		MatInputModule,
-		MatFormFieldModule,
-		MatDatepickerModule,
-		MatNativeDateModule,
-		MatSelectModule,
-		MatIconModule,
-		MatAutocompleteModule,
-		NgxMatSelectSearchModule,
+		MaterialModule
 	],
 	templateUrl: './proyecto-modal.component.html',
 	encapsulation: ViewEncapsulation.None,
@@ -73,8 +57,6 @@ export class ProyectoModalComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.cargarEntidades();
 		this.cargarDepartamentos();
-
-		console.log(this.data);
 
 		if (this.data.id) {
 			this.isEditMode = true;
@@ -175,7 +157,7 @@ export class ProyectoModalComponent implements OnInit, OnDestroy {
 
 				if (this.isEditMode) {
 					this.proyectoService.updateProyecto(this.data.id ?? 0, proyectoData).subscribe({
-						next: () => {
+						next: (response) => {
 							Swal.fire({
 								icon: 'success',
 								title: 'Proyecto actualizado',
@@ -183,6 +165,7 @@ export class ProyectoModalComponent implements OnInit, OnDestroy {
 								timer: 2000,
 								showConfirmButton: false
 							});
+							this.dialogRef.close(response);
 						},
 						error: (err) => {
 							Swal.fire({
@@ -213,8 +196,6 @@ export class ProyectoModalComponent implements OnInit, OnDestroy {
 						}
 					});
 				}
-
-
 			}
 		});
 	}

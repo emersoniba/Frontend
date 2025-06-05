@@ -1,15 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatSelectModule } from '@angular/material/select';
-import { CommonModule } from '@angular/common';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Validators } from '@angular/forms';
+
 import { Rol } from '../../../../models/auth.interface';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { MaterialModule } from '../../../../shared/app.material';
 
 
 @Component({
@@ -17,13 +13,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 	standalone: true,
 	imports: [
 		CommonModule,
-		ReactiveFormsModule,
-		MatButtonModule,
-		MatDialogModule,
-		MatFormFieldModule,
-		MatInputModule,
-		MatSelectModule,
-		NgxMatSelectSearchModule,
+		MaterialModule,
 	],
 	templateUrl: './usuario-form-dialog.component.html',
 	styleUrl: './usuario-form-dialog.component.css',

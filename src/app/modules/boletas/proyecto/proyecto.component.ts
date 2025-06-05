@@ -1,94 +1,83 @@
-import { Component, OnInit } from '@angular/core';
-import { ProyectoService } from '../../../services/proyecto.service';
 import { CommonModule } from '@angular/common';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
-import Swal from 'sweetalert2';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+
 import { AgGridAngular, AgGridModule } from 'ag-grid-angular';
-import { ColDef, GridReadyEvent, CellClickedEvent } from 'ag-grid-community';
-import { ProyectoModalComponent } from './proyecto-modal/proyecto-modal.component';
+import { GridReadyEvent, GridApi, GridOptions } from 'ag-grid-community';
+import { themeMaterial } from 'ag-grid-community';
+import { MatDialog } from '@angular/material/dialog';
+import Swal from 'sweetalert2';
+
 import { BoletasProyectoModalComponent } from '../../boletas/proyecto/boletas-proyecto-modal/boletas-proyecto-modal.component';
+import { ProyectoModalComponent } from './proyecto-modal/proyecto-modal.component';
 import { ReporteProyectoComponent } from './reporte-proyecto/reporte-proyecto.component';
+import { BotonesProyectoComponent } from './botones-proyecto/botones-proyecto.component';
+
+import { ProyectoService } from '../../../services/proyecto.service';
 import { BoletaService } from '../../../services/boleta.service';
 import { Boleta } from '../../../models/boleta.model';
 import { Proyecto } from '../../../models/proyecto.model';
+import { localeEs } from '../../../shared/app.locale.es.grid';
+import { Subscription } from 'rxjs';
+import { MaterialModule } from '../../../shared/app.material';
 
 
 @Component({
 	standalone: true,
 	imports: [
 		CommonModule,
-		MatDialogModule,
-		MatButtonModule,
-		MatIconModule,
-		MatCardModule,
-		AgGridModule
+		MaterialModule,
+		AgGridModule,
+		AgGridAngular,
 	],
 	selector: 'app-proyecto',
 	templateUrl: './proyecto.component.html',
 	styleUrls: ['./proyecto.component.css']
 })
-export class ProyectoComponent implements OnInit {
+export class ProyectoComponent implements OnInit, OnDestroy {
 
-	pagination = true;
-	paginationPageSize = 5;
-	proyectos: Proyecto[] = [];
-	entidades: any[] = [];
-	departamentos: any[] = [];
-	boletasDelProyecto: any[] = [];
-	proyectoSeleccionado: any = null;
+	public theme = themeMaterial;
+	public proyectos: Proyecto[] = [] as Proyecto[];
+	private proyectoSubcription: Subscription | undefined;
+	private boletasSubcription: Subscription | undefined;
 
-	public columnDefs: ColDef[] = [
-		{
-			headerName: 'Nombre', field: 'nombre', filter: true,
-			floatingFilter: true
+	private gridApi!: GridApi<Proyecto>;
+	private gridColumnApi: any;
+	public getRowId = (params: Proyecto) => params.id;
+	gridOptions: GridOptions = <GridOptions>{
+		pagination: true,
+		paginationPageSize: 10,
+		paginationPageSizeSelector: [10, 20, 50, 100],
+		detailRowAutoHeight: true,
+		domLayout: 'autoHeight',
+		columnDefs: [
+			{ headerName: 'Nombre', field: 'nombre', filter: true, floatingFilter: true },
+			{ headerName: 'Descripción', field: 'descripcion', filter: true, floatingFilter: true },
+			{ headerName: 'Entidad', field: 'entidad.denominacion', filter: true, floatingFilter: true },
+			{ headerName: 'Departamento', field: 'departamento.nombre', filter: true, floatingFilter: true },
+			{ headerName: 'Fecha Creación', field: 'fecha_creado', filter: 'agDateColumnFilter' },
+			{ headerName: 'Fecha Finalización', field: 'fecha_finalizacion', filter: 'agDateColumnFilter' },
+			{
+				headerName: 'Acciones',
+				cellRenderer: BotonesProyectoComponent,
+				field: 'id',
+				width: 170
+			}
+		],
+		context: {
+			componentParent: this
 		},
-		{ headerName: 'Descripción', field: 'descripcion', filter: true, floatingFilter: true },
-		{ headerName: 'Entidad', field: 'entidad.denominacion', filter: true, floatingFilter: true },
-		{ headerName: 'Departamento', field: 'departamento.nombre', filter: true, floatingFilter: true },
-		{ headerName: 'Fecha Creación', field: 'fecha_creado', filter: 'agDateColumnFilter' },
-		{ headerName: 'Fecha Finalización', field: 'fecha_finalizacion', filter: 'agDateColumnFilter' },
-		{
-			headerName: 'Acciones',
-			cellRenderer: this.accionesRenderer.bind(this),
-			suppressSizeToFit: true,
-			width: 150,
-			cellRendererParams: {
-				onClick: (event: any) => {},
-			},
-
-		}
-	];
-
-	accionesRenderer(params: any): string {
-		return `
-			<button class="btn-ver btn btn-secondary btn-sm"  title="Ver Boletas">📄</button>
-			<button class="btn-editar btn btn-warning btn-sm" title="Editar">✏️</button>
-			<button class="btn-eliminar btn btn-danger btn-sm" title="Eliminar">🗑️</button>
-		`;
-	}
-
-	onCellClicked(event: any): void {
-		const proyecto = event.data;
-		const targetClass = event.event.target.className;
-
-		if (targetClass.includes('btn-ver')) {
-			this.verBoletas(proyecto);
-		} else if (targetClass.includes('btn-editar')) {
-			this.abrirModalEditar(proyecto);
-		} else if (targetClass.includes('btn-eliminar')) {
-			this.eliminarProyecto(proyecto.id);
-		}
-	}
-
-	public defaultColDef: ColDef = {
-		sortable: true,
-		filter: true,
+		defaultColDef: {
+			flex: 1,
+			minWidth: 80,
+			resizable: true
+		},
+		animateRows: true,
+		rowSelection: 'single',
+		localeText: localeEs,
+		paginationNumberFormatter(params) {
+			return params.value.toLocaleString()
+		},
 	};
-
-	editingProyecto: Proyecto | null = null;
 
 	constructor(
 		private proyectoService: ProyectoService,
@@ -101,30 +90,12 @@ export class ProyectoComponent implements OnInit {
 		this.cargarProyectos();
 	}
 
-	onGridReady(params: GridReadyEvent) {
-		params.api.sizeColumnsToFit();
-		params.api.addEventListener('cellClicked', (event: CellClickedEvent) => {
-			const target = event.event?.target as HTMLElement;
-			if (!target) return;
-
-			const button = target.closest('.ag-card-button');
-
-			if (button) {
-				const id = button.getAttribute('data-id');
-				if (id) {
-					if (button.classList.contains('edit')) {
-						const proyecto = this.proyectos.find(p => p.id === +id);
-						if (proyecto) this.abrirModalEditar(proyecto);
-					} else if (button.classList.contains('delete')) {
-						this.eliminarProyecto(+id);
-					}
-				}
-			}
-		});
+	ngOnDestroy(): void {
+		this.proyectoSubcription?.unsubscribe();
 	}
 
 	cargarProyectos(): void {
-		this.proyectoService.getProyectos().subscribe({
+		this.proyectoSubcription = this.proyectoService.getProyectos().subscribe({
 			next: (response) => {
 				this.proyectos = response;
 			},
@@ -135,7 +106,7 @@ export class ProyectoComponent implements OnInit {
 	}
 
 	abrirDialogoReporte(): void {
-		this.boletaService.getBoletas().subscribe((boletas: Boleta[]) => {
+		/*this.boletaService.getBoletas().subscribe((boletas: Boleta[]) => {
 			this.dialog.open(ReporteProyectoComponent, {
 				width: '600px',
 				data: {
@@ -143,7 +114,7 @@ export class ProyectoComponent implements OnInit {
 					boletas: boletas
 				}
 			});
-		});
+		});*/
 	}
 
 	verBoletas(proyecto: Proyecto): void {
@@ -151,7 +122,7 @@ export class ProyectoComponent implements OnInit {
 			width: '50vw',
 			maxWidth: '90vw',
 			maxHeight: '90vh',
-			data: { proyecto },
+			data: proyecto,
 			disableClose: false
 		});
 	}
@@ -184,7 +155,6 @@ export class ProyectoComponent implements OnInit {
 
 	eliminarProyecto(id?: number): void {
 		if (!id) {
-			console.error('ID de proyecto no proporcionado');
 			return;
 		}
 
@@ -199,7 +169,7 @@ export class ProyectoComponent implements OnInit {
 			cancelButtonText: 'Cancelar'
 		}).then((result) => {
 			if (result.isConfirmed) {
-				this.proyectoService.deleteProyecto(id).subscribe({
+				this.proyectoSubcription = this.proyectoService.deleteProyecto(id).subscribe({
 					next: () => {
 						Swal.fire({
 							title: '¡Eliminado!',
@@ -211,10 +181,9 @@ export class ProyectoComponent implements OnInit {
 						this.cargarProyectos();
 					},
 					error: (err) => {
-						console.error('Error completo al eliminar:', err);
 						Swal.fire({
 							title: 'Error',
-							text: this.obtenerMensajeError(err),
+							text: 'Error Error',
 							icon: 'error'
 						});
 					}
@@ -223,14 +192,29 @@ export class ProyectoComponent implements OnInit {
 		});
 	}
 
-	private obtenerMensajeError(err: any): string {
-		if (err.status === 404) {
-			return 'El proyecto no fue encontrado.';
-		} else if (err.status === 500) {
-			return 'Error del servidor al intentar eliminar.';
-		} else if (err.error?.message) {
-			return err.error.message;
+	public onGridReady(params: GridReadyEvent<Proyecto>) {
+		this.gridApi = params.api;
+		this.gridApi.sizeColumnsToFit();
+	}
+
+	public onCellClicked(event: any): void {
+		const proyecto = event.proyecto;
+
+		if (event.option === 'verboletas') {
+			this.verBoletas(proyecto);
+			return;
 		}
-		return 'Ocurrió un error al intentar eliminar el proyecto.';
+
+		if (event.option === 'editar') {
+			this.abrirModalEditar(proyecto);
+			return;
+		}
+
+		if (event.option === 'eliminar') {
+			this.eliminarProyecto(proyecto.id);
+			return;
+		}
+
+		return;
 	}
 }
