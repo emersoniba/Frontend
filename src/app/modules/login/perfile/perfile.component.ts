@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+
 import { Subscription } from 'rxjs';
-import { PersonaService } from '../../../services/persona.service';
-import { Persona, Departamento } from '../../../models/auth.interface';
+
 import Swal from 'sweetalert2';
+
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,16 +13,19 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { DepartamentoService } from '../../../services/departamento.service';
-import { UsuarioFormDialogComponent } from './usuario-form-dialog/usuario-form-dialog.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+
+import { UsuarioFormDialogComponent } from './usuario-form-dialog/usuario-form-dialog.component';
 import { CambiarPasswordComponent } from './cambiar-password/cambiar-password.component';
 import { SubirImagenComponent } from './subir-imagen/subir-imagen.component';
+import { PersonaService } from '../../../services/persona.service';
+import { Persona } from '../../../models/auth.interface';
 
 @Component({
 	selector: 'app-perfile',
 	standalone: true,
 	imports: [
+		MatIconModule,
 		ReactiveFormsModule, MatGridListModule,
 		CommonModule,
 		MatDialogModule,
@@ -30,7 +34,6 @@ import { SubirImagenComponent } from './subir-imagen/subir-imagen.component';
 		MatInputModule,
 		MatSelectModule,
 		MatButtonModule,
-		MatIconModule,
 	],
 	templateUrl: './perfile.component.html',
 	styleUrl: './perfile.component.css'
@@ -38,65 +41,58 @@ import { SubirImagenComponent } from './subir-imagen/subir-imagen.component';
 
 export class PerfileComponent implements OnInit, OnDestroy {
 
-	public formPersona: FormGroup;
-	public persona: Persona = {} as Persona;
-	public dataDepartamento: Departamento[] = [];
+	public perfil?: Persona; 
+	private perfilSubscriptor?: Subscription;
+	
 	private personaSubscriptor?: Subscription;
-
-	/*deseaq*/
 	public imagenPreview: string | null = null;
 	public convertido: string | null = null;
 
 	constructor(
 		private readonly personaService: PersonaService,
-		private readonly departamentoService: DepartamentoService,
 		private readonly dialog: MatDialog,
-		private readonly fb: FormBuilder
-	) {
-		this.formPersona = new FormGroup({});
-	}
+	) {	}
 
 	ngOnInit(): void {
-		this.getMiPerfil();
+		this.cargarPerfil();
 	}
 
 	ngOnDestroy(): void {
 		this.personaSubscriptor?.unsubscribe();
+		this.perfilSubscriptor?.unsubscribe();
 	}
 
-	public getMiPerfil(): void {
-		this.personaSubscriptor = this.personaService.getPerfil().subscribe({
+	public cargarPerfil(): void {
+		this.perfilSubscriptor = this.personaService.getPerfil().subscribe({
 			next: (response) => {
-				this.persona = {
-					...response.data.persona,
-					usuario: response.data.usuario,
-					roles: response.data.roles
-				};
+				this.perfil = response.data as Persona;
 
-				console.log(this.persona);
+				console.log(this.perfil);
 
-				if (this.persona?.imagen) {
-					this.imagenPreview = 'data:image/png;base64,' + this.persona.imagen;
+				if (this.perfil?.imagen) {
+					this.imagenPreview = 'data:image/png;base64,' + this.perfil.imagen;
 				} else {
 					this.imagenPreview = null;
 				}
 			},
-			error: () => {
-				Swal.fire('Error', 'No se pudo cargar el perfil del usuario.', 'error');
+			error: (error) => {
+				console.error(error);
+				Swal.fire('Error', 'No se pudo cargar el perfil.', 'error');
 			}
 		});
 	}
 
+	
 	public editar(): void {
-		if (!this.persona) return;
+		if (!this.perfil) return;
 		this.dialog.open(UsuarioFormDialogComponent, {
 			width: '40vw',
 			maxWidth: '60vw',
 			disableClose: true,
-			data: this.persona
+			data: this.perfil
 		}).afterClosed().subscribe(result => {
 			if (result) {
-				this.getMiPerfil();
+				this.cargarPerfil();
 				Swal.fire('¡Actualizado!', 'La persona ha sido actualizada correctamente.', 'success');
 			}
 		});
@@ -113,11 +109,11 @@ export class PerfileComponent implements OnInit, OnDestroy {
 
 		dialogRef.afterClosed().subscribe(result => {
 			if (result) {
-				if (!this.persona || !this.persona.ci) {
+				if (!this.perfil|| !this.perfil.ci) {
 					Swal.fire('Error', 'No se encontró la persona o su CI.', 'error');
 					return;
 				}
-				const ciNumber = typeof this.persona.ci === 'number' ? this.persona.ci : Number(this.persona.ci);
+				const ciNumber = typeof this.perfil.ci === 'number' ? this.perfil.ci : Number(this.perfil.ci);
 				if (isNaN(ciNumber)) {
 					Swal.fire('Error', 'El CI no es válido.', 'error');
 					return;
@@ -140,7 +136,7 @@ export class PerfileComponent implements OnInit, OnDestroy {
 	}
 
 	public subirImagen(): void {
-		if (!this.persona || !this.persona.ci) {
+		if (!this.perfil || !this.perfil.ci) {
 			Swal.fire('Error', 'No se encontró la persona o su CI.', 'error');
 			return;
 		}
@@ -148,11 +144,11 @@ export class PerfileComponent implements OnInit, OnDestroy {
 			disableClose: true,
 			width: '30vw',
 			maxWidth: '30vw',
-			data: { ci: this.persona.ci }
+			data: { ci: this.perfil.ci }
 		}).afterClosed().subscribe((result) => {
 			if (result) {
 				Swal.fire('¡Éxito!', 'Imagen actualizada correctamente.', 'success');
-				this.getMiPerfil();
+				this.cargarPerfil();
 			}
 		});
 	}

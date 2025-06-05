@@ -7,15 +7,16 @@ import { AgGridModule } from 'ag-grid-angular';
 import { ValueGetterParams, GridOptions, AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { GridReadyEvent } from 'ag-grid-community';
 import { themeMaterial } from 'ag-grid-community';
+import { MaterialModule } from '../../../shared/app.material';
+import { MatDialog } from '@angular/material/dialog';
+
 
 import { BotonesComponent } from './botones/botones.component';
 import { PersonaFormDialogComponent } from './persona-form-dialog/persona-form-dialog.component';
 import { UsuarioFormDialogComponent } from './usuario-form-dialog/usuario-form-dialog.component';
 import { RolesFormDialogComponent } from './roles-form-dialog/roles-form-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
 import { PersonaService } from '../../../services/persona.service';
 import { Persona } from '../../../models/auth.interface';
-import { MaterialModule } from '../../../shared/app.material';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -24,9 +25,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 	selector: 'app-persona',
 	standalone: true,
 	imports: [
-		CommonModule,
-		AgGridModule,
-		MaterialModule,
+		CommonModule, AgGridModule, MaterialModule,
 	],
 
 	templateUrl: './persona.component.html',
@@ -103,7 +102,7 @@ export class PersonaComponent implements OnInit, OnDestroy {
 	public getPersonas(): void {
 		this.personaSubscriptor = this.personaService.getPersonasUsuario().subscribe({
 			next: (response) => {
-				console.log(response.data);
+
 				this.dataPersonas = response.data as Persona[];
 			},
 			error: () => Swal.fire('Error', 'No se cargaron las personas', 'error')
@@ -111,10 +110,11 @@ export class PersonaComponent implements OnInit, OnDestroy {
 	}
 
 	public nuevaPersona(persona?: Persona): void {
+
 		const dialogRef = this.dialog.open(PersonaFormDialogComponent, {
 			width: '40vw',
 			maxWidth: '60vw',
-			disableClose: true,
+			disableClose: true, 
 			data: persona
 		});
 
@@ -141,7 +141,9 @@ export class PersonaComponent implements OnInit, OnDestroy {
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
 			confirmButtonText: 'Sí, eliminar',
-			cancelButtonText: 'Cancelar'
+			cancelButtonText: 'Cancelar',
+			allowOutsideClick: false,
+			allowEscapeKey: false
 		}).then((result) => {
 			if (result.isConfirmed) {
 				this.personaService.deletePersona(ci).subscribe({
@@ -171,12 +173,14 @@ export class PersonaComponent implements OnInit, OnDestroy {
 			next: (rolesDisponibles) => {
 				const dialogRef = this.dialog.open(UsuarioFormDialogComponent, {
 					width: '400px',
+					disableClose: true,
 					data: { rolesDisponibles, modo: 'crear' }
 				});
 				dialogRef.afterClosed().subscribe(result => {
 					if (result && result.roles.length > 0) {
 						this.personaService.postCrearUsuarioPersona(ci, { roles: result.roles }).subscribe({
 							next: (response) => {
+								console.log('Usuario creado:', response);
 								Swal.fire('Éxito', `Usuario creado: ${response.username}`, 'success');
 								this.getPersonas();
 							},
@@ -197,6 +201,7 @@ export class PersonaComponent implements OnInit, OnDestroy {
 	public editarRol(ci: string): void {
 		const dialogRef = this.dialog.open(RolesFormDialogComponent, {
 			width: '400px',
+			disableClose: true,
 			data: this.dataPersonas.find((p) => p.ci === ci)
 		});
 

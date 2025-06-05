@@ -12,13 +12,14 @@ export interface Actividad  {
 export interface Empresa {
   id?: number;
   denominacion: string;
-  actividad: Actividad;
+  actividad?: Actividad;
   nit: string;
   representante_legal: string;
   contacto: string;
   correo: string;
   proyectos: Proyecto[];
 }
+
 
 export interface nuevaEmpresa {
   denominacion: string;
@@ -27,6 +28,7 @@ export interface nuevaEmpresa {
   correo: string;
   contacto: string;
 };
+
 export interface Proyecto {
   id: number;
   nombre: string;

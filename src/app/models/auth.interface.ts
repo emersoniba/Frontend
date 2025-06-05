@@ -14,14 +14,15 @@ export interface Usuario {
 	roles?: Rol[];
 }
 
+
+export interface ChangePasswordPayload {
+	password_actual: string;
+	nuevo_password: string;
+	confirmacion_password: string;
+}
 export interface Login {
 	username: string,
 	password: string
-}
-
-export interface LoginResponse1 {
-	access: string,
-	refresh: string
 }
 
 export interface LoginResponse {

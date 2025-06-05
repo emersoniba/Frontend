@@ -3,13 +3,12 @@
   <span class="spacer"></span>
   <button mat-raised-button color="accent" 
    (click)="nuevaEmpresa()">Nueva Empresa</button>
-   <button mat-raised-button color="accent" (click)="abrirDialogoReporte()">
+   <button mat-raised-button color="accent" (click)="abrirDialogoReporte()"matTooltip="Empresas">
           <mat-icon>download</mat-icon> Exportar Empresas
       </button>
 </mat-toolbar>
 
-
-<div class="ag-grid-container">
+<div class="ag-grid-container" style="margin: 8px 0;">
   <ag-grid-angular 
     style="width: 100%; height: 65%;" 
     [gridOptions]="gridOptions" 
@@ -26,21 +25,19 @@
     class="ag-theme-alpine" 
     rowSelection="single" 
     (rowDoubleClicked)="onRowDoubleClicked($event)"
-    
     >
   </ag-grid-angular>
 </div>
 
 
-
 <div class="panel-container">
-  @if (empresaSeleccionada?.proyectos?.length) {
+  @if (empresaSeleccionada?.id && dataProyecto.length > 0) {
   <mat-expansion-panel [expanded]="true">
     <mat-expansion-panel-header>
       <mat-panel-title>Proyectos de la empresa {{ empresaSeleccionada.denominacion }}</mat-panel-title>
     </mat-expansion-panel-header>
 
-    <mat-table [dataSource]="empresaSeleccionada.proyectos" class="mat-elevation-z2 proyectos-table">
+    <mat-table [dataSource]="dataProyecto" class="mat-elevation-z2 proyectos-table">
 
       <ng-container matColumnDef="nombre">
         <mat-header-cell *matHeaderCellDef> Proyecto </mat-header-cell>
@@ -73,5 +70,4 @@
   </mat-expansion-panel>
 }
 
-   
 </div>

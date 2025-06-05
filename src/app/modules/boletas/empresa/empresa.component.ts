@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Actividad, Empresa } from '../../../models/empresa.interface';
+import { Actividad, Empresa, Proyecto } from '../../../models/empresa.interface';
 import { EmpresaService } from '../../../services/empresa.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActividadService } from '../../../services/actividad.service';
@@ -22,9 +22,8 @@ import { AgGridModule } from 'ag-grid-angular';
 import { BotonesComponent } from './botones/botones.component';
 import { themeMaterial } from 'ag-grid-community';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReporteEmpresaComponent } from './reporte-empresa/reporte-empresa.component';
-
+import { ResponseData } from '../../../models/response.model';
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
@@ -41,76 +40,84 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 })
 
+
 export class EmpresaComponent implements OnInit, OnDestroy {
   public theme = themeMaterial;
-  public formEmpresa: FormGroup;
-  public dataEmpresas: Empresa[] = [];
-  public dataActividad: Actividad[] = [];
-  public dataProyecto: Empresa[] = [];
-  public gridOptions: GridOptions;
+  public dataEmpresas: Empresa[] = [] as Empresa[];
   private empresaSubscriptor?: Subscription;
-  private proyectoSubscriptor?: Subscription;
   public gridApi: any;
+  public gridColumnApi: any;
+  public formEmpresa: FormGroup;
+  public dataProyecto: Proyecto[] = [];
+  private proyectoSubscriptor?: Subscription;
   public columnasProyecto: string[] = ['nombre', 'descripcion', 'fecha_creado', 'fecha_finalizacion', 'departamento'];
   public empresaSeleccionada: any = null;
   public frameworkComponents: any = { botonesComponent: BotonesComponent };
   public expandedEmpresaId: number | null = null;
-  public filaExpandida: number | null = null;//pruebita
+  public filaExpandida: number | null = null;
+
+  gridOptions: GridOptions = {
+    pagination: true,
+    paginationPageSize: 6,
+    paginationPageSizeSelector: [6, 10, 20, 50, 100],
+    detailRowAutoHeight: true,
+    domLayout: 'autoHeight',
+    detailCellRenderer: 'agDetailCellRenderer',
+    columnDefs: [
+      { field: 'denominacion', headerName: 'Empresa', filter: true, floatingFilter: true },
+      { headerName: 'Actividad', filter: true, floatingFilter: true, valueGetter: (params: ValueGetterParams) => params.data?.actividad?.descripcion },
+      { field: 'nit', headerName: 'NIT', filter: true, floatingFilter: true },
+      { field: 'representante_legal', headerName: 'Representante Legal', filter: true, floatingFilter: true },
+      { field: 'contacto', headerName: 'Contacto', filter: true, floatingFilter: true },
+      { field: 'correo', headerName: 'Correo', floatingFilter: true, filter: true },
+      { headerName: 'Acciones', cellRenderer: BotonesComponent, field: 'id', width: 130 },
+    ],
+    context: {
+      componentParent: this
+    },
+    defaultColDef: {
+      flex: 1,
+      minWidth: 80,
+      resizable: true
+    },
+    animateRows: true,
+    rowSelection: 'single',
+  };
 
   constructor(
+
     private readonly empresaService: EmpresaService,
-    private readonly actividadService: ActividadService,
     private dialog: MatDialog,
     private fb: FormBuilder,
   ) {
     this.formEmpresa = new FormGroup({});
-    this.gridOptions = {
-      getRowId: params => params.data.id.toString(),
-      pagination: true,
-      paginationPageSize: 6,
-      paginationPageSizeSelector: [6, 10, 20, 50, 100],
-
-      domLayout: 'autoHeight',
-      detailCellRenderer: 'agDetailCellRenderer',
-      detailRowAutoHeight: true,
-
-      columnDefs: [
-        { field: 'denominacion', headerName: 'Empresa', filter: true, floatingFilter: true },
-        { headerName: 'Actividad', filter: true, floatingFilter: true, valueGetter: (params: ValueGetterParams) => params.data?.actividad?.descripcion },
-        { field: 'nit', headerName: 'NIT', filter: true, floatingFilter: true },
-        { field: 'representante_legal', headerName: 'Representante Legal', filter: true, floatingFilter: true },
-        { field: 'contacto', headerName: 'Contacto', filter: true, floatingFilter: true },
-        { field: 'correo', headerName: 'Correo', floatingFilter: true, filter: true },
-        { headerName: 'Acciones', cellRenderer: BotonesComponent, width: 130 }
-      ],
-      context: { componentParent: this },
-      defaultColDef: {
-        flex: 1,
-        minWidth: 10,
-        resizable: true
-      },
-      animateRows: true,
-      rowSelection: 'single'
-
-    };
   }
 
   public onRowDoubleClickedCerrar(event: any): void {
     this.empresaSeleccionada = event.data;
+    this.getProyectosEmpresaporId(this.empresaSeleccionada.id);
   }
+
+  public getProyectosEmpresaporId(id: number): void {
+    this.proyectoSubscriptor = this.empresaService.getEmpresasConProyectos(id).subscribe({
+      next: (response) => {
+        this.dataProyecto = response.data as Proyecto[];
+      },
+      error: (err) => {
+        console.error(err);
+        Swal.fire('Error', 'No se pudieron cargar los proyectos de la empresa', 'error');
+      }
+    });
+  }
+
   public onRowDoubleClicked(event: any): void {
-    if (this.empresaSeleccionada && this.empresaSeleccionada.id === event.data.id) {
-      this.empresaSeleccionada = null;
-    } else {
-      this.empresaSeleccionada = event.data;
-    }
+    this.empresaSeleccionada = event.data;
+    console.log('Empresa seleccionada:', this.empresaSeleccionada);
+    this.getProyectosEmpresaporId(this.empresaSeleccionada.id);
   }
 
   public ngOnInit(): void {
     this.getEmpresa();
-    this.getActividad();
-    this.getProyecto();
-
   }
 
   public ngOnDestroy(): void {
@@ -123,7 +130,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
   }
 
   public getEmpresa(): void {
-    this.empresaSubscriptor = this.empresaService.getEmpresasConProyectos().subscribe({
+    this.empresaSubscriptor = this.empresaService.getEmpresas().subscribe({
       next: (response) => {
         this.dataEmpresas = response;
       },
@@ -131,30 +138,10 @@ export class EmpresaComponent implements OnInit, OnDestroy {
     });
   }
 
-  public getActividad(): void {
-    this.actividadService.getActividades().subscribe({
-      next: (response) => {
-
-        this.dataActividad = response;
-      },
-      error: (err) => console.error(err)
-    });
-  }
-    public abrirDialogoReporte(): void {
-  this.dialog.open(ReporteEmpresaComponent, {
-    width: '450px',
-    data: { empresas: this.dataEmpresas }
-  });
-}
-  public getProyecto(): void {
-    this.proyectoSubscriptor = this.empresaService.getEmpresasConProyectos().subscribe({
-      next: (response) => {
-        this.dataProyecto = response;
-        if (this.gridApi) {
-          this.gridApi.setRowData(this.dataProyecto);
-        }
-      },
-      error: (err) => console.error(err)
+  public abrirDialogoReporte(): void {
+    this.dialog.open(ReporteEmpresaComponent, {
+      width: '450px',
+      data: { empresas: this.dataEmpresas }
     });
   }
 
@@ -163,13 +150,12 @@ export class EmpresaComponent implements OnInit, OnDestroy {
       width: '650px',
       disableClose: true,
       data: {
-        actividades: this.dataActividad,
-        empresa
+        empresa //aqui ya no se manda da: actividad
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-       this.getEmpresa();
-     });
+      this.getEmpresa();
+    });
   }
   public eliminar(id: number): void {
     Swal.fire({
@@ -180,7 +166,9 @@ export class EmpresaComponent implements OnInit, OnDestroy {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
+      allowOutsideClick: false,
+      allowEscapeKey: false
     }).then((result) => {
       if (result.isConfirmed) {
         this.empresaService.eliminarEmpresa(id).subscribe({
@@ -238,6 +226,5 @@ export class EmpresaComponent implements OnInit, OnDestroy {
       this.gridApi.setQuickFilter(value);
     }
   }
-
 
 }

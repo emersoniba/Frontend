@@ -19,27 +19,27 @@ import { MatTooltip } from '@angular/material/tooltip';
 })
 export class NavbarComponent implements OnInit {
 
-	public formPersona: FormGroup;
-	public persona?: Persona;
-	personaSubscriptor?: Subscription;
+	public isNavOpen: boolean = true;
 
+	public perfil?: Persona;
+	private perfilSubscriptor?: Subscription;
 	public imagenPreview: string | null = null;
 	public convertido: string | null = null;
-	public isNavOpen: boolean = true;
+
+
 
 	constructor(
 		private rolesService: RolesService,
 		private readonly personaService: PersonaService,
 		private readonly fb: FormBuilder
-	) {
-		this.formPersona = new FormGroup({});
-	}
+	) { }
+
 	ngOnInit(): void {
-		this.getMiPerfil();
+		this.cargarPerfil();
 	}
 
 	ngOnDestroy(): void {
-		this.personaSubscriptor?.unsubscribe();
+		this.perfilSubscriptor?.unsubscribe();
 	}
 
 	tieneRol(rolId: number): boolean {
@@ -51,25 +51,19 @@ export class NavbarComponent implements OnInit {
 	}
 
 
-	public getMiPerfil(): void {
-		this.personaSubscriptor = this.personaService.getPerfil().subscribe({
+	public cargarPerfil(): void {
+		this.perfilSubscriptor = this.personaService.getPerfil().subscribe({
 			next: (response) => {
-				this.persona = {
-					...response.data.persona,
-					usuario: response.data.usuario,
-					roles: response.data.roles
-				};
-
-				console.log('Perfil del usuario************:', response);
-
-				if (this.persona?.imagen) {
-					this.imagenPreview = 'data:image/png;base64,' + this.persona.imagen;
+				this.perfil = response.data as Persona;
+				if (this.perfil?.imagen) {
+					this.imagenPreview = 'data:image/png;base64,' + this.perfil.imagen;
 				} else {
 					this.imagenPreview = null;
 				}
 			},
-			error: () => {
-				Swal.fire('Error', 'No se pudo cargar el perfil del usuario.', 'error');
+			error: (error) => {
+				console.error(error);
+				Swal.fire('Error', 'No se pudo cargar el perfil.', 'error');
 			}
 		});
 	}
