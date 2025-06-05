@@ -1,8 +1,9 @@
 <mat-toolbar color="primary">
 	<span>Personas</span>
 	<span class="spacer"></span>
-	<button mat-raised-button color="accent" (click)="nuevaPersona()">Adicionar Persona</button>
+	<button mat-raised-button color="accent" (click)="nuevaPersona()"matTooltip="Adicionar nueva persona"> <mat-icon>person_add</mat-icon>Adicionar Persona</button>
 </mat-toolbar>
+
 
 <div style="margin: 8px 0;">
 	<ag-grid-angular

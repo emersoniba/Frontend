@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import Swal from 'sweetalert2';
-import { AgGridAngular, AgGridModule } from 'ag-grid-angular';
+import { AgGridModule } from 'ag-grid-angular';
 import { ValueGetterParams, GridOptions, AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { GridReadyEvent } from 'ag-grid-community';
 import { themeMaterial } from 'ag-grid-community';
@@ -64,7 +64,9 @@ export class PersonaComponent implements OnInit, OnDestroy {
 				headerName: 'Acciones',
 				cellRenderer: BotonesComponent,
 				field: 'ci',
-				width: 130
+				width: 180,
+				maxWidth: 180,
+				minWidth: 180,
 			}
 		],
 		context: {
