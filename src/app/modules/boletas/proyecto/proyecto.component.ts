@@ -60,7 +60,7 @@ export class ProyectoComponent implements OnInit, OnDestroy {
 				headerName: 'Acciones',
 				cellRenderer: BotonesProyectoComponent,
 				field: 'id',
-				width: 170
+				width: 190
 			}
 		],
 		context: {
@@ -106,15 +106,16 @@ export class ProyectoComponent implements OnInit, OnDestroy {
 	}
 
 	abrirDialogoReporte(): void {
-		/*this.boletaService.getBoletas().subscribe((boletas: Boleta[]) => {
+		this.boletaService.getBoletas().subscribe((boletas: Boleta[]) => {
 			this.dialog.open(ReporteProyectoComponent, {
 				width: '600px',
 				data: {
+
 					proyectos: this.proyectos,
 					boletas: boletas
 				}
 			});
-		});*/
+		});
 	}
 
 	verBoletas(proyecto: Proyecto): void {
