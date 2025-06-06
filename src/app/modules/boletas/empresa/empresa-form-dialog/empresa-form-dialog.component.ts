@@ -2,16 +2,16 @@ import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-
-import {  MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {  MatDialogRef } from '@angular/material/dialog';
+import { MaterialModule } from '../../../../shared/app.material';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 
 import { EmpresaService } from '../../../../services/empresa.service';
 import { Actividad, Empresa } from '../../../../models/empresa.interface';
 import { ActividadService } from '../../../../services/actividad.service';
 import Swal from 'sweetalert2';
 
-import { MaterialModule } from '../../../../shared/app.material';
+import { ErrorHandlerService } from '../../../../services/error-handler.service';
 
 @Component({
   selector: 'app-empresa-form-dialog',
@@ -21,16 +21,20 @@ import { MaterialModule } from '../../../../shared/app.material';
 })
 
 export class EmpresaFormDialogComponent {
-  formEmpresa!: FormGroup;
-  esEdicion: boolean = false;
+
   dataActividad: Actividad[] = [] as Actividad[];
+  esEdicion: boolean = false;
+  formEmpresa!: FormGroup;
 
   constructor(
+    
     private fb: FormBuilder,
     private readonly actividadService: ActividadService,
 
     private dialogRef: MatDialogRef<EmpresaFormDialogComponent>,
     private empresaService: EmpresaService,
+    private errorHandler: ErrorHandlerService,
+
     @Inject(MAT_DIALOG_DATA) public data: { empresa?: Empresa }
   ) {
 
@@ -60,7 +64,7 @@ export class EmpresaFormDialogComponent {
   public getActividades() {
     this.actividadService.getActividades().subscribe({
       next: (response) => {
-        console.log('Actividades obtenidas:', response);
+
         this.dataActividad = response;
       },
       error: (err) => {
@@ -83,12 +87,11 @@ export class EmpresaFormDialogComponent {
     });
   }
 
-
-
-  cancelar(): void {
+  public cancelar(): void {
     this.dialogRef.close();
   }
-  registrar(): void {
+
+  public registrar(): void {
     if (this.formEmpresa.invalid) {
       this.formEmpresa.markAllAsTouched();
       return;
@@ -112,18 +115,20 @@ export class EmpresaFormDialogComponent {
       error: (error) => {
         if (error.status === 400 && error.error) {
           if (error.error.nit) {
-            this.formEmpresa.get('nit')?.setErrors({ backend: error.error.nit[0] });
+            const controlNit = this.formEmpresa.get('nit');
+            controlNit?.setErrors({ backend: error.error.nit[0] });
+            controlNit?.markAsTouched();
           }
           if (error.error.correo) {
-            this.formEmpresa.get('correo')?.setErrors({ backend: error.error.correo[0] });
+            const controlCorreo = this.formEmpresa.get('correo');
+            controlCorreo?.setErrors({ backend: error.error.correo[0] });
+            controlCorreo?.markAsTouched();
           }
           Swal.fire(
             'Error de validación',
-            'Por favor revisa los campos: NIT o Correo ya están registrados en otra entidad.',
-            'error'
-          );
+            'Por favor revisa los campos: NIT o Correo ya están registrados en otra entidad.', 'error');
         } else {
-          console.error('Error al registrar empresa', error);
+          this.errorHandler.handleError(error, 'Ocurrió un error al registrar la empresa');
         }
       }
     });

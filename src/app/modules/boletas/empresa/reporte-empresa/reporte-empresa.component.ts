@@ -6,12 +6,11 @@ import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import autoTable from 'jspdf-autotable';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCard, MatCardModule } from '@angular/material/card';
-
+import { MaterialModule } from '../../../../shared/app.material';
 @Component({
   selector: 'app-reporte-empresa',
   templateUrl: './reporte-empresa.component.html',
-  imports: [MatButtonModule,MatCardModule],
+  imports: [MatButtonModule, MaterialModule],
   styleUrls: ['./reporte-empresa.component.css']
 })
 export class ReporteEmpresaComponent implements OnInit {

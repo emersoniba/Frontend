@@ -1,35 +1,29 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { BoletaService } from '../../../services/boleta.service';
-import { Boleta } from '../../../models/boleta.model';
 import { CommonModule } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { FormsModule } from '@angular/forms';
-import { BoletaModalComponent } from './boleta-modal/boleta-modal.component';
-import Swal from 'sweetalert2';
-import { PdfViewerDialogComponent } from './pdf-viewer-dialog/pdf-viewer-dialog.component';
-import { AgGridModule } from 'ag-grid-angular';
-import { ColDef, GridApi, GridOptions, GridReadyEvent, ICellRendererParams } from 'ag-grid-community';
 import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MaterialModule } from '../../../shared/app.material';
+import { AgGridModule } from 'ag-grid-angular';
+
+import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
+import { ColDef, GridApi, GridOptions, GridReadyEvent, ICellRendererParams } from 'ag-grid-community';
+
+
 import { ReporteBoletasComponent } from './reporte-boletas/reporte-boletas.component';
+import { PdfViewerDialogComponent } from './pdf-viewer-dialog/pdf-viewer-dialog.component';
+import { BoletaModalComponent } from './boleta-modal/boleta-modal.component';
+import { Boleta } from '../../../models/boleta.model';
+
+import { BoletaService } from '../../../services/boleta.service';
+
+import Swal from 'sweetalert2';
 
 @Component({
 	standalone: true,
 	imports: [
 		CommonModule,
-		MatButtonModule,
-		MatIconModule,
-		MatCardModule,
-		MatInputModule,
-		MatFormFieldModule,
-		MatPaginatorModule,
-		MatProgressSpinnerModule,
+		MaterialModule,
 		FormsModule,
 		AgGridModule,
 	],

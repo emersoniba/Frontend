@@ -2,27 +2,27 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { PersonaService } from '../../../../services/persona.service';
-import { MatIconModule } from '@angular/material/icon';
+
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MaterialModule } from '../../../../shared/app.material';
 import Swal from 'sweetalert2';
 
+import { PersonaService } from '../../../../services/persona.service';
 import { Departamento, Persona } from '../../../../models/auth.interface';
 import { DepartamentoService } from '../../../../services/departamento.service';
+import { ErrorHandlerService } from '../../../../services/error-handler.service';
+
 
 @Component({
 	selector: 'app-usuario-form-dialog',
 	standalone: true,
-	imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatDialogModule,
-		MatButtonModule, MatSelectModule, MatIconModule],
+	imports: [CommonModule, ReactiveFormsModule,
+		MaterialModule,
+	],
 	templateUrl: './usuario-form-dialog.component.html',
 	styleUrl: './usuario-form-dialog.component.css'
 })
-export class UsuarioFormDialogComponent implements OnInit{
+export class UsuarioFormDialogComponent implements OnInit {
 
 	formPersona!: FormGroup;
 	esEdicion: boolean = false;
@@ -33,6 +33,8 @@ export class UsuarioFormDialogComponent implements OnInit{
 		private dialogRef: MatDialogRef<UsuarioFormDialogComponent>,
 		private personaService: PersonaService,
 		private departamentoService: DepartamentoService,
+		private errorHandler: ErrorHandlerService,
+
 		@Inject(MAT_DIALOG_DATA) public data: Persona
 	) {
 		this.getFormBuilder();
@@ -57,8 +59,11 @@ export class UsuarioFormDialogComponent implements OnInit{
 	ngOnInit(): void {
 		this.getAllDepartamentos();
 	}
+	ngOnDestroy(): void {
+		this.formPersona.reset();
+	}
 
-	public getAllDepartamentos(){
+	public getAllDepartamentos() {
 		this.departamentoService.getDepartamentos().subscribe({
 			next: (response) => {
 				this.dataDepartamentos = response;
@@ -106,15 +111,13 @@ export class UsuarioFormDialogComponent implements OnInit{
 					if (error.error.correo) {
 						this.formPersona.get('correo')?.setErrors({ backend: error.error.correo[0] });
 					}
-
 					Swal.fire(
 						'Error de validación',
 						'CI o correo ya están registrados en otra persona.',
 						'error'
 					);
 				} else {
-					console.error('Error al registrar persona', error);
-					Swal.fire('Error', 'Ocurrió un error inesperado al guardar la persona.', 'error');
+					this.errorHandler.handleError(error, 'Ocurrió un error inesperado al guardar la persona');
 				}
 			}
 		});

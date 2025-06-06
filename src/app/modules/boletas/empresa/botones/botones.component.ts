@@ -1,17 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
+import { MaterialModule } from '../../../../shared/app.material';
 
-import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 
-import { CommonModule } from '@angular/common'; //
+
 @Component({
   selector: 'app-botones',
-
-  //standalone: true,
-
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule],
+  standalone: true,
+  imports: [CommonModule, MaterialModule],
   templateUrl: './botones.component.html',
   styleUrl: './botones.component.css'
 })

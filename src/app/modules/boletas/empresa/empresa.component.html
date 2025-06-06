@@ -2,7 +2,7 @@
   <span>EMPRESAS</span>
   <span class="spacer"></span>
   <button mat-raised-button color="accent" 
-   (click)="nuevaEmpresa()">Nueva Empresa</button>
+   (click)="nuevaEmpresa()"><mat-icon>add_box</mat-icon>Nueva Empresa</button>
    <button mat-raised-button color="accent" (click)="abrirDialogoReporte()"matTooltip="Empresas">
           <mat-icon>download</mat-icon> Exportar Empresas
       </button>
@@ -20,11 +20,11 @@
     [isRowMaster]="gridOptions.isRowMaster"
     [pagination]="gridOptions.pagination" 
     [paginationPageSize]="gridOptions.paginationPageSize"
-    (cellClicked)="onCellClicked($event)" 
+    (cellClicked)="clickFila($event)" 
     [theme]="theme"
     class="ag-theme-alpine" 
     rowSelection="single" 
-    (rowDoubleClicked)="onRowDoubleClicked($event)"
+    (rowDoubleClicked)="abrirProyecto($event)"
     >
   </ag-grid-angular>
 </div>
