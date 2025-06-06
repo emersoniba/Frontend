@@ -54,8 +54,26 @@ export class ProyectoComponent implements OnInit, OnDestroy {
 			{ headerName: 'Descripción', field: 'descripcion', filter: true, floatingFilter: true },
 			{ headerName: 'Entidad', field: 'entidad.denominacion', filter: true, floatingFilter: true },
 			{ headerName: 'Departamento', field: 'departamento.nombre', filter: true, floatingFilter: true },
-			{ headerName: 'Fecha Creación', field: 'fecha_creado', filter: 'agDateColumnFilter' },
-			{ headerName: 'Fecha Finalización', field: 'fecha_finalizacion', filter: 'agDateColumnFilter' },
+			{
+				headerName: 'Fecha Inicio',
+				field: 'fecha_creado',
+				filter: 'agDateColumnFilter',
+				valueFormatter: (params: any) => {
+					if (!params.value) return '';
+					const [year, month, day] = params.value.split('-').map((v: string) => parseInt(v, 10));
+					return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
+				}
+			},
+			{
+				headerName: 'Fecha Finalización',
+				field: 'fecha_finalizacion',
+				filter: 'agDateColumnFilter',
+				valueFormatter: (params: any) => {
+					if (!params.value) return '';
+					const [year, month, day] = params.value.split('-').map((v: string) => parseInt(v, 10));
+					return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
+				}
+			},
 			{
 				headerName: 'Acciones',
 				cellRenderer: BotonesProyectoComponent,

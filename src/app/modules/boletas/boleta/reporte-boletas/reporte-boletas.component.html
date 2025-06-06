@@ -1,6 +1,9 @@
 <div class="modal-container">
   <div class="modal-header">
     <h4 class="modal-title">📄 Reporte de Boletas</h4>
+    <button mat-icon-button (click)="dialogRef.close()">
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
 
   <div class="modal-body">
@@ -13,15 +16,79 @@
       </mat-card-header>
 
       <mat-card-content>
-        <p class="mb-3">Total de boletas: <strong>{{ boletas.length }}</strong></p>
-            <button mat-raised-button class="btn-exportar-excel" (click)="exportarExcel()">
-            <i class="bi bi-file-earmark-excel-fill"></i> Exportar a Excel
-            </button>
+        <form [formGroup]="filterForm">
+          <!-- Filtro por fechas -->
+          <div class="row mb-3" [class.disabled]="filterForm.get('usarFiltros')?.value">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Fecha Inicio</mat-label>
+                <input matInput [matDatepicker]="picker1" formControlName="fechaInicio">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Fecha Fin</mat-label>
+                <input matInput [matDatepicker]="picker2" formControlName="fechaFin">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
 
-            <button mat-raised-button class="btn-exportar-pdf" (click)="exportarPDF()">
-            <i class="bi bi-file-earmark-pdf-fill"></i> Exportar a PDF
-            </button>
+          <!-- Opción para usar filtros especiales -->
+          <mat-checkbox formControlName="usarFiltros" class="mb-3">
+            Usar filtros especiales (Tipo de Boleta, Entidad Financiera, Estado de la boleta) 
+          </mat-checkbox>
 
+          <!-- Filtros especiales -->
+          <div class="filtros-especiales" *ngIf="filterForm.get('usarFiltros')?.value">
+            <div class="row">
+              <div class="col-md-4">
+               <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Tipo</mat-label>
+                  <mat-select formControlName="tiposSeleccionados" multiple>
+                    <mat-option *ngFor="let tipo of tipos" [value]="tipo">{{tipo}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Entidad Financiera</mat-label>
+                  <mat-select formControlName="entidadesSeleccionadas" multiple>
+                    <mat-option *ngFor="let entidad of entidades" [value]="entidad">{{entidad}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Estado</mat-label>
+                  <mat-select formControlName="estadosSeleccionados" multiple>
+                    <mat-option *ngFor="let estado of estados" [value]="estado">{{estado}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <p class="mb-3">Total de boletas: <strong>{{ boletas.length }}</strong></p>
+          <p class="mb-3" *ngIf="filteredBoletas.length !== boletas.length">
+            Boletas filtradas: <strong>{{ filteredBoletas.length }}</strong>
+          </p>
+        </form>
+
+        <div class="d-flex gap-2">
+          <button mat-raised-button color="primary" class="btn-exportar-excel" 
+                  (click)="exportarExcel()" [disabled]="filteredBoletas.length === 0">
+            <mat-icon>description</mat-icon> Exportar a Excel
+          </button>
+
+          <button mat-raised-button color="warn" class="btn-exportar-pdf" 
+                  (click)="exportarPDF()" [disabled]="filteredBoletas.length === 0">
+            <mat-icon>picture_as_pdf</mat-icon> Exportar a PDF
+          </button>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>

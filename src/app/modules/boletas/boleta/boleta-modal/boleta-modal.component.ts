@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { Estado, EntidadFinanciera, Boleta } from '../../../../models/boleta.model';
+import { Estado, EntidadFinanciera, Boleta, Tipo } from '../../../../models/boleta.model';
 import { ProyectoService } from '../../../../services/proyecto.service';
 import { BoletaService } from '../../../../services/boleta.service';
 import { EntidadFinancieraService } from '../../../../services/entidad-financiera.service';
 import { EstadoService } from '../../../../services/estado.service';
+import { TipoService } from '../../../../services/tipo.service';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -64,11 +65,10 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
 	isEditing: boolean = false;
 	estados: Estado[] = [];
 	entidadesFinancieras: EntidadFinanciera[] = [];
+	tipo_boleta:Tipo[] = [];
 	proyectos: Proyecto[] = [];
 	filteredProyectos: Proyecto[] = [];
 	archivoSeleccionado: File | null = null;
-
-	// Control para el filtro de proyectos
 	proyectoFilterCtrl = new FormControl('');
 	private _onDestroy = new Subject<void>();
 
@@ -79,15 +79,14 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
 		private boletaService: BoletaService,
 		private proyectoService: ProyectoService,
 		private estadoService: EstadoService,
-		private entidadFinancieraService: EntidadFinancieraService
+		private entidadFinancieraService: EntidadFinancieraService,
+		private tipoService: TipoService
 	) {
 		this.boletaForm = this.fb.group({
-			tipo: ['', Validators.required],
+			tipo_boleta_id: ['', Validators.required],
 			numero: ['', Validators.required],
 			concepto: ['', Validators.required],
 			entidad_financiera_id: [null, Validators.required],
-			//fecha_inicio: [new Date(), Validators.required],
-			// fecha_finalizacion: [new Date(), Validators.required],
 			fecha_inicio: [moment(), Validators.required],
 			fecha_finalizacion: [moment(), Validators.required],
 			monto: [0, [Validators.required, Validators.min(0)]],
@@ -106,8 +105,6 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
 			this.isEditing = true;
 			this.loadBoletaData(this.data.boleta);
 		}
-
-		// Configuración del filtro de proyectos con debounce
 		this.proyectoFilterCtrl.valueChanges
 			.pipe(
 				takeUntil(this._onDestroy),
@@ -124,13 +121,21 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
 		this.loadEstados();
 		this.loadEntidadesFinancieras();
 		this.loadProyectos();
+		this.loadTipos();
+	}
+	
+	loadTipos(): void {
+		this.tipoService.getTipos().subscribe({
+			next: (data) => this.tipo_boleta = data,
+			error: (err) => console.error('Error cargando tipos:', err)
+		});
 	}
 
 	loadProyectos(): void {
 		this.proyectoService.getProyectos().subscribe({
 			next: (data) => {
 				this.proyectos = data;
-				this.filteredProyectos = [...this.proyectos]; // Copia inicial
+				this.filteredProyectos = [...this.proyectos]; 
 			},
 			error: (err) => console.error('Error cargando proyectos:', err)
 		});
@@ -151,10 +156,9 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
 	}
 
 	loadBoletaData(boleta: Boleta): void {
-		// Si las fechas vienen como strings en formato ISO
 		const fechaInicio = moment(boleta.fecha_inicio, moment.ISO_8601).isValid()
 			? moment(boleta.fecha_inicio)
-			: moment(boleta.fecha_inicio, 'DD-MM-YYYY:mm:ss');//'YYYY-MM-DD HH:mm:ss');
+			: moment(boleta.fecha_inicio, 'DD-MM-YYYY:mm:ss');
 
 		const fechaFin = moment(boleta.fecha_finalizacion, moment.ISO_8601).isValid()
 			? moment(boleta.fecha_finalizacion)

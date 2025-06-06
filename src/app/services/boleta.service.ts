@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Boleta, Estado, EntidadFinanciera } from '../models/boleta.model';
 import { environment } from '../../environment/environment';
@@ -38,7 +38,6 @@ export class BoletaService {
 		return this.http.get<ResponseData>(`${this.apiUrlBoletas}?proyecto_id=${proyectoId}`);
 	}
 
-
 }
 export class EstadoService {
 	private apiUrl = 'http://127.0.0.1:8000/api/';
@@ -54,6 +53,7 @@ export class EstadoService {
 		return this.http.get<EntidadFinanciera[]>(`${this.apiUrl}entidad_financiera/`);
 	}
 }
+
 export class EntidadService {
 	private apiUrl = 'http://127.0.0.1:8000/api/';
 
