@@ -94,7 +94,7 @@ export class ProyectoModalComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this._onDestroy.next();
-		this._onDestroy.complete();
+		this._onDestroy.complete();		
 	}
 
 	cargarEntidades(): void {

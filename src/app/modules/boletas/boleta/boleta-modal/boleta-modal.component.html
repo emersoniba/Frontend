@@ -5,9 +5,11 @@
   <form [formGroup]="boletaForm" >
     <mat-form-field appearance="fill" class="w-100">
       <mat-icon matIconPrefix>file_copy</mat-icon>
-      <mat-label>Tipo de Boleta</mat-label>
-      <input matInput formControlName="tipo" required>
-      <mat-error *ngIf="boletaForm.get('tipo')?.invalid">Este campo es requerido</mat-error>
+      <mat-select formControlName="tipo_boleta_id">
+        <mat-option *ngFor="let tipo_boleta of tipo_boleta" [value]="tipo_boleta.id">
+          {{tipo_boleta.nombre}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
     
     <mat-form-field appearance="fill" class="w-100">

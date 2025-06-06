@@ -1,37 +1,36 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MaterialModule } from '../../../shared/app.material';
-import { AgGridModule } from 'ag-grid-angular';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { PdfViewerDialogComponent } from './pdf-viewer-dialog/pdf-viewer-dialog.component';
 
 import { MatDialog } from '@angular/material/dialog';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { PageEvent } from '@angular/material/paginator';
+import { MaterialModule } from '../../../shared/app.material';
+
+import { FormsModule } from '@angular/forms';
+import { AgGridModule } from 'ag-grid-angular';
 import { ColDef, GridApi, GridOptions, GridReadyEvent, ICellRendererParams } from 'ag-grid-community';
 
-
-import { ReporteBoletasComponent } from './reporte-boletas/reporte-boletas.component';
-import { PdfViewerDialogComponent } from './pdf-viewer-dialog/pdf-viewer-dialog.component';
-import { BoletaModalComponent } from './boleta-modal/boleta-modal.component';
 import { Boleta } from '../../../models/boleta.model';
+import { ReporteBoletasComponent } from './reporte-boletas/reporte-boletas.component';
 
+import { BoletaModalComponent } from './boleta-modal/boleta-modal.component';
 import { BoletaService } from '../../../services/boleta.service';
-
-import Swal from 'sweetalert2';
+import { ErrorHandlerService } from '../../../services/error-handler.service';
 
 @Component({
 	standalone: true,
 	imports: [
-		CommonModule,
-		MaterialModule,
-		FormsModule,
-		AgGridModule,
+		CommonModule,FormsModule,AgGridModule,MaterialModule,
 	],
 	selector: 'app-boleta',
 	templateUrl: './boleta.component.html',
 	encapsulation: ViewEncapsulation.None,
 	styleUrls: ['./boleta.component.css'],
-	providers: [DatePipe]
+	providers: [DatePipe, provideNativeDateAdapter(),
+]
 })
 export class BoletaComponent implements OnInit {
 	boletas: Boleta[] = [];
@@ -44,33 +43,31 @@ export class BoletaComponent implements OnInit {
 	pageSizeOptions = [3, 5, 10, 25, 100];
 	totalRecords = 0;
 
-	// Configuración de columnas - ahora con la columna Acciones primero y fija
 	columnDefs: ColDef[] = [
 		{
 			headerName: 'Acciones',
 			cellRenderer: (params: ICellRendererParams) => {
 				return `
-                <button class="edit-btn" title="Editar">✏️</button>
-                <button class="delete-btn" title="Eliminar">🗑️</button>
+                <button class="edit-btn" title="Editar"><mat-icon>edit</mat-icon></button>
+                <button class="delete-btn" title="Eliminar"><mat-icon>delete</mat-icon></button>
             `;
 			},
-			//width: 120,
-			width: 140, // Suficiente para 2 botones
+			width: 140, 
 			minWidth: 120,
 			maxWidth: 160,
 			pinned: 'left',
 			lockPinned: true,
 			suppressMovable: true,
-			// cellStyle: { 'white-space': 'nowrap' },
+
 			cellStyle: {
 				display: 'flex',
 				alignItems: 'center',
 				justifyContent: 'center',
 				whiteSpace: 'nowrap'
 			},
-			suppressSizeToFit: true, // No se ajusta al tamaño
+			suppressSizeToFit: true, 
 		},
-		//dias de venciminto
+
 		{
 			headerName: 'Días para Vencimiento',
 			field: 'dias_para_vencimiento',
@@ -98,9 +95,6 @@ export class BoletaComponent implements OnInit {
 				return `<span class="dias-restantes ${clase}">${texto}</span>`;
 			}
 		},
-		//inicio
-
-		//fin
 		{
 			headerName: 'Estado',
 			field: 'estado.nombre',
@@ -124,8 +118,8 @@ export class BoletaComponent implements OnInit {
 			headerName: 'Número',
 			field: 'numero',
 			width: 300,
-			minWidth: 150, // Ancho mínimo
-			flex: 1, // Puede crecer
+			minWidth: 150, 
+			flex: 1, 
 			autoHeight: true,
 			wrapText: true,
 			cellStyle: { 'white-space': 'normal' },
@@ -139,10 +133,10 @@ export class BoletaComponent implements OnInit {
 		},
 		{
 			headerName: 'Tipo',
-			field: 'tipo',
+			field: 'tipo_boleta.nombre',
 			width: 200,
-			minWidth: 200, // Ancho mínimo mayor para contenido largo
-			flex: 2, // Más flexible que otras
+			minWidth: 200,
+			flex: 2,
 			autoHeight: true,
 			wrapText: true,
 			cellStyle: { 'white-space': 'normal' },
@@ -152,9 +146,8 @@ export class BoletaComponent implements OnInit {
 		{
 			headerName: 'Concepto',
 			field: 'concepto',
-			//width: 500,
-			width: 300,
-			minWidth: 300, // Ancho mínimo mayor para contenido largo
+			width: 200,
+			minWidth: 200,
 			flex: 2,
 			autoHeight: true,
 			wrapText: true,
@@ -180,7 +173,6 @@ export class BoletaComponent implements OnInit {
 			headerName: 'Proyecto',
 			field: 'proyecto.nombre',
 			autoHeight: true,
-			//width: 300,
 			minWidth: 600,
 			maxWidth: 600,
 			wrapText: true,
@@ -205,9 +197,8 @@ export class BoletaComponent implements OnInit {
 		{
 			headerName: 'Observaciones',
 			field: 'observaciones',
-			//width: 300,
 			width: 300,
-			minWidth: 300, // Ancho mínimo mayor para contenido largo
+			minWidth: 300,
 			flex: 2,
 			filter: true,
 			cellStyle: { 'white-space': 'normal', 'line-height': '1.5' },
@@ -243,8 +234,6 @@ export class BoletaComponent implements OnInit {
 		},
 
 	];
-
-	// Configuración del grid
 	gridOptions: GridOptions = {
 		rowClassRules: {
 			'boleta-odd-row': (params: any) => params.node.rowIndex % 2 === 0,
@@ -276,7 +265,8 @@ export class BoletaComponent implements OnInit {
 	constructor(
 		private boletaService: BoletaService,
 		private dialog: MatDialog,
-		private datePipe: DatePipe
+		private datePipe: DatePipe,
+		private errorHandler: ErrorHandlerService,
 	) { }
 
 	ngOnInit(): void {
@@ -291,11 +281,9 @@ export class BoletaComponent implements OnInit {
 	onGridReady(params: GridReadyEvent) {
 		this.gridApi = params.api;
 		this.gridApi.sizeColumnsToFit();
-		// Verifica los datos recibidos
 		params.api.addEventListener('modelUpdated', () => {
 			const rowData: Boleta[] = [];
 			params.api.forEachNode(node => rowData.push(node.data));
-			console.log('Datos de la grilla:', rowData);
 		});
 	}
 
@@ -309,8 +297,8 @@ export class BoletaComponent implements OnInit {
 				this.applyPagination();
 				this.loading = false;
 			},
-			error: (err) => {
-				console.error('Error cargando boletas:', err);
+			error: (error) => {
+				this.errorHandler.handleError(error, 'No se pudieron cargar las boletas');
 				this.loading = false;
 			}
 		});
@@ -353,7 +341,7 @@ export class BoletaComponent implements OnInit {
 
 	abrirDialogoReporte(): void {
 		this.dialog.open(ReporteBoletasComponent, {
-			width: '600px',
+			width: '800px',  
 			data: { boletas: this.rowData }
 		});
 	}
@@ -398,12 +386,11 @@ export class BoletaComponent implements OnInit {
 			if (result.isConfirmed) {
 				this.boletaService.deleteBoleta(id).subscribe({
 					next: () => {
-						Swal.fire('Eliminado', 'La boleta ha sido eliminada.', 'success');
+						this.errorHandler.handleSuccess('Boleta eliminada correctamente');
 						this.cargarBoletas();
 					},
-					error: (err) => {
-						console.error('Error eliminando boleta:', err);
-						Swal.fire('Error', 'Hubo un problema al eliminar la boleta.', 'error');
+					error: (error) => {
+						this.errorHandler.handleError(error, 'No se pudo eliminar la boleta');
 					}
 				});
 			}

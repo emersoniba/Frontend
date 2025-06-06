@@ -15,14 +15,12 @@
 				</button>
 			</div>
 
-			<!-- AG-Grid -->
 			<div class="grid-container">
 				<ag-grid-angular style="width: 100%; height: 600px;" class="ag-theme-alpine" [rowData]="rowData"
 					[columnDefs]="columnDefs" [gridOptions]="gridOptions" [animateRows]="true"
 					[suppressCellFocus]="true" (cellClicked)="onCellClicked($event)" (gridReady)="onGridReady($event)">
 				</ag-grid-angular>
 			</div>
-			<!--leyenda-->
 			<div class="leyenda-vencimiento">
 				<h4>Dias de vencimiento de Boletas</h4>
 				<div class="leyenda-item">
@@ -42,12 +40,10 @@
 					<span>Boleta vencida</span>
 				</div>
 			</div>
-			<!-- Paginador -->
 			<mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
 				[pageIndex]="pageIndex" (page)="onPageChange($event)" showFirstLastButtons class="custom-paginator">
 			</mat-paginator>
 
-			<!-- Loading spinner -->
 			<div *ngIf="loading" class="loading-overlay">
 				<mat-spinner>
 					<p>Cargando boletas...</p>

@@ -16,11 +16,14 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatPaginatorModule  } from '@angular/material/paginator';
+
+
 
 const materialModules = [
 	MatCardModule,
 	MatButtonModule,
-	
 	MatIconModule,
 	MatToolbarModule,
 	MatTooltipModule,
@@ -35,6 +38,9 @@ const materialModules = [
 	MatDatepickerModule,
 	MatNativeDateModule,
 	NgxMatSelectSearchModule,
+	MatCheckboxModule,
+	MatPaginatorModule,
+	
 ];
 
 @NgModule({
