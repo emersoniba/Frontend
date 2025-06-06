@@ -103,7 +103,7 @@ export class BoletaComponent implements OnInit {
 			cellRenderer: (params: ICellRendererParams) => {
 				const icon = params.data.estado?.icono || 'info';
 				const nombre = params.data.estado?.nombre || '';
-
+				
 				const container = document.createElement('div');
 				container.innerHTML = `
           <span class="material-icons" style="font-size: 18px;">${icon}</span>

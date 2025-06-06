@@ -63,8 +63,9 @@ export class EmpresaFormDialogComponent {
 
   public getActividades() {
     this.actividadService.getActividades().subscribe({
+      
       next: (response) => {
-
+        
         this.dataActividad = response;
       },
       error: (err) => {

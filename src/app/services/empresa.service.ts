@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
 import { ResponseData } from '../models/response.model';
 import { Empresa } from '../models/empresa.interface';
-import { Entidad } from '../models/proyecto.model';
 
 
 @Injectable({

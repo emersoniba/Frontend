@@ -115,11 +115,9 @@ export class PersonaComponent implements OnInit, OnDestroy {
 			next: (response) => {
 				this.dataPersonas = response.data as Persona[];
 			},
-			//error: () => Swal.fire('Error', 'No se cargaron las personas', 'error')
-			error: (error) => this.errorHandler.handleError(error, 'No se pudieron cargar laspersonas')
+			error: (error) => this.errorHandler.handleError(error, 'No se pudieron cargar las personas')
 		});
 	}
-
 
 	public nuevaPersona(persona?: Persona): void {
 
@@ -163,9 +161,6 @@ export class PersonaComponent implements OnInit, OnDestroy {
 						this.getPersonas();
 						Swal.fire('¡Eliminado!', 'La perssona ha sido eliminada correctamente.', 'success');
 					},
-					/*error: () => {
-						Swal.fire('Error', 'Ocurrió un error al eliminar la persona.', 'error');
-					}*/
 					error: (error) => this.errorHandler.handleError(error, 'Ocurrió un error al eliminar la persona.')
 
 				});
