@@ -5,6 +5,8 @@ import { debounceTime, ReplaySubject, startWith, Subject, takeUntil } from 'rxjs
 
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { DateAdapter } from '@angular/material/core';
 
 import { ProyectoService } from '../../../../services/proyecto.service';
 import { EntidadService } from '../../../../services/entidad.service';
@@ -42,7 +44,9 @@ export class ProyectoModalComponent implements OnInit, OnDestroy {
 		private departamentoService: DepartamentoService,
 		private proyectoService: ProyectoService,
 		public dialogRef: MatDialogRef<ProyectoModalComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: Proyecto
+		@Inject(MAT_DIALOG_DATA) public data: Proyecto,
+		@Inject(MAT_DATE_LOCALE) private _dateLocale: string,
+		private _dateAdapter: DateAdapter<Date>
 	) {
 		this.proyectoForm = this.fb.group({
 			nombre: ['', Validators.required],
@@ -52,6 +56,7 @@ export class ProyectoModalComponent implements OnInit, OnDestroy {
 			fecha_creado: [new Date(), Validators.required],
 			fecha_finalizacion: [new Date(), Validators.required]
 		});
+		this._dateAdapter.setLocale('es-ES');
 	}
 
 	ngOnInit(): void {
@@ -60,13 +65,17 @@ export class ProyectoModalComponent implements OnInit, OnDestroy {
 
 		if (this.data.id) {
 			this.isEditMode = true;
+
+			// Corregir las fechas para evitar el desplazamiento de 1 día
+			const fechaCreado = this.fixDateOffset(new Date(this.data.fecha_creado));
+			const fechaFinalizacion = this.fixDateOffset(new Date(this.data.fecha_finalizacion));
+
 			this.proyectoForm.patchValue({
 				...this.data,
-				fecha_creado: new Date(this.data.fecha_creado),
-				fecha_finalizacion: new Date(this.data.fecha_finalizacion)
+				fecha_creado: fechaCreado,
+				fecha_finalizacion: fechaFinalizacion
 			});
 		}
-
 		this.entidadFilterCtrl.valueChanges
 			.pipe(
 				takeUntil(this._onDestroy),
@@ -75,6 +84,11 @@ export class ProyectoModalComponent implements OnInit, OnDestroy {
 			.subscribe(() => {
 				this.filtrarEntidades();
 			});
+	}
+
+	private fixDateOffset(date: Date): Date {
+		const offset = date.getTimezoneOffset() * 60000;
+		return new Date(date.getTime() + offset);
 	}
 
 	filtrarEntidades() {

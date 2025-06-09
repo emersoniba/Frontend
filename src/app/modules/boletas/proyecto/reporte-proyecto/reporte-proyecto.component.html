@@ -15,7 +15,8 @@
       <mat-card-content>
         <!-- Filtros -->
         <form [formGroup]="filterForm">
-          <div class="row mb-3">
+          <!-- Filtro por fechas (se deshabilita al usar filtros especiales) -->
+          <div class="row mb-3" [class.disabled]="filterForm.get('usarFiltrosEspeciales')?.value">
             <div class="col-md-6">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Fecha inicio</mat-label>
@@ -54,7 +55,6 @@
                     <mat-option *ngFor="let entidad of entidadesFiltradasArray" [value]="entidad">
                       {{entidad}}
                     </mat-option>
-
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -69,10 +69,9 @@
                         noEntriesFoundLabel="No se encontraron departamentos">
                       </ngx-mat-select-search>
                     </mat-option>
-                  <mat-option *ngFor="let depto of departamentosFiltradosArray" [value]="depto">
-                    {{depto}}
-                  </mat-option>
-
+                    <mat-option *ngFor="let depto of departamentosFiltradosArray" [value]="depto">
+                      {{depto}}
+                    </mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -83,10 +82,10 @@
         <p class="mb-3 text-left">Proyectos filtrados: <strong>{{ filteredProyectos.length }}</strong> de {{ proyectos.length }}</p>
         
         <div class="d-flex gap-2 justify-content-start">
-          <button mat-raised-button class="btn-exportar-excel" (click)="exportarExcel()">
+          <button mat-raised-button class="btn-exportar-excel" (click)="exportarExcel()" [disabled]="filteredProyectos.length === 0">
             <i class="bi bi-file-earmark-excel-fill"></i> Exportar a Excel
           </button>
-          <button mat-raised-button class="btn-exportar-pdf" (click)="exportarPdf()">
+          <button mat-raised-button class="btn-exportar-pdf" (click)="exportarPdf()" [disabled]="filteredProyectos.length === 0">
             <i class="bi bi-file-earmark-pdf-fill"></i> Exportar a PDF
           </button>
         </div>

@@ -1,35 +1,46 @@
 import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
+
+import { MaterialModule } from '../../../../shared/app.material';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
+
 import { EmpresaService } from '../../../../services/empresa.service';
-import { MatIconModule } from '@angular/material/icon';
-import { Actividad, Empresa } from '../../../../models/empresa.interface';
+import { Actividad, Empresa } from '../../../../models/empresa.model';
+import { ActividadService } from '../../../../services/actividad.service';
 import Swal from 'sweetalert2';
+
+import { ErrorHandlerService } from '../../../../services/error-handler.service';
+
 @Component({
   selector: 'app-empresa-form-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatDialogModule,
-    MatButtonModule, MatSelectModule, MatIconModule],
+  imports: [CommonModule, ReactiveFormsModule, MaterialModule],
   templateUrl: './empresa-form-dialog.component.html',
 })
 
 export class EmpresaFormDialogComponent {
-  formEmpresa!: FormGroup;
+
+  dataActividad: Actividad[] = [] as Actividad[];
   esEdicion: boolean = false;
+  formEmpresa!: FormGroup;
 
   constructor(
+    
     private fb: FormBuilder,
+    private readonly actividadService: ActividadService,
+
     private dialogRef: MatDialogRef<EmpresaFormDialogComponent>,
     private empresaService: EmpresaService,
-    @Inject(MAT_DIALOG_DATA) public data: { actividades: Actividad[], empresa?: Empresa }
+    private errorHandler: ErrorHandlerService,
+
+    @Inject(MAT_DIALOG_DATA) public data: { empresa?: Empresa }
   ) {
 
     this.getFormBuilder();
+
+
     if (data.empresa) {
       this.esEdicion = true;
       this.formEmpresa.patchValue({
@@ -44,6 +55,26 @@ export class EmpresaFormDialogComponent {
     }
   }
 
+
+  ngOnInit(): void {
+    this.getActividades();
+  }
+
+
+  public getActividades() {
+    this.actividadService.getActividades().subscribe({
+      next: (response) => {
+
+        this.dataActividad = response;
+      },
+      error: (err) => {
+        this.dataActividad = [] as Actividad[];
+      }
+
+    });
+
+  }
+
   public getFormBuilder(): void {
     this.formEmpresa = this.fb.group({
       id: [''],
@@ -56,22 +87,15 @@ export class EmpresaFormDialogComponent {
     });
   }
 
-
-
-  cancelar(): void {
+  public cancelar(): void {
     this.dialogRef.close();
   }
 
-
-  registrar(): void {
-   /* if (this.formEmpresa.valid) {
-      this.dialogRef.close(this.formEmpresa.value);
-    }*/
+  public registrar(): void {
     if (this.formEmpresa.invalid) {
       this.formEmpresa.markAllAsTouched();
       return;
     }
-
     const empresaData = this.formEmpresa.value;
     const save$ = this.esEdicion
       ? this.empresaService.putEmpresa(empresaData.id!, empresaData)
@@ -79,30 +103,32 @@ export class EmpresaFormDialogComponent {
 
     save$.subscribe({
       next: (res) => {
-        this.dialogRef.close(res); 
+        this.dialogRef.close(res);
         Swal.fire(
-          this.esEdicion ?'¡Actualizada!':'¡Registrada!',
+          this.esEdicion ? '¡Actualizada!' : '¡Registrada!',
           this.esEdicion
             ? 'Empresa actualizada correctamnete.'
             : 'Empresa añadida correctamente.', 'success'
         );
-        
+
       },
       error: (error) => {
         if (error.status === 400 && error.error) {
           if (error.error.nit) {
-            this.formEmpresa.get('nit')?.setErrors({ backend: error.error.nit[0] });
+            const controlNit = this.formEmpresa.get('nit');
+            controlNit?.setErrors({ backend: error.error.nit[0] });
+            controlNit?.markAsTouched();
           }
           if (error.error.correo) {
-            this.formEmpresa.get('correo')?.setErrors({ backend: error.error.correo[0] });
+            const controlCorreo = this.formEmpresa.get('correo');
+            controlCorreo?.setErrors({ backend: error.error.correo[0] });
+            controlCorreo?.markAsTouched();
           }
           Swal.fire(
-          'Error de validación',
-          'Por favor revisa los campos: NIT o Correo ya están registrados en otra entidad.',
-          'error'
-        );
+            'Error de validación',
+            'Por favor revisa los campos: NIT o Correo ya están registrados en otra entidad.', 'error');
         } else {
-          console.error('Error al registrar empresa', error);
+          this.errorHandler.handleError(error, 'Ocurrió un error al registrar la empresa');
         }
       }
     });

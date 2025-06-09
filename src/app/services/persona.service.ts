@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
 import { HttpClient } from '@angular/common/http';
-import { Persona, Rol } from '../models/auth.interface';
+import { Persona, Rol, ChangePasswordPayload } from '../models/auth.interface';
 import { Observable } from 'rxjs';
 import { ResponseData } from '../models/response.model';
-
-interface ChangePasswordPayload {
-	password_actual: string;
-	nuevo_password: string;
-	confirmacion_password: string;
-}
 
 @Injectable({
 	providedIn: 'root'
@@ -26,18 +20,20 @@ export class PersonaService {
 
 	getPersonasUsuario(): Observable<ResponseData> {
 		return this.http.get<ResponseData>(`${this.url}/personas/con_usuario/`)
-	}
-	getRoles(): Observable<Rol[]> {
-		return this.http.get<Rol[]>(`${this.url}/roles/`)
+	}	
+	
+	getPerfil(): Observable<ResponseData> {
+		return this.http.get<ResponseData>(`${this.url}/personas/perfil/`);
 	}
 
-	getPersonaProfile(): Observable<Persona> {
-		return this.http.get<Persona>(`${this.url}/personas/profile_user/`)
+	getRoles(): Observable<Rol[]> {
+		return this.http.get<Rol[]>(`${this.url}/roles/`)
 	}
 
 	deletePersona(ci: number): Observable<any> {
 		return this.http.delete(`${this.url}/personas/${ci}/`)
 	}
+	
 	deleteUsuario(ci: number): Observable<any> {
 		return this.http.delete(`${this.url}/personas/eliminar_usuario/${ci}/`)
 	}
@@ -45,18 +41,18 @@ export class PersonaService {
 	putPersona(ci: number, persona: any): Observable<any> {
 		return this.http.put(`${this.url}/personas/${ci}/`, persona);
 	}
+	
 	putPersonal(ci: number, persona: any): Observable<any> {
 		return this.http.put(`${this.url}/personas/${ci}/editar_persona`, persona);
 	}
+	
 	postPersona(data: Persona): Observable<any> {
 		return this.http.post(`${this.url}/personas/`, data);
 	}
 
-
 	postChangePassword(ci: number, data: any): Observable<any> {
 		return this.http.post(`${this.url}/personas/${ci}/change_password/`, data);
 	}
-
 
 	postCrearUsuarioPersona(ci: number, data: { roles: number[] }): Observable<any> {
 		return this.http.post(`${this.url}/personas/${ci}/crear_usuario/`, data);
@@ -74,17 +70,9 @@ export class PersonaService {
 		return this.http.get<Rol[]>(`${this.url}/personas/${personaId}/roles/`);
 	}
 
-
-	getPerfil(): Observable<ResponseData> {
-		return this.http.get<ResponseData>(`${this.url}/personas/perfil/`);
-	}
-
 	subirImagen(ci: string, imagenBase64: string) {
 		const body = { imagen_base64: imagenBase64 };
 		return this.http.post(`${this.url}/personas/${ci}/subir_imagen/`, body);
 	}
 
 }
-
-
-

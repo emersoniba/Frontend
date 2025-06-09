@@ -1,21 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
-import { Usuario } from '../../../models/auth.interface';
-import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
-
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { RolesService } from '../../../services/roles.service';
-import { PersonaService } from '../../../services/persona.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Persona } from '../../../models/auth.interface';
-import Swal from 'sweetalert2';
-import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatIcon } from '@angular/material/icon';
+
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { PersonaService } from '../../../services/persona.service';
+import { Persona } from '../../../models/auth.interface';
+
+import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
+
 
 @Component({
 	selector: 'app-header',
@@ -26,31 +24,25 @@ import { MatIcon } from '@angular/material/icon';
 })
 
 export class HeaderComponent implements OnInit {
-	usuario: any = null;
 
-	public dataUsuario: Usuario = {} as Usuario;
-	private usuarioSubscriptor: Subscription | undefined;
-
-
-	public formPersona: FormGroup;
-	public persona?: Persona;
-	personaSubscriptor?: Subscription;
-
+	public perfil?: Persona;
+	private perfilSubscriptor?: Subscription;
 	public imagenPreview: string | null = null;
 	public convertido: string | null = null;
 
 	constructor(
 		private readonly router: Router,
-		private readonly authService: AuthService,
-		private rolesService: RolesService,
 		private readonly personaService: PersonaService,
-		private readonly fb: FormBuilder
-	) {
-		this.formPersona = new FormGroup({});
-	}
+	) { }
 
 	ngOnInit(): void {
-		this.getMiPerfil();
+		this.cargarPerfil();
+	}
+
+	ngondestroy(): void {
+		if (this.perfilSubscriptor) {
+			this.perfilSubscriptor.unsubscribe();
+		}
 	}
 
 	public logout() {
@@ -63,28 +55,20 @@ export class HeaderComponent implements OnInit {
 		this.router.navigateByUrl('/perfil');
 	}
 
-	public getMiPerfil(): void {
-		this.personaSubscriptor = this.personaService.getPerfil().subscribe({
+	public cargarPerfil(): void {
+		this.perfilSubscriptor = this.personaService.getPerfil().subscribe({
 			next: (response) => {
-				this.persona = {
-					...response.data.persona,
-					usuario: response.data.usuario,
-					roles: response.data.roles
-				};
-
-				console.log('Perfil del usuario************:', response);
-
-				if (this.persona?.imagen) {
-					this.imagenPreview = 'data:image/png;base64,' + this.persona.imagen;
+				this.perfil = response.data as Persona;
+				if (this.perfil?.imagen) {
+					this.imagenPreview = 'data:image/png;base64,' + this.perfil.imagen;
 				} else {
 					this.imagenPreview = null;
 				}
 			},
-			error: () => {
-				Swal.fire('Error', 'No se pudo cargar el perfil del usuario.', 'error');
+			error: (error) => {
+				console.error(error);
+				Swal.fire('Error', 'No se pudo cargar el perfil.', 'error');
 			}
 		});
 	}
-
-
 }

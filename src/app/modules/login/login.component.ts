@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 					this.rolesService.setRoles(response.roles);
 					this.rolesService.setRolesId(response.roles_id);
 					this.rolesService.setFullName(response.nombre_completo);
-					this.router.navigate(['/perfil']);
+					this.router.navigate(['/dashboard']);
 				});
 			},
 			error: (err) => {

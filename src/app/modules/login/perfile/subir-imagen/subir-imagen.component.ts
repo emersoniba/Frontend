@@ -5,8 +5,6 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { PersonaService } from '../../../../services/persona.service';
-
-
 @Component({
 	selector: 'app-subir-imagen',
 	standalone: true,
@@ -35,15 +33,16 @@ export class SubirImagenComponent {
 
 	}
 
+
 	ngOnInit(): void {
 		this.obtenerImagenActual();
 	}
 
+
 	obtenerImagenActual(): void {
 		this.personaService.getPerfil().subscribe({
 			next: (resp) => {
-				const data = resp.data;
-				const base64 = data.persona.imagen;
+				const base64 = resp?.data.persona?.imagen;
 				if (base64) {
 					this.imagenActual = base64.startsWith('data:')
 						? base64
@@ -55,6 +54,7 @@ export class SubirImagenComponent {
 			}
 		});
 	}
+
 
 	convertirImagen(event: Event): void {
 		const input = event.target as HTMLInputElement;
@@ -86,11 +86,7 @@ export class SubirImagenComponent {
 			}
 		});
 	}
-
 	cancelar() {
 		this.dialogRef.close(null);
 	}
-
-
-
 }

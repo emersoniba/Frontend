@@ -1,21 +1,27 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-
 import Swal from 'sweetalert2';
-import { AgGridAngular, AgGridModule } from 'ag-grid-angular';
-import { ValueGetterParams, GridOptions, AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { GridReadyEvent } from 'ag-grid-community';
-import { themeMaterial } from 'ag-grid-community';
 
-import { BotonesComponent } from './botones/botones.component';
+import { AgGridModule } from 'ag-grid-angular';
+import {
+	ValueGetterParams, GridOptions, AllCommunityModule,
+	ModuleRegistry, GridReadyEvent, themeMaterial,
+} from 'ag-grid-community';
+
+import { MaterialModule } from '../../../shared/app.material';
+import { MatDialog } from '@angular/material/dialog';
+import { localeEs } from '../../../shared/app.locale.es.grid';
+
+
 import { PersonaFormDialogComponent } from './persona-form-dialog/persona-form-dialog.component';
 import { UsuarioFormDialogComponent } from './usuario-form-dialog/usuario-form-dialog.component';
 import { RolesFormDialogComponent } from './roles-form-dialog/roles-form-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { BotonesComponent } from './botones/botones.component';
 import { PersonaService } from '../../../services/persona.service';
 import { Persona } from '../../../models/auth.interface';
-import { MaterialModule } from '../../../shared/app.material';
+import { ErrorHandlerService } from '../../../services/error-handler.service';
+
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -24,9 +30,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 	selector: 'app-persona',
 	standalone: true,
 	imports: [
-		CommonModule,
-		AgGridModule,
-		MaterialModule,
+		CommonModule, AgGridModule, MaterialModule,
 	],
 
 	templateUrl: './persona.component.html',
@@ -64,7 +68,9 @@ export class PersonaComponent implements OnInit, OnDestroy {
 				headerName: 'Acciones',
 				cellRenderer: BotonesComponent,
 				field: 'ci',
-				width: 130
+				width: 180,
+				maxWidth: 180,
+				minWidth: 180,
 			}
 		],
 		context: {
@@ -77,11 +83,17 @@ export class PersonaComponent implements OnInit, OnDestroy {
 		},
 		animateRows: true,
 		rowSelection: 'single',
+		localeText: localeEs,
+		paginationNumberFormatter(params) {
+			return params.value.toLocaleString()
+		},
 	};
+
 
 	constructor(
 		private readonly personaService: PersonaService,
 		private readonly dialog: MatDialog,
+		private readonly errorHandler: ErrorHandlerService
 	) {
 	}
 
@@ -101,14 +113,16 @@ export class PersonaComponent implements OnInit, OnDestroy {
 	public getPersonas(): void {
 		this.personaSubscriptor = this.personaService.getPersonasUsuario().subscribe({
 			next: (response) => {
-				console.log(response.data);
 				this.dataPersonas = response.data as Persona[];
 			},
-			error: () => Swal.fire('Error', 'No se cargaron las personas', 'error')
+			//error: () => Swal.fire('Error', 'No se cargaron las personas', 'error')
+			error: (error) => this.errorHandler.handleError(error, 'No se pudieron cargar laspersonas')
 		});
 	}
 
+
 	public nuevaPersona(persona?: Persona): void {
+
 		const dialogRef = this.dialog.open(PersonaFormDialogComponent, {
 			width: '40vw',
 			maxWidth: '60vw',
@@ -139,7 +153,9 @@ export class PersonaComponent implements OnInit, OnDestroy {
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
 			confirmButtonText: 'Sí, eliminar',
-			cancelButtonText: 'Cancelar'
+			cancelButtonText: 'Cancelar',
+			allowOutsideClick: false,
+			allowEscapeKey: false
 		}).then((result) => {
 			if (result.isConfirmed) {
 				this.personaService.deletePersona(ci).subscribe({
@@ -147,9 +163,11 @@ export class PersonaComponent implements OnInit, OnDestroy {
 						this.getPersonas();
 						Swal.fire('¡Eliminado!', 'La perssona ha sido eliminada correctamente.', 'success');
 					},
-					error: () => {
+					/*error: () => {
 						Swal.fire('Error', 'Ocurrió un error al eliminar la persona.', 'error');
-					}
+					}*/
+					error: (error) => this.errorHandler.handleError(error, 'Ocurrió un error al eliminar la persona.')
+
 				});
 			}
 		});
@@ -169,6 +187,7 @@ export class PersonaComponent implements OnInit, OnDestroy {
 			next: (rolesDisponibles) => {
 				const dialogRef = this.dialog.open(UsuarioFormDialogComponent, {
 					width: '400px',
+					disableClose: true,
 					data: { rolesDisponibles, modo: 'crear' }
 				});
 				dialogRef.afterClosed().subscribe(result => {
@@ -186,15 +205,15 @@ export class PersonaComponent implements OnInit, OnDestroy {
 					}
 				});
 			},
-			error: () => {
-				Swal.fire('Error', 'No se pudieron cargar los roles', 'error');
-			}
+			//error: () => {Swal.fire('Error', 'No se pudieron cargar los roles', 'error');}
+			error: (error) => this.errorHandler.handleError(error, 'No se pudieron cargar los roles')
 		});
 	}
 
 	public editarRol(ci: string): void {
 		const dialogRef = this.dialog.open(RolesFormDialogComponent, {
 			width: '400px',
+			disableClose: true,
 			data: this.dataPersonas.find((p) => p.ci === ci)
 		});
 

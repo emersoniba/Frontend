@@ -36,14 +36,14 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 		FormsModule,
 		AgGridModule,
 		MatDatepickerModule,
-		
+
 	],
 	selector: 'app-boleta',
 	templateUrl: './boleta.component.html',
 	encapsulation: ViewEncapsulation.None,
 	styleUrls: ['./boleta.component.css'],
 	providers: [DatePipe, provideNativeDateAdapter(),
-]
+	]
 })
 export class BoletaComponent implements OnInit {
 	boletas: Boleta[] = [];
@@ -61,11 +61,12 @@ export class BoletaComponent implements OnInit {
 			headerName: 'Acciones',
 			cellRenderer: (params: ICellRendererParams) => {
 				return `
-                <button class="edit-btn" title="Editar">✏️</button>
-                <button class="delete-btn" title="Eliminar">🗑️</button>
-            `;
+				<button class="edit-btn" title="Editar">✏️</button>
+				<button class="delete-btn" title="Eliminar">🗑️</button>
+			`;
 			},
-			width: 140, 
+			///cellRenderer: BotonesBoletaComponent,
+			width: 140,
 			minWidth: 120,
 			maxWidth: 160,
 			pinned: 'left',
@@ -77,7 +78,7 @@ export class BoletaComponent implements OnInit {
 				justifyContent: 'center',
 				whiteSpace: 'nowrap'
 			},
-			suppressSizeToFit: true, 
+			suppressSizeToFit: true,
 		},
 		{
 			headerName: 'Días para Vencimiento',
@@ -129,8 +130,8 @@ export class BoletaComponent implements OnInit {
 			headerName: 'Número',
 			field: 'numero',
 			width: 300,
-			minWidth: 150, 
-			flex: 1, 
+			minWidth: 150,
+			flex: 1,
 			autoHeight: true,
 			wrapText: true,
 			cellStyle: { 'white-space': 'normal' },
@@ -327,6 +328,7 @@ export class BoletaComponent implements OnInit {
 		this.applyPagination();
 	}
 
+	
 	onCellClicked(event: any) {
 		const boleta = event.data;
 		const target = event.event?.target as HTMLElement;
@@ -342,7 +344,7 @@ export class BoletaComponent implements OnInit {
 			this.eliminarBoleta(boleta.id);
 		}
 	}
-
+	
 	verPDF(archivoUrl: string) {
 		this.dialog.open(PdfViewerDialogComponent, {
 			width: '80%',
@@ -352,7 +354,7 @@ export class BoletaComponent implements OnInit {
 
 	abrirDialogoReporte(): void {
 		this.dialog.open(ReporteBoletasComponent, {
-			width: '800px',  
+			width: '800px',
 			data: { boletas: this.rowData }
 		});
 	}
