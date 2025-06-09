@@ -1,12 +1,15 @@
-<div class="container">
-	<mat-card>
-		<mat-card-header class="header">
-			<mat-card-title>Gestión de Boletas</mat-card-title>
-			<mat-card-subtitle>Listado de todas las boletas registradas</mat-card-subtitle>
-		</mat-card-header>
 
+<div class="container">
+	
+	<mat-card>
+
+		<mat-card-header class="header">
+			<mat-card-title> Gestión de Boletas</mat-card-title>
+			<mat-card-subtitle> Listado de todas las boletas registradas</mat-card-subtitle>
+		</mat-card-header>
+		
 		<mat-card-content>
-			<div class="controls-container">
+			<div class="controls-container" >
 				<button mat-raised-button color="primary" (click)="abrirModalCrear()" class="new-button">
 					<mat-icon>add</mat-icon> Nueva Boleta
 				</button>
@@ -16,9 +19,16 @@
 			</div>
 
 			<div class="grid-container">
-				<ag-grid-angular style="width: 100%; height: 600px;" class="ag-theme-alpine" [rowData]="rowData"
-					[columnDefs]="columnDefs" [gridOptions]="gridOptions" [animateRows]="true"
-					[suppressCellFocus]="true" (cellClicked)="onCellClicked($event)" (gridReady)="onGridReady($event)">
+				<ag-grid-angular style="width: 100%; height: 600px;" class="ag-theme-alpine" 
+				[rowData]="rowData"
+					[columnDefs]="columnDefs" 
+					[gridOptions]="gridOptions" 
+					[animateRows]="true"
+					[suppressCellFocus]="true" 
+					(cellClicked)="clikFila($event)"
+					(gridReady)="onGridReady($event)"
+					[context]="{ componentParent: this }"
+>
 				</ag-grid-angular>
 			</div>
 			<div class="leyenda-vencimiento">
@@ -36,7 +46,7 @@
 					<span>De 0 a 3 días para vencer</span>
 				</div>
 				<div class="leyenda-item">
-					<span class="leyenda-color" style="background-color: #cc0000;"></span>
+					<span class="leyenda-color" style="background-color: #a30202;"></span>
 					<span>Boleta vencida</span>
 				</div>
 			</div>

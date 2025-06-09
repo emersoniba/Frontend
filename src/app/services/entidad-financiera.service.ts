@@ -12,7 +12,7 @@ export interface EntidadFinanciera {
   providedIn: 'root'
 })
 export class EntidadFinancieraService {
-  private apiUrl = `${environment.apiUrl}/entidad_financiera/`;
+  private apiUrl = `${environment.apiUrl}/entidad-financiera/`;
 
   constructor(private http: HttpClient) {}
 

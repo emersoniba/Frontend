@@ -14,31 +14,22 @@
 }
 
 
-/* Botón Excel */
-
 .btn-exportar-excel {
     background-color: #4caf50 !important;
     color: white !important;
     padding: 0.5rem 1.5rem;
-    font-weight: 500;
-    border-radius: 8px;
-    margin-right: 1rem;
     transition: background-color 0.3s ease;
 }
 
 .btn-exportar-excel:hover {
-    background-color: #388e3c !important;
+    background-color: #73cc78 !important;
 }
-
-
-/* Botón PDF */
 
 .btn-exportar-pdf {
     background-color: #f44336 !important;
-    color: white !important;
+    color: #ffffff !important;
     padding: 0.5rem 1.5rem;
-    font-weight: 500;
-    border-radius: 8px;
+   
     transition: background-color 0.3s ease;
 }
 
@@ -46,13 +37,6 @@
     background-color: #d32f2f !important;
 }
 
-.btn-exportar i {
-    margin-right: 0.5rem;
-    font-size: 1.2rem;
-}
-
-
-/**/
 
 .modal-container {
     padding: 20px;
@@ -67,22 +51,12 @@
 
 .modal-title {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
 }
 
 .card-custom {
     padding: 20px;
     border-radius: 8px;
-}
-
-.btn-exportar-excel {
-    background-color: #1d6f42;
-    color: white;
-}
-
-.btn-exportar-pdf {
-    background-color: #d32f2f;
-    color: white;
 }
 
 .disabled {
@@ -99,4 +73,7 @@
 
 .mat-mdc-form-field {
     width: 100%;
+}
+.mat-mdc-card-header {
+    padding: 22px ;
 }

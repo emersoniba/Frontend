@@ -1,14 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environment/environment';
+import { EntidadFinanciera } from './entidad-financiera.service';
 
 @Injectable({ providedIn: 'root' })
 export class EntidadService {
-  private apiUrl = 'http://127.0.0.1:8000/api/entidades/';
+  private apiUrl = `${environment.apiUrl}/entidades/`;
 
   constructor(private http: HttpClient) {}
 
   getEntidades(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
+
+	getEntidadesFinancieras(): Observable<EntidadFinanciera[]> {
+		return this.http.get<EntidadFinanciera[]>(`${this.apiUrl}entidad-financiera/`);
+	}
+	getDashboardData(): Observable<any> {
+		return this.http.get(`${this.apiUrl}dashboard/`); 
+	}
 }

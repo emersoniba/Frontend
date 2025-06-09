@@ -41,16 +41,15 @@ mat-option input::placeholder {
 }
 
 
-/* boleta-modal.component.css */
 
 .boleta-form {
-    padding: 20px;
+    padding: 2px;
 }
 
 .row {
     display: flex;
-    gap: 16px;
-    margin-bottom: 16px;
+    gap: 5px;
+    margin-bottom: -2px;
 }
 
 .col-md-6 {

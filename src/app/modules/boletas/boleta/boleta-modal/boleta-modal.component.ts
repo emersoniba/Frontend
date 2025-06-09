@@ -25,6 +25,8 @@ import { Subject, takeUntil, debounceTime, distinctUntilChanged, startWith, map 
 import Swal from 'sweetalert2';
 import moment from 'moment';
 import { Proyecto } from '../../../../models/proyecto.model';
+import { ErrorHandlerService } from '../../../../services/error-handler.service';
+
 
 export const MY_DATE_FORMATS = {
 	parse: {
@@ -132,6 +134,7 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
 		this.tipoService.getTipos().subscribe({
 			next: (data) => this.tipo_boleta = data,
 			error: (err) => console.error('Error cargando tipos:', err)
+								
 		});
 	}
 
@@ -153,6 +156,7 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
 	}
 
 	loadEntidadesFinancieras(): void {
+		
 		this.entidadFinancieraService.getEntidadesFinancieras().subscribe({
 			next: (data) => this.entidadesFinancieras = data,
 			error: (err) => console.error('Error cargando entidades financieras:', err)

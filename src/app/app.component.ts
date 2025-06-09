@@ -1,8 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
+
+import { Rol } from './models/auth.interface';
 import { AuthService } from './services/auth.service';
 import { RolesService } from './services/roles.service';
-import { Rol } from './models/auth.interface'
 
 
 @Component({
@@ -12,11 +13,13 @@ import { Rol } from './models/auth.interface'
 	templateUrl: './app.component.html',
 	styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit{
+
+
+export class AppComponent implements OnInit {
 
 	private readonly router = inject(Router);
-  private readonly authService = inject(AuthService);
-  private readonly rolesService = inject(RolesService);
+	private readonly authService = inject(AuthService);
+	private readonly rolesService = inject(RolesService);
 
 	ngOnInit(): void {
 		const token = localStorage.getItem('tkn-boletas');
@@ -41,4 +44,4 @@ export class AppComponent implements OnInit{
 		}
 	}
 
-}
+ }

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { RolesService } from '../services/roles.service';
 
 @Injectable({
@@ -13,24 +12,12 @@ export class RolesGuard implements CanActivate {
     private rolesService: RolesService
   ) { }
 
- /* canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const rolesPermitidos = route.data['roles'] as number[];
-    const rolesUsuario= this.rolesService.getRolesId();
-
-    const tieneAcceso = rolesUsuario.some((rol: number) => rolesPermitidos.includes(rol));
-    if (!tieneAcceso) {
-      this.router.navigate(['/sin-acceso']);
-    }
-    return tieneAcceso;
-  }
-}*/
   canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    _state: RouterStateSnapshot
   ): boolean {
     const rolesPermitidos = route.data['roles'] as number[];
+    console.log('Roles permitidos:', rolesPermitidos);
     const tieneAcceso = this.rolesService.hasAnyRole(rolesPermitidos);
     if (!tieneAcceso) {
       this.router.navigate(['/sin-acceso']);

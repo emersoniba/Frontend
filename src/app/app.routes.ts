@@ -41,8 +41,7 @@ export const routes: Routes = [
 			{
 				path: 'sin-acceso',
 				loadComponent: () => import('./modules/login/sin-acceso/sin-acceso.component').then(m => m.SinAccesoComponent)
-				, canActivate: [AuthGuard, RolesGuard],
-				data: { roles: [1] }
+				
 			},
 			/*
 			{
