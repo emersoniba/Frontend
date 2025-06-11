@@ -31,7 +31,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     MatSelectModule,
     MatCheckboxModule,
     MatDatepickerModule,
-    DatePipe,
+   // DatePipe,
   ],
   templateUrl: './reporte-boletas.component.html',
   providers: [
@@ -51,7 +51,7 @@ export class ReporteBoletasComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
 
-    private dialogRef: MatDialogRef<ReporteBoletasComponent>
+    public dialogRef: MatDialogRef<ReporteBoletasComponent>
   ) {
     this.boletas = data.boletas;
     this.filteredBoletas = [...this.boletas];

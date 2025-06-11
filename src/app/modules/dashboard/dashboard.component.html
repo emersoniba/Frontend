@@ -1,1 +1,54 @@
-<p>dashboard works!</p>
+
+<!-- Nuevas cards de vencimiento -->
+<div class="stats-container">
+  <mat-card class="stat-card verde">
+    <mat-card-header>
+      <mat-card-title>Más de 15 días para vencer</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="stat-value">{{ vencimientoStats.masDe15Dias }}</div>
+      <div class="stat-description">Todas las boletas</div>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="stat-card amarillo">
+    <mat-card-header>
+      <mat-card-title>De 4 a 15 días para vencer</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="stat-value">{{ vencimientoStats.de4a15Dias }}</div>
+      <div class="stat-description">Todas las boletas</div>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="stat-card rojo">
+    <mat-card-header>
+      <mat-card-title>De 0 a 3 días para vencer</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="stat-value">{{ vencimientoStats.de0a3Dias }}</div>
+      <div class="stat-description">Todas las boletas</div>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="stat-card vencido">
+    <mat-card-header>
+      <mat-card-title>Vencidas</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="stat-value">{{ vencimientoStats.vencidas }}</div>
+      <div class="stat-description">Boletas con fecha pasada</div>
+    </mat-card-content>
+  </mat-card>
+</div>
+<div class="charts-container">
+  <!-- Gráfico de estados -->
+  <div class="chart-wrapper">
+    <h3>Estados de Boletas</h3>
+    <div id="chartdiv" style="width: 100%; height: 400px;"></div>
+    
+  </div>
+  
+  <!-- Gráfico de tipos -->
+  <div class="chart-wrapper">
+    <h3>Tipos de Boletas</h3>
+    <div id="chartipos" style="width: 100%; height: 400px;"></div>
+  </div>
+</div>

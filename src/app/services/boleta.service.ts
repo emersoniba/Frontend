@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { Boleta, Estado, EntidadFinanciera } from '../models/boleta.model';
 import { environment } from '../../environment/environment';
 import { ResponseData } from '../models/response.model';
@@ -38,6 +38,33 @@ export class BoletaService {
 		return this.http.get<ResponseData>(`${this.apiUrlBoletas}?proyecto_id=${proyectoId}`);
 	}
 
+	getBoletasCountByStatus(): Observable<ResponseData> {
+		return this.http.get<ResponseData>(`${this.apiUrl}estadisticas-contadores/`).pipe(
+			tap(response => console.log('Respuesta del servicio:', response)),
+			catchError(error => {
+				console.error('Error al obtener estadísticas:', error);
+				return throwError(() => error);
+			})
+		);
+	}
+	getBoletasCountByVencimiento(): Observable<ResponseData> {
+		return this.http.get<ResponseData>(`${this.apiUrl}estadisticas-vencimientos/`).pipe(
+			tap(response => console.log('Respuesta del servicio:', response)),
+			catchError(error => {
+				console.error('Error al obtener estadísticas:', error);
+				return throwError(() => error);
+			})
+		);
+	}
+	getBoletasTipo(): Observable<ResponseData> {
+		return this.http.get<ResponseData>(`${this.apiUrl}estadisticas-tipos/`).pipe(
+			tap(response => console.log('Respuesta del servicio de tipos:', response)),
+			catchError(error => {
+				console.error('Error al obtener estadísticas:', error);
+				return throwError(() => error);
+			})
+		);
+	}
 }
 export class EstadoService {
 	private apiUrl = 'http://127.0.0.1:8000/api/';

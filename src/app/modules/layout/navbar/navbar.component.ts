@@ -26,8 +26,6 @@ export class NavbarComponent implements OnInit {
 	public imagenPreview: string | null = null;
 	public convertido: string | null = null;
 
-
-
 	constructor(
 		private rolesService: RolesService,
 		private readonly personaService: PersonaService,

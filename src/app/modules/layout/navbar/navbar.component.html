@@ -13,6 +13,10 @@
                 <p><strong>{{ perfil.cargo }}</strong></p>
             </div>}
         </div>}
+          @if (tieneAlgunRol([1])) {
+        <li><a routerLink="/dashboard" matTooltip="personas"><mat-icon>dashboard</mat-icon>@if (isNavOpen) {
+                <span>Inicio</span> }</a></li> }
+
         @if (tieneAlgunRol([1])) {
         <li><a routerLink="/persona" matTooltip="personas"><mat-icon>people</mat-icon>@if (isNavOpen) {
                 <span>Personas</span> }</a></li> }

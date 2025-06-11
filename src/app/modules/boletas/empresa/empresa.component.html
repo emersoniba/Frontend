@@ -1,11 +1,16 @@
 <mat-toolbar color="primary">
   <span>EMPRESAS</span>
   <span class="spacer"></span>
-  <button mat-raised-button color="accent" 
-   (click)="nuevaEmpresa()"><mat-icon>add_box</mat-icon>Nueva Empresa</button>
-   <button mat-raised-button color="accent" (click)="abrirDialogoReporte()"matTooltip="Empresas">
-          <mat-icon>download</mat-icon> Exportar Empresas
-      </button>
+  <button mat-raised-button color="accent" style="margin-right: 8px;"
+   (click)="nuevaEmpresa()">
+    <mat-icon>add_box</mat-icon>
+    Nueva Empresa
+  </button>
+  <button mat-raised-button color="accent" style="margin-right: 8px;"
+    (click)="abrirDialogoReporte()" matTooltip="Empresas">
+    <mat-icon>download</mat-icon>
+    Exportar Empresas
+  </button>
 </mat-toolbar>
 
 <div class="ag-grid-container" style="margin: 8px 0;">

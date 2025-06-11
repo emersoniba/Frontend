@@ -247,6 +247,7 @@ export class BoletaComponent implements OnInit {
 
 	];
 	gridOptions: GridOptions = {
+		
 		rowClassRules: {
 			'boleta-odd-row': (params: any) => params.node.rowIndex % 2 === 0,
 			'boleta-even-row': (params: any) => params.node.rowIndex % 2 !== 0,
