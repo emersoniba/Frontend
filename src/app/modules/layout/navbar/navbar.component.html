@@ -29,11 +29,10 @@
         <li><a routerLink="/empresa" matTooltip="Empresa"><mat-icon>domain</mat-icon>@if (isNavOpen) {
                 <span>Empresa</span> }</a></li>}
 
-
         @if (tieneAlgunRol([1])) {
-        <li><a routerLink="/actividad" matTooltip="Actividad"><mat-icon>domain</mat-icon>@if (isNavOpen) {
-                <span> Actividad </span> }</a></li>}
-            
+        <li><a routerLink="/parametros" matTooltip="Parametros"><mat-icon>domain</mat-icon>@if (isNavOpen) {
+                <span> Parametros </span> }</a></li>}
+
         @if (tieneAlgunRol([1, 2])) {
         <li><a routerLink="/proyecto" matTooltip="Proyectos"><mat-icon>file_copy</mat-icon>@if (isNavOpen) {
                 <span>Proyectos</span> }</a></li>}

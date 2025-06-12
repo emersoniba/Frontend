@@ -1,18 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 
-import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatIcon } from '@angular/material/icon';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { PersonaService } from '../../../services/persona.service';
 import { Persona } from '../../../models/auth.interface';
+import { PersonaService } from '../../../services/persona.service';
 
-import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 
 
 @Component({

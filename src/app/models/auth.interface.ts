@@ -20,6 +20,7 @@ export interface ChangePasswordPayload {
 	nuevo_password: string,
 	confirmacion_password: string,
 }
+
 export interface Login {
 	username: string,
 	password: string

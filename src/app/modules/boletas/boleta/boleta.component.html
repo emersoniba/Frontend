@@ -16,17 +16,10 @@
 		</div>
 
 		<div class="grid-container">
-			<ag-grid-angular style="width: 100%; height: 60%;" class="ag-theme-alpine" 
-			[rowData]="dataBoletas"
-				[columnDefs]="gridOptions.columnDefs"  
-				[gridOptions]="gridOptions" 
-				[animateRows]="true" 
-				[suppressCellFocus]="true"
-				(cellClicked)="clikFila($event)" 
-				(gridReady)="onGridReady($event)" 
-				[context]="{ componentParent: this }"
-				[theme]="theme" 
-				[pagination]="true">
+			<ag-grid-angular style="width: 100%; height: 60%;" class="ag-theme-alpine" [rowData]="dataBoletas"
+				[columnDefs]="gridOptions.columnDefs" [gridOptions]="gridOptions" [animateRows]="true"
+				[suppressCellFocus]="true" (cellClicked)="clikFila($event)" (gridReady)="onGridReady($event)"
+				[context]="{ componentParent: this }" [theme]="theme" [pagination]="true">
 			</ag-grid-angular>
 		</div>
 
@@ -57,7 +50,7 @@
 			<mat-spinner>
 				<p>Cargando boletas...</p>
 			</mat-spinner>
-	</div>
+		</div>
 
 	</mat-card-content>
 </mat-card>

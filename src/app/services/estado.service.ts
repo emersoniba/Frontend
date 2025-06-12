@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { HttpClientModule } from '@angular/common/http';
-import { EntidadFinanciera } from '../models/boleta.model';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
-import { Estado } from '../models/boleta.model';
+import { EntidadFinanciera, Estado } from '../models/boleta.model';
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +16,6 @@ export class EstadoService {
   getEstados(): Observable<Estado[]> {
     return this.http.get<Estado[]>(this.apiUrl);
   }
-
 
   getEstadoById(id: number): Observable<Estado> {
     return this.http.get<Estado>(`${this.apiUrl}/${id}`);

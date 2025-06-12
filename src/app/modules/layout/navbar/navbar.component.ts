@@ -21,13 +21,10 @@ import { PersonaService } from '../../../services/persona.service';
 export class NavbarComponent implements OnInit {
 
 	public isNavOpen: boolean = true;
-
 	public perfil?: Persona;
 	private perfilSubscriptor?: Subscription;
 	public imagenPreview: string | null = null;
 	public convertido: string | null = null;
-
-
 
 	constructor(
 		private readonly personaService: PersonaService,
@@ -40,7 +37,7 @@ export class NavbarComponent implements OnInit {
 	ngOnDestroy(): void {
 		this.perfilSubscriptor?.unsubscribe();
 	}
-	
+
 	tieneRol(rol: Rol): boolean {
 		if (!this.perfil?.roles) return false;
 		return this.perfil.roles.some(r => r.id === rol.id);

@@ -3,7 +3,6 @@ import { Router, RouterOutlet } from '@angular/router';
 
 import { AuthService } from './services/auth.service';
 
-
 @Component({
 	selector: 'app-root',
 	standalone: true,
@@ -12,11 +11,11 @@ import { AuthService } from './services/auth.service';
 	styleUrl: './app.component.css'
 })
 
-
 export class AppComponent implements OnInit {
 
 	private readonly router = inject(Router);
 	private readonly authService = inject(AuthService);
+
 
 	ngOnInit(): void {
 		const token = localStorage.getItem('tkn-boletas');
@@ -31,14 +30,15 @@ export class AppComponent implements OnInit {
 					console.error('Error al recuperar usuario:', err);
 					if (err.status === 401) {
 						console.warn('Token inválido o expirado, cerrando sesión...');
+
 						this.authService.logout();
 					}
 				}
 			});
-		} 
-		else 
-		{
+		}
+		else {
 			this.router.navigate(['/dashboard']);
 		}
 	}
+
 }

@@ -15,7 +15,7 @@ import { MaterialModule } from '../../../../shared/app.material';
   standalone: true,
   selector: 'app-reporte-boletas',
   imports: [
-    CommonModule, MaterialModule, 
+    CommonModule, MaterialModule,
   ],
   templateUrl: './reporte-boletas.component.html',
   providers: [
@@ -72,11 +72,11 @@ export class ReporteBoletasComponent implements OnDestroy {
       this.aplicarFiltros();
     });
   }
- ngOnDestroy(): void {
-   
+  ngOnDestroy(): void {
+
     this.dialogRef.close();
-  
- }
+
+  }
   aplicarFiltros(): void {
     let boletasFiltradas = [...this.boletas];
 
@@ -133,13 +133,13 @@ export class ReporteBoletasComponent implements OnDestroy {
       alert('No hay boletas para exportar.');
       return;
     }
-    
+
     const encabezados = [
       'Número', 'Tipo', 'Concepto', 'Entidad Financiera', 'Proyecto',
       'Observación', 'Fecha Inicio', 'Fecha Fin', 'Cite', 'Monto',
       'Nota Ejecución', 'Estado'
     ];
-    
+
     const datos = this.filteredBoletas.map(b => [
       b.numero,
       b.tipo_boleta?.nombre || '',
@@ -154,7 +154,7 @@ export class ReporteBoletasComponent implements OnDestroy {
       b.nota_ejecucion,
       b.estado?.nombre || ''
     ])
-    
+
     const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([
       ['Reporte de Boletas'],
       [],
@@ -175,20 +175,19 @@ export class ReporteBoletasComponent implements OnDestroy {
       { wch: 20 }, // Nota Ejecución
       { wch: 15 }  // Estado
     ];
-    
+
     worksheet['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: encabezados.length - 1 } }];
-    
+
     worksheet['A1'].s = {
       font: { bold: true, sz: 14 },
       alignment: { horizontal: 'center' }
-    
+
     };
-    
+
     const workbook: XLSX.WorkBook = {
       Sheets: { 'Boletas': worksheet },
       SheetNames: ['Boletas']
     };
-    
     const excelBuffer: any = XLSX.write(workbook, {
       bookType: 'xlsx',
       type: 'array'
@@ -199,7 +198,6 @@ export class ReporteBoletasComponent implements OnDestroy {
     });
 
     FileSaver.saveAs(blob, 'reporte_boletas.xlsx');
-
   }
 
   async exportarPDF(): Promise<void> {
@@ -336,7 +334,7 @@ export class ReporteBoletasComponent implements OnDestroy {
 
     try {
       const date = new Date(fecha);
-      return date.toLocaleDateString('es-ES'); 
+      return date.toLocaleDateString('es-ES');
     } catch {
       return '';
     }

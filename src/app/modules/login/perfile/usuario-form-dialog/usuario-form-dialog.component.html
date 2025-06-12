@@ -148,7 +148,7 @@
                     @if (formPersona.get('telefono')?.hasError('minlength')) {
                     <mat-error>El teléfono introducido debe tener como mínimo 7 dígitos</mat-error>
                     }
-                     @if (formPersona.get('telefono')?.hasError('pattern')) {
+                    @if (formPersona.get('telefono')?.hasError('pattern')) {
                     <mat-error>El teléfono introducido debe tener solo dígitos</mat-error>
                     }
                 </mat-form-field>
@@ -167,6 +167,6 @@
         <mat-icon>
             @if (esEdicion) {save} @else {person_add}
         </mat-icon>
-        @if (esEdicion) { Guardar cambios } @else {  Registrar Persona }
+        @if (esEdicion) { Guardar cambios } @else { Registrar Persona }
     </button>
 </mat-dialog-actions>

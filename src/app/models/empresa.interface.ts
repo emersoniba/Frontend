@@ -38,4 +38,5 @@ export interface Proyecto {
   departamento: Departamento,
   fecha_creado: string,
   fecha_finalizacion: string,
+
 }

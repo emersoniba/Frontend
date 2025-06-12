@@ -11,12 +11,14 @@
                 <mat-form-field appearance="fill" class="w-100">
                     <mat-label>Denominación</mat-label>
                     <mat-icon matPrefix>business</mat-icon>
+
                     <input matInput formControlName="denominacion" />
                     @if (formEmpresa.get('denominacion')?.hasError('required')) {
                     <mat-error>La denominación es obligatoria</mat-error>
                     }
                     @if (formEmpresa.get('denominacion')?.hasError('minlength')) {
                     <mat-error>Debe tener al menos 5 caracteres</mat-error>
+
                     }
                 </mat-form-field>
             </div>
@@ -25,6 +27,7 @@
                 <mat-form-field appearance="fill" class="w-100">
                     <mat-label>NIT</mat-label>
                     <mat-icon matPrefix>badge</mat-icon>
+
                     <input matInput formControlName="nit" />
                     @if (formEmpresa.get('nit')?.hasError('required')) {
                     <mat-error>El NIT es obligatorio</mat-error>
@@ -66,7 +69,6 @@
                     @if (formEmpresa.get('correo')?.hasError('backend')) {
                     <mat-error>{{ formEmpresa.get('correo')?.getError('backend') }}</mat-error>
                     }
-
                 </mat-form-field>
             </div>
 

@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from "@angular/material/dialog";
-import { MaterialModule } from '../../shared/app.material';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
+import { MaterialModule } from '../../shared/app.material';
+
+
 @Component({
 	selector: 'app-login',
 	imports: [FormsModule, ReactiveFormsModule, CommonModule, MaterialModule],

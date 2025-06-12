@@ -4,8 +4,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../environment/environment';
-import { ResponseData } from '../models/response.model';
 import { Empresa } from '../models/empresa.interface';
+import { ResponseData } from '../models/response.model';
 
 
 @Injectable({

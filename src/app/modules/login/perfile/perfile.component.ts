@@ -18,8 +18,6 @@ import { PersonaService } from '../../../services/persona.service';
 import { ChangeDetectorRef } from '@angular/core';
 
 
-
-
 @Component({
 	selector: 'app-perfile',
 	standalone: true,
@@ -59,8 +57,6 @@ export class PerfileComponent implements OnInit, OnDestroy {
 		this.perfilSubscriptor?.unsubscribe();
 	}
 
-
-
 	public cargarPerfil(): void {
 		this.perfilSubscriptor = this.personaService.getPerfil().subscribe({
 			next: (response) => {
@@ -75,7 +71,6 @@ export class PerfileComponent implements OnInit, OnDestroy {
 			error: (error) => this.errorHandler.handleError(error, 'No se pudo cargar el perfil.')
 		});
 	}
-
 
 	public editar(): void {
 		if (!this.perfil) return;
@@ -162,7 +157,6 @@ export class PerfileComponent implements OnInit, OnDestroy {
 			}
 		});
 	}
-
 
 }
 

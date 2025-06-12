@@ -13,6 +13,7 @@ export const routes: Routes = [
 				path: 'persona',
 				loadComponent: () => import('./modules/boletas/persona/persona.component').then(m => m.PersonaComponent)
 				, canActivate: [authGuard, rolGuard], data: { roles: [1] }
+
 			},
 			{
 				path: 'empresa',
@@ -22,22 +23,24 @@ export const routes: Routes = [
 			},
 			{
 
-				path: 'actividad',
+				path: 'parametros',
 				loadComponent: () => import('./modules/boletas/empresa/actividades/actividades.component').then(a => a.ActividadesComponent),
 				canActivate: [authGuard, rolGuard],
 				data: { roles: [1] }
 			},
-			
+
 			{
 				path: 'boleta',
 				loadComponent: () => import('./modules/boletas/boleta/boleta.component').then(m => m.BoletaComponent),
 				canActivate: [authGuard, rolGuard],
-				data: { roles: [1, 2] }//id
+
+				data: { roles: [1, 2] }
 			},
 			{
 				path: 'proyecto',
 				loadComponent: () => import('./modules/boletas/proyecto/proyecto.component').then(m => m.ProyectoComponent),
 				canActivate: [authGuard, rolGuard],
+
 				data: { roles: [1, 2] }
 			},
 			{
@@ -49,6 +52,7 @@ export const routes: Routes = [
 				path: 'dashboard',
 				loadComponent: () => import('./modules/boletas/dashboard/dashboard.component').then(m => m.DashboardComponent),
 				canActivate: [authGuard]
+
 			},
 			{
 				path: 'sin-acceso',
@@ -58,6 +62,5 @@ export const routes: Routes = [
 		]
 	},
 	{ path: '**', redirectTo: 'dashboard' },
-
 ];
 

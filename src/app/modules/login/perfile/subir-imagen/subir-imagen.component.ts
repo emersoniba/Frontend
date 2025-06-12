@@ -94,5 +94,4 @@ export class SubirImagenComponent {
 	cancelar() {
 		this.dialogRef.close(null);
 	}
-
 }

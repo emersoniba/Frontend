@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
-import { EntidadFinanciera } from './entidad-financiera.service';
+import { EntidadFinanciera } from '../models/boleta.model';
+
 
 @Injectable({ providedIn: 'root' })
 export class EntidadService {

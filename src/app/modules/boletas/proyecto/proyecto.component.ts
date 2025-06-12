@@ -38,10 +38,8 @@ export class ProyectoComponent implements OnInit, OnDestroy {
 	public theme = themeMaterial;
 	public proyectos: Proyecto[] = [] as Proyecto[];
 	private proyectoSubcription: Subscription | undefined;
-
-	
 	private gridApi!: GridApi<Proyecto>;
-	
+
 	public getRowId = (params: Proyecto) => params.id;
 	gridOptions: GridOptions = <GridOptions>{
 		pagination: true,
@@ -111,8 +109,8 @@ export class ProyectoComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.proyectoSubcription?.unsubscribe();
-		this.gridApi?.destroy(); 
-		this.gridApi = undefined as any; 
+		this.gridApi?.destroy();
+		this.gridApi = undefined as any;
 
 	}
 
@@ -196,7 +194,7 @@ export class ProyectoComponent implements OnInit, OnDestroy {
 						this.errorHandler.handleSuccess('Proyecto eliminado correctamente');
 						this.cargarProyectos();
 					},
-					error: (error) => {this.errorHandler.handleError(error, 'Ocurrió un error al eliminar el proyecto.');}
+					error: (error) => { this.errorHandler.handleError(error, 'Ocurrió un error al eliminar el proyecto.'); }
 				});
 			}
 		});

@@ -1,0 +1,53 @@
+<!-- boleta-detalle-modal.component.html -->
+<div class="modal-container">
+  <h2 mat-dialog-title>Detalles adicionales de la boleta</h2>
+  
+  <mat-dialog-content>
+    <mat-card>
+   
+      <mat-card-content>
+        <mat-list>
+                        
+          <mat-list-item>
+            <span matListItemTitle>Fecha Inicio</span>
+            <span matListItemLine>{{ formatDate(data.boleta.fecha_inicio) }}</span>
+          </mat-list-item>
+          
+          <mat-list-item>
+            <span matListItemTitle>Fecha Fin</span>
+            <span matListItemLine>{{ formatDate(data.boleta.fecha_finalizacion) }}</span>
+          </mat-list-item>
+          
+          <mat-list-item>
+            <span matListItemTitle>CITE</span>
+            <span matListItemLine>{{ data.boleta.cite || 'No especificado' }}</span>
+          </mat-list-item>
+          
+          <mat-list-item>
+            <span matListItemTitle>Monto</span>
+            <span matListItemLine>{{ formatCurrency(data.boleta.monto) }}</span>
+          </mat-list-item>
+          
+          <mat-list-item>
+            <span matListItemTitle>Nota de Ejecución</span>
+            <span matListItemLine>{{ data.boleta.nota_ejecucion || 'No especificado' }}</span>
+          </mat-list-item>
+          
+          <mat-list-item>
+            <span matListItemTitle>Estado</span>
+            <span matListItemLine>
+              <mat-icon *ngIf="data.boleta.estado?.icono" style="vertical-align: middle;">
+                {{ data.boleta.estado.icono }}
+              </mat-icon>
+              {{ data.boleta.estado?.nombre || 'No especificado' }}
+            </span>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onClose()">Cerrar</button>
+  </mat-dialog-actions>
+</div>

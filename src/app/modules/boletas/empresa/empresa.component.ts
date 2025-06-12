@@ -120,6 +120,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
 
     this.getEmpresa();
+
   }
 
   public ngOnDestroy(): void {
@@ -128,6 +129,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
     if (this.gridApi) {
       this.gridApi.destroy();
     }
+
   }
 
   public onGridReady(params: GridReadyEvent) {
@@ -147,6 +149,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
     this.dialog.open(ReporteEmpresaComponent, {
       width: '480px',
       data: { empresas: this.dataEmpresas }
+
     });
   }
 
@@ -177,6 +180,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
       cancelButtonText: 'Cancelar',
       allowOutsideClick: false,
       allowEscapeKey: false
+
     }).then((result) => {
       if (result.isConfirmed) {
         this.empresaService.eliminarEmpresa(id).subscribe({
@@ -185,6 +189,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
             this.errorHandler.handleSuccess('La empresa ha sido eliminada correctamente.', '¡Eliminado!');
           },
           error: (error) => this.errorHandler.handleError(error, 'Ocurrió un error al eliminar la empresa.')
+
         });
       }
     });
@@ -192,7 +197,6 @@ export class EmpresaComponent implements OnInit, OnDestroy {
 
   public proyectos(id: number): void {
     if (this.gridApi) {
-
       const rowNode = this.gridApi.getRowNode(id.toString());
       if (rowNode) {
         rowNode.setExpanded(!rowNode.expanded);
@@ -227,5 +231,4 @@ export class EmpresaComponent implements OnInit, OnDestroy {
       this.proyectos(id);
     }
   }
-
 }

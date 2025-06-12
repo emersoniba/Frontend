@@ -27,7 +27,7 @@ export class EmpresaFormDialogComponent {
   formEmpresa!: FormGroup;
 
   constructor(
-    
+
     private fb: FormBuilder,
     private readonly actividadService: ActividadService,
 
@@ -60,12 +60,11 @@ export class EmpresaFormDialogComponent {
     this.getActividades();
   }
 
-
   public getActividades() {
     this.actividadService.getActividades().subscribe({
-      
+
       next: (response) => {
-        
+
         this.dataActividad = response;
       },
       error: (err) => {
@@ -111,7 +110,6 @@ export class EmpresaFormDialogComponent {
             ? 'Empresa actualizada correctamnete.'
             : 'Empresa añadida correctamente.', 'success'
         );
-
       },
       error: (error) => {
         if (error.status === 400 && error.error) {
@@ -134,6 +132,5 @@ export class EmpresaFormDialogComponent {
       }
     });
   }
-
 
 }

@@ -2,14 +2,15 @@
   padding: 1rem;
   margin-bottom: 2rem;
 }
+
 .mat-form-white {
   background-color: white;
 }
-.mdc-text-field--filled:not(.mdc-text-field--disabled) {
-    background-color: #1c2f8f;
-}
-.mdc-text-field--filled:not(.mdc-text-field--disabled)
 
- {
-    background-color: var(--mdc-filled-text-field-container-color, #151e49);
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: #1c2f8f;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: var(--mdc-filled-text-field-container-color, #151e49);
 }

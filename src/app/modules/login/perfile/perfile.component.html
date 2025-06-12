@@ -1,55 +1,58 @@
 <mat-grid-list cols="2" rowHeight="2:2">
-  <mat-card *ngIf="perfil">
-    <mat-grid-list cols="2" rowHeight="2:0.9">
-      <mat-grid-tile>
-        <div class="form-avatar">
-          <img [src]="imagenPreview ? imagenPreview : 'assets/img/perfil.png'" alt="Avatar" class="perfil-foto" />
-        </div>
-        <button mat-raised-button color="accent" (click)="subirImagen()"> <mat-icon>add_a_photo</mat-icon>
-          Subir Imagen
-        </button>
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <mat-card-header>
-          <mat-card-title>Perfil de Usuario</mat-card-title>
-          <mat-card-subtitle>
-            {{ perfil.usuario?.username || 'Sin usuario' }}
-            <br />
-            <button mat-raised-button color="accent" (click)="cambiarPassword()"><mat-icon>verified_user</mat-icon>
-              Cambiar contraseña
-            </button>
-          </mat-card-subtitle>
-        </mat-card-header>
-      </mat-grid-tile>
-    </mat-grid-list>
-    <mat-grid-list cols="2" rowHeight="2:1">
-      <mat-card-content>
-        <div style="display: flex; flex-direction: row; gap: 32px;">
-          <div style="flex: 1;">
-            <p><strong>CI:</strong> {{ perfil.ci }} {{ perfil.departamento?.nombre_reducido }}</p>
-            <p><strong>Nombre:</strong> {{ perfil.nombres }} {{ perfil.apellido_paterno }} {{ perfil.apellido_materno
-              }}</p>
-            <p><strong>Correo:</strong> {{ perfil.correo }}</p>
-            <p><strong>Dirección</strong> {{ perfil.direccion}}</p>
-          </div>
-          <div style="flex: 1;">
-            <p><strong>Cargo:</strong> {{ perfil.cargo }}</p>
-            <p><strong>Unidad:</strong> {{ perfil.unidad }}</p>
-            <p><strong>Teléfono:</strong> {{ perfil.telefono }}</p>
-            <p><strong>Roles:</strong>
-              <ng-container *ngIf="perfil.roles && perfil.roles.length > 0; else sinRoles">
-                <span *ngFor="let rol of perfil.roles; let i = index">
-                  {{ rol.nombre }}<span *ngIf="i < perfil.roles.length - 1">, </span>
-                </span>
-              </ng-container>
-              <ng-template #sinRoles>Sin roles asignados</ng-template>
-            </p>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-grid-list>
-    <mat-card-actions>
-      <button mat-raised-button color="primary" (click)="editar()">Editar <mat-icon>create</mat-icon></button>
-    </mat-card-actions>
-  </mat-card>
+	<mat-card *ngIf="perfil">
+		<mat-grid-list cols="2" rowHeight="2:0.9">
+			<mat-grid-tile>
+				<div class="form-avatar">
+					<img [src]="imagenPreview ? imagenPreview : 'assets/img/perfil.png'" alt="Avatar"
+						class="perfil-foto" />
+				</div>
+				<button mat-raised-button color="accent" (click)="subirImagen()"> <mat-icon>add_a_photo</mat-icon>
+					Subir Imagen
+				</button>
+			</mat-grid-tile>
+			<mat-grid-tile>
+				<mat-card-header>
+					<mat-card-title>Perfil de Usuario</mat-card-title>
+					<mat-card-subtitle>
+						{{ perfil.usuario?.username || 'Sin usuario' }}
+						<br />
+						<button mat-raised-button color="accent"
+							(click)="cambiarPassword()"><mat-icon>verified_user</mat-icon>
+							Cambiar contraseña
+						</button>
+					</mat-card-subtitle>
+				</mat-card-header>
+			</mat-grid-tile>
+		</mat-grid-list>
+		<mat-grid-list cols="2" rowHeight="2:1">
+			<mat-card-content>
+				<div style="display: flex; flex-direction: row; gap: 32px;">
+					<div style="flex: 1;">
+						<p><strong>CI:</strong> {{ perfil.ci }} {{ perfil.departamento?.nombre_reducido }}</p>
+						<p><strong>Nombre:</strong> {{ perfil.nombres }} {{ perfil.apellido_paterno }} {{
+							perfil.apellido_materno
+							}}</p>
+						<p><strong>Correo:</strong> {{ perfil.correo }}</p>
+						<p><strong>Dirección</strong> {{ perfil.direccion}}</p>
+					</div>
+					<div style="flex: 1;">
+						<p><strong>Cargo:</strong> {{ perfil.cargo }}</p>
+						<p><strong>Unidad:</strong> {{ perfil.unidad }}</p>
+						<p><strong>Teléfono:</strong> {{ perfil.telefono }}</p>
+						<p><strong>Roles:</strong>
+							<ng-container *ngIf="perfil.roles && perfil.roles.length > 0; else sinRoles">
+								<span *ngFor="let rol of perfil.roles; let i = index">
+									{{ rol.nombre }}<span *ngIf="i < perfil.roles.length - 1">, </span>
+								</span>
+							</ng-container>
+							<ng-template #sinRoles>Sin roles asignados</ng-template>
+						</p>
+					</div>
+				</div>
+			</mat-card-content>
+		</mat-grid-list>
+		<mat-card-actions>
+			<button mat-raised-button color="primary" (click)="editar()">Editar <mat-icon>create</mat-icon></button>
+		</mat-card-actions>
+	</mat-card>
 </mat-grid-list>

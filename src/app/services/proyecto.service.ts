@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Proyecto } from '../models/proyecto.model';
-import { ResponseData } from '../models/response.model';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
+import { Proyecto } from '../models/proyecto.model';
+import { ResponseData } from '../models/response.model';
 
 
 @Injectable({

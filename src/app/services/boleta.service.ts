@@ -1,8 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { Boleta, Estado, EntidadFinanciera } from '../models/boleta.model';
+import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
+import { Boleta } from '../models/boleta.model';
 import { ResponseData } from '../models/response.model';
 
 @Injectable({

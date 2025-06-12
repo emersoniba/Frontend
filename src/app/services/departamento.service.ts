@@ -1,9 +1,12 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
 import { Departamento } from '../models/empresa.interface';
+
+
 @Injectable({ providedIn: 'root' })
+
 export class DepartamentoService {
 
   private url = `${environment.apiUrl}/departamentos/`;

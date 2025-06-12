@@ -53,7 +53,6 @@ export class AuthService {
 		return this.http.get<Usuario>(`${this.url}/personas/perfil/`);
 	}
 
-
 	getCurrentUser(): Observable<ResponseData> {
 		const headers = new HttpHeaders({
 			'Authorization': `Bearer ${this.getToken()}`,
@@ -66,7 +65,6 @@ export class AuthService {
 		if (token) {
 			try {
 				const decoded: any = jwtDecode(token);
-				
 			} catch (err) {
 				console.error('Error decodificando token', err);
 			}

@@ -2,11 +2,9 @@
   {{isEditing ? 'Editar Boleta' : 'Regitrar Boleta'}}
 </h2>
 
-
 <mat-dialog-content>
   <form [formGroup]="boletaForm">
     <div class="row">
-
 
       <div class="col-lg-6 col-md-6 col-sm-12">
         <mat-form-field appearance="fill" class="w-100">
@@ -89,7 +87,6 @@
           <mat-error *ngIf="boletaForm.get('fecha_inicio')?.invalid">Este campo es requerido</mat-error>
         </mat-form-field>
       </div>
-
       <div class="col-lg-6 col-md-6 col-sm-12">
         <mat-form-field appearance="fill" class="w-100">
           <mat-label>Fecha Finalización</mat-label>
@@ -99,7 +96,6 @@
           <mat-error *ngIf="boletaForm.get('fecha_finalizacion')?.invalid">Este campo es requerido</mat-error>
         </mat-form-field>
       </div>
-
 
       <div class="col-lg-6 col-md-6 col-sm-12">
         <mat-form-field appearance="fill" class="w-100">
@@ -116,9 +112,6 @@
           <input matInput formControlName="cite">
         </mat-form-field>
       </div>
-
-
-
 
       <mat-form-field appearance="fill" class="w-100">
         <mat-icon matIconPrefix>description</mat-icon>

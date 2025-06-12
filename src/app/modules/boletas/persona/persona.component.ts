@@ -1,26 +1,30 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
 import { AgGridModule } from 'ag-grid-angular';
 import {
-	ValueGetterParams, GridOptions, AllCommunityModule,
-	ModuleRegistry, GridReadyEvent, themeMaterial,
+	AllCommunityModule,
+	GridOptions,
+	GridReadyEvent,
+	ModuleRegistry,
+	themeMaterial,
+	ValueGetterParams,
 } from 'ag-grid-community';
 
-import { MaterialModule } from '../../../shared/app.material';
 import { MatDialog } from '@angular/material/dialog';
 import { localeEs } from '../../../shared/app.locale.es.grid';
+import { MaterialModule } from '../../../shared/app.material';
 
 
-import { PersonaFormDialogComponent } from './persona-form-dialog/persona-form-dialog.component';
-import { UsuarioFormDialogComponent } from './usuario-form-dialog/usuario-form-dialog.component';
-import { RolesFormDialogComponent } from './roles-form-dialog/roles-form-dialog.component';
-import { BotonesComponent } from './botones/botones.component';
-import { PersonaService } from '../../../services/persona.service';
 import { Persona } from '../../../models/auth.interface';
 import { ErrorHandlerService } from '../../../services/error-handler.service';
+import { PersonaService } from '../../../services/persona.service';
+import { BotonesComponent } from './botones/botones.component';
+import { PersonaFormDialogComponent } from './persona-form-dialog/persona-form-dialog.component';
+import { RolesFormDialogComponent } from './roles-form-dialog/roles-form-dialog.component';
+import { UsuarioFormDialogComponent } from './usuario-form-dialog/usuario-form-dialog.component';
 
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -120,7 +124,6 @@ export class PersonaComponent implements OnInit, OnDestroy {
 	}
 
 	public nuevaPersona(persona?: Persona): void {
-
 		const dialogRef = this.dialog.open(PersonaFormDialogComponent, {
 			width: '40vw',
 			maxWidth: '60vw',

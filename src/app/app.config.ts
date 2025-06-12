@@ -18,9 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withHashLocation()),
     importProvidersFrom(),
     importProvidersFrom(BrowserModule, HttpClientModule),
-    //AuthGuard,
     provideAnimations()
   ]
 };
-
 

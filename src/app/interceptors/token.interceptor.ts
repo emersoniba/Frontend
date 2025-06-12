@@ -8,7 +8,7 @@ export const tokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next:
   const authService = inject(AuthService);
   const token = localStorage.getItem('tkn-boletas');
 
-  if (req.url.includes('/login/')){
+  if (req.url.includes('/login/')) {
     return next(req);
   }
   if (token) {
@@ -18,8 +18,5 @@ export const tokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next:
     return next(cloned);
   }
   return next(req);
-
-
-  
 
 };

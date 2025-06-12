@@ -9,6 +9,7 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
   selector: 'app-botones',
   standalone: true,
   imports: [CommonModule, MaterialModule],
+
   templateUrl: './botones.component.html',
   styleUrl: './botones.component.css'
 })
