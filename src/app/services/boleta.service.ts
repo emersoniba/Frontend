@@ -34,6 +34,7 @@ export class BoletaService {
 	deleteBoleta(id: number): Observable<void> {
 		return this.http.delete<void>(`${this.apiUrl}${id}/`);
 	}
+
 	getBoletasPorProyecto(proyectoId: number): Observable<ResponseData> {
 		return this.http.get<ResponseData>(`${this.apiUrlBoletas}?proyecto_id=${proyectoId}`);
 	}
@@ -46,6 +47,7 @@ export class BoletaService {
 			})
 		);
 	}
+
 	getBoletasCountByVencimiento(): Observable<ResponseData> {
 		return this.http.get<ResponseData>(`${this.apiUrl}estadisticas-vencimientos/`).pipe(
 			catchError(error => {
@@ -54,6 +56,7 @@ export class BoletaService {
 			})
 		);
 	}
+
 	getBoletasTipo(): Observable<ResponseData> {
 		return this.http.get<ResponseData>(`${this.apiUrl}estadisticas-tipos/`).pipe(
 			catchError(error => {
@@ -61,32 +64,5 @@ export class BoletaService {
 				return throwError(() => error);
 			})
 		);
-	}
-}
-export class EstadoService {
-	private apiUrl = 'http://127.0.0.1:8000/api/';
-
-	constructor(private http: HttpClient) { }
-
-
-	getEstados(): Observable<Estado[]> {
-		return this.http.get<Estado[]>(`${this.apiUrl}estados/`);
-	}
-
-	getEntidadesFinancieras(): Observable<EntidadFinanciera[]> {
-		return this.http.get<EntidadFinanciera[]>(`${this.apiUrl}entidad_financiera/`);
-	}
-}
-
-export class EntidadService {
-	private apiUrl = 'http://127.0.0.1:8000/api/';
-
-	constructor(private http: HttpClient) { }
-
-	getEntidadesFinancieras(): Observable<EntidadFinanciera[]> {
-		return this.http.get<EntidadFinanciera[]>(`${this.apiUrl}entidad_financiera/`);
-	}
-	getDashboardData(): Observable<any> {
-		return this.http.get(`${this.apiUrl}dashboard/`); // Asegúrate de que coincide con tu endpoint
 	}
 }
