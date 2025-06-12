@@ -1,0 +1,9 @@
+<button class="btn btn-warning btn-sm" data-action="editar" matTooltip="Editar boleta">
+    <mat-icon class="fs-5">edit</mat-icon>
+</button>
+<button class="btn btn-danger btn-sm" data-action="eliminar" matTooltip="Eliminar boleta">
+    <mat-icon class="fs-5">delete</mat-icon>
+</button>
+<button *ngIf="params.data.archivo" class="btn btn-primary btn-sm" (click)="verPDF()" matTooltip="Ver PDF">
+  <mat-icon class="fs-5">picture_as_pdf</mat-icon>
+</button>

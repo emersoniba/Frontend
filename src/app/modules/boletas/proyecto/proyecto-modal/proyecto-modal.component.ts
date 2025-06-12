@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { debounceTime, ReplaySubject, startWith, Subject, takeUntil } from 'rxjs';
 
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { DateAdapter } from '@angular/material/core';
 
-import { ProyectoService } from '../../../../services/proyecto.service';
-import { EntidadService } from '../../../../services/entidad.service';
-import { DepartamentoService } from '../../../../services/departamento.service';
 import { Departamento } from '../../../../models/auth.interface';
 import { Entidad, Proyecto } from '../../../../models/proyecto.model';
+import { DepartamentoService } from '../../../../services/departamento.service';
+import { EntidadService } from '../../../../services/entidad.service';
+import { ProyectoService } from '../../../../services/proyecto.service';
 import { MaterialModule } from '../../../../shared/app.material';
 
 

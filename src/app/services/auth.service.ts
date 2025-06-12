@@ -1,12 +1,10 @@
-import { Injectable } from '@angular/core';
-import { jwtDecode } from 'jwt-decode';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
-import { Login, LoginResponse, Persona } from '../models/auth.interface';
-import { Usuario } from '../models/auth.interface';
-import { Router } from '@angular/router';
-import { RolesService } from './roles.service';
+import { Login, LoginResponse, Usuario } from '../models/auth.interface';
 import { ResponseData } from '../models/response.model';
 @Injectable({
 	providedIn: 'root'
@@ -18,7 +16,6 @@ export class AuthService {
 	constructor(
 		private http: HttpClient,
 		private router: Router,
-		private rolesService: RolesService
 	) { }
 
 	refreshToken() {
@@ -28,7 +25,6 @@ export class AuthService {
 
 	logout() {
 		localStorage.clear();
-		this.rolesService.clearAll();
 		this.router.navigate(['/login']);
 	}
 
@@ -57,10 +53,6 @@ export class AuthService {
 		return this.http.get<Usuario>(`${this.url}/personas/perfil/`);
 	}
 
-	hasRole(rol: string): boolean {
-		return this.rolesService.hasRole(rol);
-	}
-
 	getCurrentUser(): Observable<ResponseData> {
 		const headers = new HttpHeaders({
 			'Authorization': `Bearer ${this.getToken()}`,
@@ -73,9 +65,6 @@ export class AuthService {
 		if (token) {
 			try {
 				const decoded: any = jwtDecode(token);
-				this.rolesService.setRoles(decoded.roles || []);
-				this.rolesService.setRolesId(decoded.roles_id || []);
-				this.rolesService.setFullName(decoded.nombre_completo || '');
 			} catch (err) {
 				console.error('Error decodificando token', err);
 			}

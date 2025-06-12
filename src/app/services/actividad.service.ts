@@ -16,4 +16,17 @@ export class ActividadService {
 		return this.http.get<Actividad[]>(`${this.url}/actividad/`);
 	}
 
+	eliminarActividad(id: number): Observable<any> {
+		return this.http.delete(`${this.url}/actividad/${id}/`);
+	}
+	
+	postActividad(data: Actividad): Observable<Actividad[]> {
+		return this.http.post<Actividad[]>(`${this.url}/actividad/`, data);
+	}
+
+	putActividad(id: number, actividad: Actividad): Observable<Actividad[]> {
+		return this.http.put<Actividad[]>(`${this.url}/actividad/${id}/`, actividad);
+	}
+	
+
 }

@@ -1,16 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
-import { Subscription } from 'rxjs';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { jwtDecode } from 'jwt-decode';
-import Swal from 'sweetalert2';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from "@angular/material/dialog";
-import { RolesService } from '../../services/roles.service';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
+import { AuthService } from '../../services/auth.service';
+import { MaterialModule } from '../../shared/app.material';
+
+
 @Component({
 	selector: 'app-login',
-	imports: [FormsModule, ReactiveFormsModule, CommonModule],
+	imports: [FormsModule, ReactiveFormsModule, CommonModule, MaterialModule],
 	templateUrl: './login.component.html',
 	styleUrl: './login.component.css'
 })
@@ -24,7 +25,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 		private fb: FormBuilder,
 		private router: Router,
 		private dialog: MatDialog,
-		private rolesService: RolesService,
 	) {
 		this.formLogin = new FormGroup({});
 	}
@@ -51,10 +51,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 				localStorage.setItem('tkn-refresh', response.refresh);
 
 				this.authService.getPerfil().subscribe((usuario) => {
-					this.rolesService.setRoles(response.roles);
-					this.rolesService.setRolesId(response.roles_id);
-					this.rolesService.setFullName(response.nombre_completo);
-					this.router.navigate(['/dashboard']);
+					this.router.navigate(['/perfil']);
 				});
 			},
 			error: (err) => {

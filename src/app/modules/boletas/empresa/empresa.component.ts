@@ -1,28 +1,26 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
 import { AgGridModule } from 'ag-grid-angular';
 import { Subscription } from 'rxjs';
 
-import { ValueGetterParams, GridReadyEvent, GridOptions, AllCommunityModule, ModuleRegistry, themeMaterial } from 'ag-grid-community';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MaterialModule } from '../../../shared/app.material';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { AllCommunityModule, GridOptions, GridReadyEvent, ModuleRegistry, themeMaterial, ValueGetterParams } from 'ag-grid-community';
+import { MaterialModule } from '../../../shared/app.material';
 
-import { Empresa } from '../../../models/empresa.model';
-import { Proyecto } from '../../../models/proyecto.model';
+import { Empresa, Proyecto } from '../../../models/empresa.interface';
 import { EmpresaService } from '../../../services/empresa.service';
 
+import { ErrorHandlerService } from '../../../services/error-handler.service';
 import { BotonesComponent } from './botones/botones.component';
 import { EmpresaFormDialogComponent } from './empresa-form-dialog/empresa-form-dialog.component';
 import { ReporteEmpresaComponent } from './reporte-empresa/reporte-empresa.component';
-import { ErrorHandlerService } from '../../../services/error-handler.service';
 
 import Swal from 'sweetalert2';
 import { localeEs } from '../../../shared/app.locale.es.grid';
-import { ProyectoService } from '../../../services/proyecto.service';
 
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -45,6 +43,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
 
   public dataProyecto: Proyecto[] = [];
   public dataEmpresas: Empresa[] = [] as Empresa[];
+  
   public columnasProyecto: string[] = ['nombre', 'descripcion', 'fecha_creado', 'fecha_finalizacion', 'departamento'];
 
   private proyectoSubscriptor?: Subscription;
@@ -90,8 +89,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
 
     private readonly empresaService: EmpresaService,
     private dialog: MatDialog,
-    private errorHandler: ErrorHandlerService,
-    private proyectoService: ProyectoService,
+    private errorHandler: ErrorHandlerService
 
   ) { }
 
@@ -118,9 +116,12 @@ export class EmpresaComponent implements OnInit, OnDestroy {
     });
   }
 
+
+
   public ngOnInit(): void {
 
     this.getEmpresa();
+
   }
 
   public ngOnDestroy(): void {
@@ -129,6 +130,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
     if (this.gridApi) {
       this.gridApi.destroy();
     }
+
   }
 
   public onGridReady(params: GridReadyEvent) {
@@ -145,17 +147,10 @@ export class EmpresaComponent implements OnInit, OnDestroy {
   }
 
   public abrirDialogoReporte(): void {
-    this.empresaService.getEmpresasConProyectosAll().subscribe({
-      next: (response) => {
-        this.dialog.open(ReporteEmpresaComponent, {
-          width: '450px',
-          data: {
-            empresas: response.data,
-            proyectos: [] 
-          }
-        });
-      },
-      error: (error) => this.errorHandler.handleError(error, 'Ocurrió un error al cargar el reporte.')
+    this.dialog.open(ReporteEmpresaComponent, {
+      width: '480px',
+      data: { empresas: this.dataEmpresas }
+
     });
   }
 
@@ -186,6 +181,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
       cancelButtonText: 'Cancelar',
       allowOutsideClick: false,
       allowEscapeKey: false
+
     }).then((result) => {
       if (result.isConfirmed) {
         this.empresaService.eliminarEmpresa(id).subscribe({
@@ -194,6 +190,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
             this.errorHandler.handleSuccess('La empresa ha sido eliminada correctamente.', '¡Eliminado!');
           },
           error: (error) => this.errorHandler.handleError(error, 'Ocurrió un error al eliminar la empresa.')
+
         });
       }
     });
@@ -236,5 +233,4 @@ export class EmpresaComponent implements OnInit, OnDestroy {
       this.proyectos(id);
     }
   }
-
 }

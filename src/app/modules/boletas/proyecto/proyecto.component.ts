@@ -19,7 +19,7 @@ import { Proyecto } from '../../../models/proyecto.model';
 import { localeEs } from '../../../shared/app.locale.es.grid';
 import { Subscription } from 'rxjs';
 import { MaterialModule } from '../../../shared/app.material';
-
+import { ErrorHandlerService } from '../../../services/error-handler.service';
 
 @Component({
 	standalone: true,
@@ -38,10 +38,8 @@ export class ProyectoComponent implements OnInit, OnDestroy {
 	public theme = themeMaterial;
 	public proyectos: Proyecto[] = [] as Proyecto[];
 	private proyectoSubcription: Subscription | undefined;
-	private boletasSubcription: Subscription | undefined;
-
 	private gridApi!: GridApi<Proyecto>;
-	private gridColumnApi: any;
+
 	public getRowId = (params: Proyecto) => params.id;
 	gridOptions: GridOptions = <GridOptions>{
 		pagination: true,
@@ -78,7 +76,7 @@ export class ProyectoComponent implements OnInit, OnDestroy {
 				headerName: 'Acciones',
 				cellRenderer: BotonesProyectoComponent,
 				field: 'id',
-				width: 190
+				width: 160, maxWidth: 160, minWidth: 160
 			}
 		],
 		context: {
@@ -101,6 +99,7 @@ export class ProyectoComponent implements OnInit, OnDestroy {
 		private proyectoService: ProyectoService,
 		private dialog: MatDialog,
 		private boletaService: BoletaService,
+		private errorHandler: ErrorHandlerService
 	) {
 	}
 
@@ -110,6 +109,9 @@ export class ProyectoComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.proyectoSubcription?.unsubscribe();
+		this.gridApi?.destroy();
+		this.gridApi = undefined as any;
+
 	}
 
 	cargarProyectos(): void {
@@ -190,22 +192,10 @@ export class ProyectoComponent implements OnInit, OnDestroy {
 			if (result.isConfirmed) {
 				this.proyectoSubcription = this.proyectoService.deleteProyecto(id).subscribe({
 					next: () => {
-						Swal.fire({
-							title: '¡Eliminado!',
-							text: 'El proyecto ha sido eliminado correctamente.',
-							icon: 'success',
-							timer: 2000,
-							showConfirmButton: false
-						});
+						this.errorHandler.handleSuccess('Proyecto eliminado correctamente');
 						this.cargarProyectos();
 					},
-					error: (err) => {
-						Swal.fire({
-							title: 'Error',
-							text: 'Error Error',
-							icon: 'error'
-						});
-					}
+					error: (error) => { this.errorHandler.handleError(error, 'Ocurrió un error al eliminar el proyecto.'); }
 				});
 			}
 		});
@@ -233,7 +223,6 @@ export class ProyectoComponent implements OnInit, OnDestroy {
 			this.eliminarProyecto(proyecto.id);
 			return;
 		}
-
 		return;
 	}
 }

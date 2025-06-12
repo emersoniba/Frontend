@@ -127,7 +127,4 @@ export class UsuarioFormDialogComponent implements OnInit {
 		this.formPersona.reset();
 		this.dialogRef.close();
 	}
-
 }
-
-

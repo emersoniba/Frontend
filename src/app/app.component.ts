@@ -1,9 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { AuthService } from './services/auth.service';
-import { RolesService } from './services/roles.service';
-import { Rol } from './models/auth.interface'
 
+import { AuthService } from './services/auth.service';
 
 @Component({
 	selector: 'app-root',
@@ -12,32 +10,34 @@ import { Rol } from './models/auth.interface'
 	templateUrl: './app.component.html',
 	styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit{
+
+export class AppComponent implements OnInit {
 
 	private readonly router = inject(Router);
-  private readonly authService = inject(AuthService);
-  private readonly rolesService = inject(RolesService);
+	private readonly authService = inject(AuthService);
+
 
 	ngOnInit(): void {
 		const token = localStorage.getItem('tkn-boletas');
 		if (token) {
+
 			this.authService.getCurrentUser().subscribe({
 				next: (response) => {
 					const user = response.data;
-					const roles: Rol[] = user.roles;
-					if (user.roles) {
-						this.rolesService.setRoles(roles.map(r => r.nombre));
-						this.rolesService.setRolesId(roles.map(r => r.id));
-					}
 				},
+
 				error: (err) => {
+					console.error('Error al recuperar usuario:', err);
 					if (err.status === 401) {
+						console.warn('Token inválido o expirado, cerrando sesión...');
+
 						this.authService.logout();
 					}
 				}
 			});
-		} else {
-			this.router.navigate(['/login']);
+		}
+		else {
+			this.router.navigate(['/dashboard']);
 		}
 	}
 

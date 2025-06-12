@@ -1,13 +1,11 @@
 nav {
 
 	background-color: #070435;
-	/*color: #031c35;*/
 	width: 200px;
 	height: 100%;
 	left: 0;
 	top: 0;
 	padding-top: 12px;
-	/*box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);*/
 	z-index: auto;
 	overflow-y: auto;
 }
@@ -18,14 +16,13 @@ nav ul {
 	margin: 0;
 }
 
-/**/
 nav li {
 	border-bottom: 1px solid #34495e;
 	transition: background-color 0.3s ease;
 }
 
 nav li:hover {
-	background-color: #34495e;
+	background-color: #3a668073;
 }
 
 nav a {
@@ -100,7 +97,6 @@ nav a mat-icon {
 	text-align: center;
 }
 
-/*dsde aquipara el togle*/
 .toggle-button {
 	position: fixed;
 	top: 10px;
@@ -108,7 +104,7 @@ nav a mat-icon {
 	background-color: #070435;
 	color: white;
 	border: none;
-	z-index: 110;
+	z-index: 10;
 	padding: 10px;
 	border-radius: 50%;
 	cursor: pointer;
@@ -138,15 +134,8 @@ nav.collapsed .perfil-foto {
 	margin-top: 35px;
 }
 
-
-
-
 .descripcion-perfil {
 	display: flex;
 	flex-direction: column;
-	/* Para que nombre y cargo estén uno encima del otro*/
-	/* overflow: hidden; Ocultar cualquier desbordamiento si lo hubiera*/
-	/*text-overflow: ellipsis;/*/
 	white-space: normal;
-	/*/* Permitir que el texto se ajuste a múltiples líneas si es necesario*/
 }

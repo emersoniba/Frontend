@@ -11,6 +11,12 @@
     <mat-icon>download</mat-icon>
     Exportar Empresas
   </button>
+  
+  <button mat-raised-button color="accent" (click)="nuevaEmpresa()"><mat-icon>add_box</mat-icon>Nueva Empresa</button>
+  <button mat-raised-button color="accent" (click)="abrirDialogoReporte()" matTooltip="Empresas">
+
+    <mat-icon>download</mat-icon> Exportar Empresas
+  </button>
 </mat-toolbar>
 
 <div class="ag-grid-container" style="margin: 8px 0;">
@@ -31,12 +37,21 @@
     rowSelection="single" 
     (rowDoubleClicked)="abrirProyecto($event)"
     >
-  </ag-grid-angular>
-</div>
+<div class="ag-grid-container" style="margin: 8px 0;">
 
+  <ag-grid-angular style="width: 100%; height: 65%;" [gridOptions]="gridOptions" [rowData]="dataEmpresas"
+    (gridReady)="onGridReady($event)" [columnDefs]="gridOptions.columnDefs" [defaultColDef]="gridOptions.defaultColDef"
+    [detailCellRendererParams]="gridOptions.detailCellRendererParams" [isRowMaster]="gridOptions.isRowMaster"
+    [pagination]="gridOptions.pagination" [paginationPageSize]="gridOptions.paginationPageSize"
+    (cellClicked)="clickFila($event)" [theme]="theme" class="ag-theme-alpine" rowSelection="single"
+    (rowDoubleClicked)="abrirProyecto($event)">
+  </ag-grid-angular>
+
+</div>
 
 <div class="panel-container">
   @if (empresaSeleccionada?.id && dataProyecto.length > 0) {
+
   <mat-expansion-panel [expanded]="true">
     <mat-expansion-panel-header>
       <mat-panel-title>Proyectos de la empresa {{ empresaSeleccionada.denominacion }}</mat-panel-title>
@@ -73,6 +88,6 @@
       <mat-row *matRowDef="let row; columns: columnasProyecto;"></mat-row>
     </mat-table>
   </mat-expansion-panel>
-}
+  }
 
 </div>

@@ -1,13 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Estado, EntidadFinanciera, Boleta, Tipo } from '../../../../models/boleta.model';
 import { ProyectoService } from '../../../../services/proyecto.service';
 import { BoletaService } from '../../../../services/boleta.service';
 import { EntidadFinancieraService } from '../../../../services/entidad-financiera.service';
 import { EstadoService } from '../../../../services/estado.service';
 import { TipoService } from '../../../../services/tipo.service';
-import { CommonModule } from '@angular/common';
+
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -15,12 +17,14 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
+
 import { Subject, takeUntil, debounceTime, distinctUntilChanged, startWith, map } from 'rxjs';
 import Swal from 'sweetalert2';
 import moment from 'moment';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
-import { MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
 import { Proyecto } from '../../../../models/proyecto.model';
+import { ErrorHandlerService } from '../../../../services/error-handler.service';
 
 export const MY_DATE_FORMATS = {
 	parse: {
@@ -65,7 +69,7 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
 	isEditing: boolean = false;
 	estados: Estado[] = [];
 	entidadesFinancieras: EntidadFinanciera[] = [];
-	tipo_boleta:Tipo[] = [];
+	tipo_boleta: Tipo[] = [];
 	proyectos: Proyecto[] = [];
 	filteredProyectos: Proyecto[] = [];
 	archivoSeleccionado: File | null = null;
@@ -123,7 +127,6 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
 		this.loadProyectos();
 		this.loadTipos();
 	}
-	
 	loadTipos(): void {
 		this.tipoService.getTipos().subscribe({
 			next: (data) => this.tipo_boleta = data,
@@ -135,7 +138,8 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
 		this.proyectoService.getProyectos().subscribe({
 			next: (data) => {
 				this.proyectos = data;
-				this.filteredProyectos = [...this.proyectos]; 
+				this.filteredProyectos = [...this.proyectos];
+
 			},
 			error: (err) => console.error('Error cargando proyectos:', err)
 		});
@@ -159,7 +163,6 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
 		const fechaInicio = moment(boleta.fecha_inicio, moment.ISO_8601).isValid()
 			? moment(boleta.fecha_inicio)
 			: moment(boleta.fecha_inicio, 'DD-MM-YYYY:mm:ss');
-
 		const fechaFin = moment(boleta.fecha_finalizacion, moment.ISO_8601).isValid()
 			? moment(boleta.fecha_finalizacion)
 			: moment(boleta.fecha_finalizacion, 'DD-MM-YYYY:mm:ss');

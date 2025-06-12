@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Visualización de Boleta</h2>
+    <mat-dialog-content>
+      <ng-container *ngIf="pdfUrl; else cargando">
+        <iframe [src]="pdfUrl" width="100%" height="400px"></iframe>
+      </ng-container>
+      <ng-template #cargando>
+        <p>Cargando PDF...</p>
+      </ng-template>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close="primary"  class="new-button">
+				<mat-icon>close</mat-icon> Cerrar
+			</button>
+    </mat-dialog-actions>

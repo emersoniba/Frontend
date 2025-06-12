@@ -1,15 +1,14 @@
-<h2 mat-dialog-title><mat-icon>add_a_photo</mat-icon>   Subir Imagen de Perfil</h2>
+<h2 mat-dialog-title><mat-icon>add_a_photo</mat-icon> Subir Imagen de Perfil</h2>
 
 <form [formGroup]="form" (ngSubmit)="enviarImagen()" style="margin: 25px;">
   <div style="text-align: center; margin-bottom: 16px;">
-    <img
-      *ngIf="imagenBase64 || imagenActual"
-      [src]="imagenBase64 ? imagenBase64 : imagenActual"
+
+    <img [src]="imagenBase64 ? imagenBase64 : (imagenActual ? imagenActual : 'assets/img/perfil.png')"
       alt="Vista previa"
-      style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;"
-    />
+      style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;" />
   </div>
-  <div style="margin-bottom: 16px; text-align: center;">
+
+  <div class="subirimagen">
     <input type="file" (change)="convertirImagen($event)" accept="image/*" />
   </div>
   <div style="text-align: right; margin-top: 16px;">
@@ -17,6 +16,6 @@
       <mat-icon class="me-1">close</mat-icon>Cancelar
     </button>
     <button mat-raised-button color="primary" type="submit">
-      <mat-icon class="me-1">save</mat-icon>Guardar-
+      <mat-icon class="me-1">save</mat-icon>Guardar
     </button>
   </div>

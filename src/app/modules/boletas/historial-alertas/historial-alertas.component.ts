@@ -1,11 +1,12 @@
-// components/historial-alertas/historial-alertas.component.ts
 import { Component, OnInit } from '@angular/core';
 import { AlertasService } from '../../../services/alertas.service';
 import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-historial-alertas',
   templateUrl: './historial-alertas.component.html',
+  imports: [CommonModule],
   styleUrls: ['./historial-alertas.component.scss']
 })
 export class HistorialAlertasComponent implements OnInit {
@@ -24,8 +25,8 @@ export class HistorialAlertasComponent implements OnInit {
       this.loadHistorial();
     });
   }
-// components/historial-alertas/historial-alertas.component.ts
-getTipoAlertaDisplay(tipo: string): string {
+
+  getTipoAlertaDisplay(tipo: string): string {
   const tipos: {[key: string]: string} = {
     'alerta_15_dias': '15 días',
     'alerta_7_dias': '7 días',

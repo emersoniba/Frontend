@@ -110,7 +110,6 @@ export class EmpresaFormDialogComponent {
             ? 'Empresa actualizada correctamnete.'
             : 'Empresa añadida correctamente.', 'success'
         );
-
       },
       error: (error) => {
         if (error.status === 400 && error.error) {
@@ -133,6 +132,5 @@ export class EmpresaFormDialogComponent {
       }
     });
   }
-
 
 }

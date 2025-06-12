@@ -15,9 +15,7 @@ import { SubirImagenComponent } from './subir-imagen/subir-imagen.component';
 import { Persona } from '../../../models/auth.interface';
 import { ErrorHandlerService } from '../../../services/error-handler.service';
 import { PersonaService } from '../../../services/persona.service';
-
-
-
+import { ChangeDetectorRef } from '@angular/core';
 
 
 @Component({
@@ -45,7 +43,9 @@ export class PerfileComponent implements OnInit, OnDestroy {
 	constructor(
 		private readonly personaService: PersonaService,
 		private readonly dialog: MatDialog,
-		private readonly errorHandler: ErrorHandlerService
+		private readonly errorHandler: ErrorHandlerService,
+		private cdr: ChangeDetectorRef,
+
 	) { }
 
 	ngOnInit(): void {
@@ -139,15 +139,22 @@ export class PerfileComponent implements OnInit, OnDestroy {
 			this.errorHandler.handleError(null, 'No se encontró la persona o su CI.');
 			return;
 		}
+		const perfil = this.perfil;
+
+		const imagenActual = perfil?.imagen
+			? (perfil.imagen.startsWith('data:') ? perfil.imagen : `data:image/jpeg;base64,${perfil.imagen}`)
+			: '';
+
 		this.dialog.open(SubirImagenComponent, {
 			disableClose: true,
-			width: '30vw',
-			maxWidth: '30vw',
-			data: { ci: this.perfil.ci }
+			width: '33vw',
+			maxWidth: '33vw',
+			data: { ci: this.perfil.ci, imagenActual: imagenActual }
 		}).afterClosed().subscribe((result) => {
 			if (result) {
-				this.errorHandler.handleSuccess('¡Éxito!', 'Imagen actualizada correctamente.');
 				this.cargarPerfil();
+				this.cdr.detectChanges();
+				this.errorHandler.handleSuccess('¡Éxito!', 'Imagen actualizada correctamente.');
 			}
 		});
 	}

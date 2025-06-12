@@ -76,5 +76,4 @@ export class CambiarPasswordComponent {
     this.dialogRef.close(null);
   }
 
-
 }

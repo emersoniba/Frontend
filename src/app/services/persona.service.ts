@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../environment/environment';
 import { HttpClient } from '@angular/common/http';
-import { Persona, Rol, ChangePasswordPayload } from '../models/auth.interface';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environment/environment';
+import { Persona, Rol } from '../models/auth.interface';
 import { ResponseData } from '../models/response.model';
 
 @Injectable({

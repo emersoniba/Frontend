@@ -1,20 +1,23 @@
-import { Component, Inject, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Inject, Input, OnDestroy } from '@angular/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
+
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from '../../../../shared/app.material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { CommonModule, DatePipe } from '@angular/common';
-import { provideNativeDateAdapter } from '@angular/material/core';
+
 
 @Component({
   standalone: true,
@@ -31,6 +34,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     MatSelectModule,
     MatCheckboxModule,
     MatDatepickerModule,
+    MaterialModule,
    // DatePipe,
   ],
   templateUrl: './reporte-boletas.component.html',
@@ -39,7 +43,9 @@ import { provideNativeDateAdapter } from '@angular/material/core';
   ],
   styleUrl: './reporte-boletas.component.css'
 })
-export class ReporteBoletasComponent {
+
+
+export class ReporteBoletasComponent implements OnDestroy {
   @Input() boletas: any[] = [];
   filterForm: FormGroup;
   tipos: string[] = [];
@@ -86,7 +92,11 @@ export class ReporteBoletasComponent {
       this.aplicarFiltros();
     });
   }
+  ngOnDestroy(): void {
 
+    this.dialogRef.close();
+
+  }
   aplicarFiltros(): void {
     let boletasFiltradas = [...this.boletas];
 
@@ -96,7 +106,7 @@ export class ReporteBoletasComponent {
 
       if (fechaInicio) {
         const inicio = new Date(fechaInicio);
-        inicio.setHours(0, 0, 0, 0); 
+        inicio.setHours(0, 0, 0, 0);
         boletasFiltradas = boletasFiltradas.filter(b => {
           const fechaBoleta = this.parseFecha(b.fecha_inicio);
           return fechaBoleta >= inicio;
@@ -105,7 +115,7 @@ export class ReporteBoletasComponent {
 
       if (fechaFin) {
         const fin = new Date(fechaFin);
-        fin.setHours(23, 59, 59, 999); 
+        fin.setHours(23, 59, 59, 999);
         boletasFiltradas = boletasFiltradas.filter(b => {
           const fechaBoleta = this.parseFecha(b.fecha_finalizacion);
           return fechaBoleta <= fin;
@@ -149,6 +159,7 @@ export class ReporteBoletasComponent {
       'Observación', 'Fecha Inicio', 'Fecha Fin', 'Cite', 'Monto',
       'Nota Ejecución', 'Estado'
     ];
+
     const datos = this.filteredBoletas.map(b => [
       b.numero,
       b.tipo_boleta?.nombre || '',
@@ -163,11 +174,12 @@ export class ReporteBoletasComponent {
       b.nota_ejecucion,
       b.estado?.nombre || ''
     ])
+
     const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([
       ['Reporte de Boletas'],
-      [],                     
-      encabezados,           
-      ...datos              
+      [],
+      encabezados,
+      ...datos
     ]);
     worksheet['!cols'] = [
       { wch: 12 }, // Número
@@ -183,18 +195,19 @@ export class ReporteBoletasComponent {
       { wch: 20 }, // Nota Ejecución
       { wch: 15 }  // Estado
     ];
+
     worksheet['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: encabezados.length - 1 } }];
+
     worksheet['A1'].s = {
       font: { bold: true, sz: 14 },
       alignment: { horizontal: 'center' }
+
     };
     // Workbook
     const workbook: XLSX.WorkBook = {
       Sheets: { 'Boletas': worksheet },
       SheetNames: ['Boletas']
     };
-
-    // Generar Excel
     const excelBuffer: any = XLSX.write(workbook, {
       bookType: 'xlsx',
       type: 'array'
@@ -205,12 +218,9 @@ export class ReporteBoletasComponent {
     });
 
     FileSaver.saveAs(blob, 'reporte_boletas.xlsx');
-
-
   }
 
   async exportarPDF(): Promise<void> {
-    //if (!this.boletas || this.boletas.length === 0) {
     if (!this.filteredBoletas || this.filteredBoletas.length === 0) {
       alert('No hay boletas para exportar.');
       return;
@@ -222,7 +232,6 @@ export class ReporteBoletasComponent {
       'Monto', 'Nota Ejecución', 'Estado'
     ]];
 
-    //const datos = this.boletas.map(b => ([
     const datos = this.filteredBoletas.map(b => ([
       b.numero || '',
       b.tipo_boleta?.nombre || '',
@@ -242,14 +251,12 @@ export class ReporteBoletasComponent {
     const pageWidth = doc.internal.pageSize.getWidth();
     const margin = 10;
 
-    // Cargar imágenes
     const logo1 = await this.convertImageToBase64('assets/img/logomopsv.png');
 
     const fechaActual = new Date();
     const fechaFormateada = `${fechaActual.getDate().toString().padStart(2, '0')}/${(fechaActual.getMonth() + 1).toString().padStart(2, '0')}/${fechaActual.getFullYear()}`;
     const horaFormateada = `${fechaActual.getHours().toString().padStart(2, '0')}:${fechaActual.getMinutes().toString().padStart(2, '0')}`;
 
-    // Encabezado en cada página
     const drawHeader = () => {
       const logo1Width = 127;
       const logoHeight = 25;
@@ -259,7 +266,6 @@ export class ReporteBoletasComponent {
       doc.setFont('helvetica', 'normal');
       doc.text(`Fecha: ${fechaFormateada}`, pageWidth - margin, 22, { align: 'right' });
       doc.text(`Hora: ${horaFormateada}`, pageWidth - margin, 25, { align: 'right' });
-      // Título del reporte
       doc.setFontSize(13);
       doc.setFont('helvetica', 'bold');
       doc.text('REPORTE DE BOLETAS', pageWidth / 2, 32, { align: 'center' });
@@ -305,7 +311,6 @@ export class ReporteBoletasComponent {
       }
     });
 
-    // Pie de página
     const pagina = "www.oep.org.bo";
     const calle = "Av. Mariscal Santa Cruz - esq. Calle Oruro, Edif. Centro de Comunicaciones La Paz, 5to piso.";
     const telefono = "Tel: (591-2) 2195299 - 2155400";
@@ -317,17 +322,13 @@ export class ReporteBoletasComponent {
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       const footerY = 190;
-      doc.line(10, footerY, 287, footerY); // línea horizontal
+      doc.line(10, footerY, 287, footerY);
       doc.text(pagina, 148, footerY + 5, { align: 'center' });
       doc.text(calle, 148, footerY + 10, { align: 'center' });
       doc.text(telefono, 148, footerY + 15, { align: 'center' });
     }
-
-
     doc.save('reporte_boletas.pdf');
-
   }
-
 
   convertImageToBase64(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -353,14 +354,14 @@ export class ReporteBoletasComponent {
 
     try {
       const date = new Date(fecha);
-      return date.toLocaleDateString('es-ES'); // Formato dd/mm/yyyy
+      return date.toLocaleDateString('es-ES');
     } catch {
       return '';
     }
   }
 
   private parseFecha(fechaStr: string | Date): Date {
-    if (!fechaStr) return new Date(0); 
+    if (!fechaStr) return new Date(0);
     if (fechaStr instanceof Date) {
       return new Date(fechaStr.getTime());
     }

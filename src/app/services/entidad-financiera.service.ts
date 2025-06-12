@@ -10,7 +10,7 @@ import { EntidadFinanciera } from '../models/boleta.model';
 export class EntidadFinancieraService {
   private apiUrl = `${environment.apiUrl}/entidad-financiera/`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getEntidadesFinancieras(): Observable<EntidadFinanciera[]> {
     return this.http.get<EntidadFinanciera[]>(this.apiUrl);
