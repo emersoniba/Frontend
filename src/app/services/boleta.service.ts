@@ -40,7 +40,6 @@ export class BoletaService {
 
 	getBoletasCountByStatus(): Observable<ResponseData> {
 		return this.http.get<ResponseData>(`${this.apiUrl}estadisticas-contadores/`).pipe(
-			tap(response => console.log('Respuesta del servicio:', response)),
 			catchError(error => {
 				console.error('Error al obtener estadísticas:', error);
 				return throwError(() => error);
@@ -49,7 +48,6 @@ export class BoletaService {
 	}
 	getBoletasCountByVencimiento(): Observable<ResponseData> {
 		return this.http.get<ResponseData>(`${this.apiUrl}estadisticas-vencimientos/`).pipe(
-			tap(response => console.log('Respuesta del servicio:', response)),
 			catchError(error => {
 				console.error('Error al obtener estadísticas:', error);
 				return throwError(() => error);
@@ -58,7 +56,6 @@ export class BoletaService {
 	}
 	getBoletasTipo(): Observable<ResponseData> {
 		return this.http.get<ResponseData>(`${this.apiUrl}estadisticas-tipos/`).pipe(
-			tap(response => console.log('Respuesta del servicio de tipos:', response)),
 			catchError(error => {
 				console.error('Error al obtener estadísticas:', error);
 				return throwError(() => error);

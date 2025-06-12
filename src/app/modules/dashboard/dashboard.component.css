@@ -152,5 +152,31 @@
     text-align: center;
 }
 
+.chart-actions {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    justify-content: center;
+}
+
 
 /*fin*/
+
+.botones-exportar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin: 20px 0;
+    color: #2196f3;
+}
+
+.stat-icon {
+    font-size: 40px;
+    /* Tamaño del icono */
+    height: 38px;
+    /* Altura del contenedor */
+    width: 38px;
+    /* Ancho del contenedor */
+    margin-right: 20px;
+    /* Espacio entre el icono y el texto */
+}

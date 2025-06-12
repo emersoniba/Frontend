@@ -5,13 +5,15 @@ import * as am5 from '@amcharts/amcharts5';
 import * as am5percent from '@amcharts/amcharts5/percent';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import { CommonModule } from '@angular/common';
-import * as am5plugins_exporting from "@amcharts/amcharts5/plugins/exporting";
+//
+import * as am5exporting from "@amcharts/amcharts5/plugins/exporting";
+import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [MatCardModule, CommonModule],
+  imports: [MatCardModule, CommonModule,MatIconModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -39,7 +41,6 @@ export class DashboardComponent implements OnDestroy {
 
   loading = true;
   error = false;
-  //private root!: am5.Root;
   private rootChart1: am5.Root | null = null;
   private rootChart2: am5.Root | null = null;
   private chart: any;
@@ -64,6 +65,7 @@ export class DashboardComponent implements OnDestroy {
       this.rootChart2.dispose();
     }
   }
+
   //conteo fechas 
   loadVencimientoStats(): void {
     this.boletaService.getBoletasCountByVencimiento().subscribe({
@@ -75,7 +77,6 @@ export class DashboardComponent implements OnDestroy {
       }
     });
   }
-
 
   //grafico estados
   loadStats(): void {
@@ -109,17 +110,27 @@ export class DashboardComponent implements OnDestroy {
         layout: root.verticalLayout
       })
     );
-
+    let title = chart.children.unshift(
+      am5.Label.new(root, {
+        text: "Estados de las Boletas",
+        fontSize: 20,
+        fontWeight: "500",
+        textAlign: "center",
+        x: am5.percent(50),
+        centerX: am5.percent(50),
+        paddingBottom: 10
+      })
+    );
     let series = chart.series.push(
       am5percent.PieSeries.new(root, {
         valueField: "value",
         categoryField: "category",
         colors: am5.ColorSet.new(root, {
           colors: [
-            am5.color("#4CAF50"),  // Verde para Vigentes
-            am5.color("#2196F3"),  // Azul para Cumplidas
-            am5.color("#FFC107"),  // Amarillo para Renovadas
-            am5.color("#F44336")   // Rojo para Vencidas
+            am5.color("#4CAF50"),  // Verde
+            am5.color("#2196F3"),  // Azul 
+            am5.color("#FFC107"),  // Amarillo
+            am5.color("#F44336")   // Rojo 
           ]
         })
       })
@@ -135,6 +146,11 @@ export class DashboardComponent implements OnDestroy {
       fontSize: 12
     });
     series.labels.template.set("text", "{category}: {value} ({percentage.formatNumber('0.0')}%)");
+    // 👇 Export plugin aquí
+    am5exporting.Exporting.new(root, {
+      filePrefix: "grafico_estados_boleta",
+      menu: am5exporting.ExportingMenu.new(root, {}),
+    });
     this.rootChart1 = root;
   }
 
@@ -167,7 +183,17 @@ export class DashboardComponent implements OnDestroy {
         layout: root.verticalLayout
       })
     );
-
+    let title = chart.children.unshift(
+      am5.Label.new(root, {
+        text: "Tipos de Boletas",
+        fontSize: 20,
+        fontWeight: "500",
+        textAlign: "center",
+        x: am5.percent(50),
+        centerX: am5.percent(50),
+        paddingBottom: 10
+      })
+    );
     let series = chart.series.push(
       am5percent.PieSeries.new(root, {
         valueField: "value",
@@ -189,26 +215,23 @@ export class DashboardComponent implements OnDestroy {
       fontSize: 14
     });
     series.labels.template.set("text", "{category}: {value} ({percentage.formatNumber('0.0')}%)");
+    am5exporting.Exporting.new(root, {
+      filePrefix: "grafico_tipos_boleta",
+      menu: am5exporting.ExportingMenu.new(root, {}),
+    });
     this.rootChart2 = root;
   }
-
-  descargarGrafico(chartId: string, nombreArchivo: string): void {
-  console.log("Descargando gráfico:", chartId);
-
-  const root = chartId === 'chartdiv' ? this.rootChart1 : this.rootChart2;
-
-  if (!root) {
-    console.error(`No se encontró el gráfico con ID ${chartId}`);
-    return;
+  exportChart1() {
+    if (this.rootChart1) {
+      let exp = am5exporting.Exporting.new(this.rootChart1, {});
+      exp.download("png");
+    }
   }
 
-  const exporting = am5plugins_exporting.Exporting.new(root, {
-    filePrefix: nombreArchivo,
-    pngOptions: { quality: 1 }
-  });
-
-  exporting.export("png");
-}
-
-
+  exportChart2() {
+    if (this.rootChart2) {
+      let exp = am5exporting.Exporting.new(this.rootChart2, {});
+      exp.download("png");
+    }
+  }
 }
