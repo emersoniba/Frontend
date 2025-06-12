@@ -21,6 +21,12 @@ export interface ChangePasswordPayload {
 	confirmacion_password: string,
 }
 
+
+export interface ChangePasswordPayload {
+	password_actual: string;
+	nuevo_password: string;
+	confirmacion_password: string;
+}
 export interface Login {
 	username: string,
 	password: string

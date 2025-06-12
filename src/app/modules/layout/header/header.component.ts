@@ -10,8 +10,8 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { Persona } from '../../../models/auth.interface';
 import { PersonaService } from '../../../services/persona.service';
 
-import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -25,7 +25,7 @@ import Swal from 'sweetalert2';
 export class HeaderComponent implements OnInit {
 
 	public perfil?: Persona;
-	private perfilSubscriptor?: Subscription;
+	private perfilSubscriptor: Subscription | undefined;
 	public imagenPreview: string | null = null;
 	public convertido: string | null = null;
 

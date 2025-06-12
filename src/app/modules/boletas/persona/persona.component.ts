@@ -123,7 +123,9 @@ export class PersonaComponent implements OnInit, OnDestroy {
 		});
 	}
 
+
 	public nuevaPersona(persona?: Persona): void {
+
 		const dialogRef = this.dialog.open(PersonaFormDialogComponent, {
 			width: '40vw',
 			maxWidth: '60vw',

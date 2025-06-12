@@ -12,7 +12,7 @@ import { Tipo } from '../models/boleta.model';
 export class TipoService {
   private apiUrl = `${environment.apiUrl}/tipos-boleta/`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getTipos(): Observable<Tipo[]> {
     return this.http.get<Tipo[]>(this.apiUrl);

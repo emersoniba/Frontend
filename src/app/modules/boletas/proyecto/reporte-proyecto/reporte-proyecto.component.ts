@@ -1,26 +1,42 @@
-import { CommonModule, DatePipe } from '@angular/common';
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { CommonModule, DatePipe } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { DateAdapter } from '@angular/material/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
-import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
+import Swal from 'sweetalert2';
 import * as FileSaver from 'file-saver';
+import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { ReplaySubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import Swal from 'sweetalert2';
-
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { provideNativeDateAdapter } from '@angular/material/core';
-
-import { MaterialModule } from '../../../../shared/app.material';
-
 
 @Component({
   selector: 'app-reporte-proyecto',
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, MaterialModule
+    CommonModule,
+    MatButtonModule,
+    MatCardModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    NgxMatSelectSearchModule
   ],
   templateUrl: './reporte-proyecto.component.html',
   styleUrl: './reporte-proyecto.component.css',
@@ -40,13 +56,14 @@ export class ReporteProyectoComponent implements OnInit, OnDestroy {
   entidadesFiltradas: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   departamentosFiltrados: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   protected _onDestroy = new Subject<void>();
-
-  constructor(
   
+  constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
-    public dialogRef: MatDialogRef<ReporteProyectoComponent>
-    
+    private datePipe: DatePipe,
+    private dialogRef: MatDialogRef<ReporteProyectoComponent>,
+    @Inject(MAT_DATE_LOCALE) private _dateLocale: string,
+		private _dateAdapter: DateAdapter<Date>
   ) {
     this.proyectos = data.proyectos.map((proyecto: any) => {
       return {
@@ -68,6 +85,8 @@ export class ReporteProyectoComponent implements OnInit, OnDestroy {
     this.filterForm.valueChanges.subscribe(() => {
       this.aplicarFiltros();
     });
+    		this._dateAdapter.setLocale('es-ES');
+
   }
 
   ngOnInit(): void {
@@ -169,18 +188,18 @@ export class ReporteProyectoComponent implements OnInit, OnDestroy {
   private parseFecha(fecha: any): Date | null {
     if (!fecha) return null;
     if (fecha instanceof Date && !isNaN(fecha.getTime())) {
-      return new Date(fecha.getTime());
+        return new Date(fecha.getTime());
     }
-    if (typeof fecha === 'string' && fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
-      return new Date(fecha + 'T00:00:00');
+    if (typeof fecha === 'string' && fecha.match(/^\d{4}-\d{2}-\d{2}/)) {
+        return new Date(fecha + 'T12:00:00Z');
     }
     if (typeof fecha === 'string' && fecha.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
-      const [dd, mm, yyyy] = fecha.split('/');
-      return new Date(`${yyyy}-${mm}-${dd}T00:00:00`);
+        const [dd, mm, yyyy] = fecha.split('/');
+        return new Date(`${yyyy}-${mm}-${dd}T12:00:00Z`);
     }
-    const parsedDate = new Date(fecha);
-    return isNaN(parsedDate.getTime()) ? null : parsedDate;
-  }
+    const parsed = new Date(fecha);
+    return isNaN(parsed.getTime()) ? null : parsed;
+}
 
   exportarExcel(): void {
     if (!this.proyectos || this.proyectos.length === 0) {
@@ -351,26 +370,39 @@ export class ReporteProyectoComponent implements OnInit, OnDestroy {
     doc.save('reporte_proyectos_con_boletas.pdf');
   }
 
-  private formatFecha(fechaStr: string): string {
+ private formatFecha(fechaStr: string | Date): string {
     if (!fechaStr) return '';
+    
     try {
-      const fecha = new Date(fechaStr);
-      if (isNaN(fecha.getTime())) {
-        const parts = fechaStr.split('/');
-        if (parts.length === 3) {
-          return fechaStr;
+        let fecha: Date;
+        
+        if (fechaStr instanceof Date) {
+            fecha = new Date(fechaStr.getTime()); // Clonar para no modificar el original
+        } 
+        else if (typeof fechaStr === 'string' && fechaStr.includes('T')) {
+            fecha = new Date(fechaStr);
+        } 
+        else if (typeof fechaStr === 'string' && fechaStr.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+            const [dd, mm, yyyy] = fechaStr.split('/');
+            return fechaStr; 
         }
-        return '';
-      }
-      const dia = fecha.getDate().toString().padStart(2, '0');
-      const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
-      const anio = fecha.getFullYear();
-      return `${dia}/${mes}/${anio}`;
-    } catch (e) {
-      return '';
-    }
-  }
+        else {
+            fecha = new Date(fechaStr);
+        }
 
+        const offset = fecha.getTimezoneOffset() * 60000;
+        const fechaAjustada = new Date(fecha.getTime() + offset);
+        
+        const dia = fechaAjustada.getDate().toString().padStart(2, '0');
+        const mes = (fechaAjustada.getMonth() + 1).toString().padStart(2, '0');
+        const anio = fechaAjustada.getFullYear();
+        
+        return `${dia}/${mes}/${anio}`;
+    } catch (e) {
+        console.error('Error al formatear fecha:', e);
+        return '';
+    }
+}
   convertImageToBase64(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const img = new Image();

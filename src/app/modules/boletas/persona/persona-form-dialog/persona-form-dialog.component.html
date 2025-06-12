@@ -17,6 +17,7 @@
                     <mat-label>CI</mat-label>
                     <mat-icon matIconPrefix>badge</mat-icon>
                     <input matInput formControlName="ci" [readonly]="esEdicion" />
+
                     @if (formPersona.get('ci')?.hasError('required')) {
                     <mat-error>El CI es obligatorio</mat-error>
                     }

@@ -33,14 +33,12 @@
     background-color: #f44336 !important;
     color: #ffffff !important;
     padding: 0.5rem 1.5rem;
-
     transition: background-color 0.3s ease;
 }
 
 .btn-exportar-pdf:hover {
     background-color: #d32f2f !important;
 }
-
 
 .modal-container {
     padding: 20px;

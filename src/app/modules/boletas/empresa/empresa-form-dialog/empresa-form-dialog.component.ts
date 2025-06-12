@@ -7,7 +7,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { EmpresaService } from '../../../../services/empresa.service';
-import { Actividad, Empresa } from '../../../../models/empresa.interface';
+import { Actividad, Empresa } from '../../../../models/empresa.model';
 import { ActividadService } from '../../../../services/actividad.service';
 import Swal from 'sweetalert2';
 
@@ -27,7 +27,7 @@ export class EmpresaFormDialogComponent {
   formEmpresa!: FormGroup;
 
   constructor(
-
+    
     private fb: FormBuilder,
     private readonly actividadService: ActividadService,
 
@@ -60,9 +60,9 @@ export class EmpresaFormDialogComponent {
     this.getActividades();
   }
 
+
   public getActividades() {
     this.actividadService.getActividades().subscribe({
-
       next: (response) => {
 
         this.dataActividad = response;

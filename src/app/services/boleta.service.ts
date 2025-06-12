@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { catchError, Observable, tap, throwError } from 'rxjs';
+import { Boleta, Estado, EntidadFinanciera } from '../models/boleta.model';
 import { environment } from '../../environment/environment';
-import { Boleta } from '../models/boleta.model';
 import { ResponseData } from '../models/response.model';
 
 @Injectable({
@@ -34,12 +34,38 @@ export class BoletaService {
 	deleteBoleta(id: number): Observable<void> {
 		return this.http.delete<void>(`${this.apiUrl}${id}/`);
 	}
+
 	getBoletasPorProyecto(proyectoId: number): Observable<ResponseData> {
 		return this.http.get<ResponseData>(`${this.apiUrlBoletas}?proyecto_id=${proyectoId}`);
 	}
 
-	verBoletaPDF(id: number) {
-		return this.http.get(`${this.apiUrl}${id}/ver-pdf/`, { responseType: 'blob' });
+	getBoletasCountByStatus(): Observable<ResponseData> {
+		return this.http.get<ResponseData>(`${this.apiUrl}estadisticas-contadores/`).pipe(
+			catchError(error => {
+				console.error('Error al obtener estadísticas:', error);
+				return throwError(() => error);
+			})
+		);
 	}
 
+	getBoletasCountByVencimiento(): Observable<ResponseData> {
+		return this.http.get<ResponseData>(`${this.apiUrl}estadisticas-vencimientos/`).pipe(
+			catchError(error => {
+				console.error('Error al obtener estadísticas:', error);
+				return throwError(() => error);
+			})
+		);
+	}
+
+	getBoletasTipo(): Observable<ResponseData> {
+		return this.http.get<ResponseData>(`${this.apiUrl}estadisticas-tipos/`).pipe(
+			catchError(error => {
+				console.error('Error al obtener estadísticas:', error);
+				return throwError(() => error);
+			})
+		);
+	}
+	verBoletaPDF(id: number) {
+	return this.http.get(`${this.apiUrl}${id}/ver-pdf/`, { responseType: 'blob' });
+	}
 }

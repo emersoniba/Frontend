@@ -4,8 +4,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../environment/environment';
-import { Empresa } from '../models/empresa.interface';
 import { ResponseData } from '../models/response.model';
+import { Empresa } from '../models/empresa.model';
+import { Entidad } from '../models/proyecto.model';
 
 
 @Injectable({
@@ -32,6 +33,10 @@ export class EmpresaService {
     return this.http.get<ResponseData>(`${this.url}/entidades/proyectos-por-empresa/?entidad_id=${entidad_id}`);
   }
 
+  getEmpresasConProyectosAll(): Observable<ResponseData> {
+    return this.http.get<ResponseData>(`${this.url}/entidades/con_proyectos/`);
+
+  }
   
   eliminarEmpresa(id: number): Observable<any> {
     return this.http.delete(`${this.url}/entidades/${id}/`);

@@ -13,6 +13,9 @@ import { MaterialModule } from '../../../shared/app.material';
 import { BoletaModalComponent } from './boleta-modal/boleta-modal.component';
 import { BotonesComponent } from './botones/botones.component';
 import { ReporteBoletasComponent } from './reporte-boletas/reporte-boletas.component';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+
 
 import { OnDestroy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -158,7 +161,6 @@ export class BoletaComponent implements OnInit, OnDestroy {
 
 	public onGridReady(params: GridReadyEvent) {
 		this.gridApi = params.api;
-
 	}
 
 	public cargarBoletas(): void {

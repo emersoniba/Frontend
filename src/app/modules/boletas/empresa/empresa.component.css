@@ -1,10 +1,12 @@
 .spacer {
     flex: 1 1 auto;
 }
+
 element.style {
     width: 100%;
     /**height: 700px !important;*/
 }
+
 .panel-container {
     margin: 5px 0;
 }
@@ -20,12 +22,12 @@ element.style {
     margin: 0;
     overflow: hidden;
     position: relative;
-
     border-radius: 1px;
 }
 
 .mat-expansion-panel-header {
-    background-color: #6c6c6e59;/**#4554a8fd;
+    background-color: #6c6c6e59;
+    /**#4554a8fd;
     /*TITULO PROYECTOS*/
     font-weight: 500;
 }
@@ -33,14 +35,12 @@ element.style {
 .ag-grid-container {
     margin-top: 12px;
     padding: 0 8px;
-
 }
 
 mat-toolbar {
     position: sticky;
     top: 0;
     z-index: 100;
-
 }
 
 .mat-mdc-header-row {
@@ -55,16 +55,16 @@ mat-toolbar {
     height: 52px;
     color: #777777;
 }
+
 .mat-mdc-cell {
     border-bottom-color: #dddfdd;
     border-bottom-style: solid;
     line-height: inherit;
 }
+
 .mat-toolbar {
     background: #3c07db00;
-
 }
-
 
 .ag-grid-container[_ngcontent-ng-c1653134568] {
     margin-top: 12px;

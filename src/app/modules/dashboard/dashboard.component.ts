@@ -1,5 +1,5 @@
 import { Component, NgZone, OnDestroy } from '@angular/core';
-import { BoletaService } from '../../../services/boleta.service';
+import { BoletaService } from '../../services/boleta.service';
 import { MatCardModule } from '@angular/material/card';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5percent from '@amcharts/amcharts5/percent';

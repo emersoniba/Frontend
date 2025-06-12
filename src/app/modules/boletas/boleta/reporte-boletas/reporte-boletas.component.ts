@@ -7,15 +7,35 @@ import * as FileSaver from 'file-saver';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../../../shared/app.material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 @Component({
   standalone: true,
   selector: 'app-reporte-boletas',
   imports: [
-    CommonModule, MaterialModule,
+    CommonModule,
+    MatButtonModule,
+    MatCardModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MaterialModule,
+   // DatePipe,
   ],
   templateUrl: './reporte-boletas.component.html',
   providers: [
@@ -183,7 +203,7 @@ export class ReporteBoletasComponent implements OnDestroy {
       alignment: { horizontal: 'center' }
 
     };
-
+    // Workbook
     const workbook: XLSX.WorkBook = {
       Sheets: { 'Boletas': worksheet },
       SheetNames: ['Boletas']

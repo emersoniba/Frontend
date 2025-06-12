@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
-
 import { Estado, EntidadFinanciera, Boleta, Tipo } from '../../../../models/boleta.model';
 import { ProyectoService } from '../../../../services/proyecto.service';
 import { BoletaService } from '../../../../services/boleta.service';
@@ -128,12 +127,10 @@ export class BoletaModalComponent implements OnInit, OnDestroy {
 		this.loadProyectos();
 		this.loadTipos();
 	}
-
 	loadTipos(): void {
 		this.tipoService.getTipos().subscribe({
 			next: (data) => this.tipo_boleta = data,
 			error: (err) => console.error('Error cargando tipos:', err)
-
 		});
 	}
 

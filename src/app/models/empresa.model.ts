@@ -3,10 +3,9 @@ import { Proyecto } from "./proyecto.model";
 export interface Departamento {
   id: number,
   nombre: string,
-  nombre_reducido: string,
 }
 
-export interface Actividad {
+export interface Actividad  {
   id?: number,
   descripcion: string,
 }
@@ -19,6 +18,7 @@ export interface Empresa {
   representante_legal: string,
   contacto: string,
   correo: string,
+  fecha_eliminacion: string,
   proyectos: Proyecto[],
 }
 
@@ -29,4 +29,5 @@ export interface nuevaEmpresa {
   representante_legal: string,
   correo: string,
   contacto: string,
-}
+};
+

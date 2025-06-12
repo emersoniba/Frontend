@@ -7,6 +7,7 @@ export interface Entidad {
 	representante_legal: string,
 	contacto: string,
 	correo: string,
+	fecha_eliminacion: string ; 
 }
 
 export interface Departamento {
@@ -19,9 +20,11 @@ export interface Proyecto {
 	nombre: string,
 	descripcion: string,
 	entidad: Entidad,
+	entidadId: number;
 	departamento: Departamento,
 	fecha_creado: string,
 	fecha_finalizacion: string,
+	fecha_eliminacion: string,
 	boletas: Boleta[],
 
 }

@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 				localStorage.setItem('tkn-refresh', response.refresh);
 
 				this.authService.getPerfil().subscribe((usuario) => {
-					this.router.navigate(['/perfil']);
+					this.router.navigate(['/dashboard']);
 				});
 			},
 			error: (err) => {

@@ -72,6 +72,7 @@ export class PerfileComponent implements OnInit, OnDestroy {
 		});
 	}
 
+
 	public editar(): void {
 		if (!this.perfil) return;
 		this.dialog.open(UsuarioFormDialogComponent, {
@@ -157,6 +158,7 @@ export class PerfileComponent implements OnInit, OnDestroy {
 			}
 		});
 	}
+
 
 }
 

@@ -5,7 +5,6 @@ import { environment } from '../../environment/environment';
 import { Persona, Rol } from '../models/auth.interface';
 import { ResponseData } from '../models/response.model';
 
-
 @Injectable({
 	providedIn: 'root'
 })
@@ -77,6 +76,3 @@ export class PersonaService {
 	}
 
 }
-
-
-

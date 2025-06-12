@@ -7,8 +7,6 @@ import { MaterialModule } from '../../../../shared/app.material';
 
 import { ErrorHandlerService } from '../../../../services/error-handler.service';
 import { PersonaService } from '../../../../services/persona.service';
-
-
 @Component({
 	selector: 'app-subir-imagen',
 	standalone: true,
@@ -41,11 +39,13 @@ export class SubirImagenComponent {
 		}
 	}
 
+
 	ngOnInit(): void {
 		if (!this.imagenActual) {
 			this.obtenerImagenActual();
 		}
 	}
+
 
 	obtenerImagenActual(): void {
 		this.personaService.getPerfil().subscribe({
@@ -60,6 +60,7 @@ export class SubirImagenComponent {
 			error: (error) => this.errorHandler.handleError(error, 'No se pudieron cargar los roles')
 		});
 	}
+
 
 	convertirImagen(event: Event): void {
 		const input = event.target as HTMLInputElement;
@@ -90,7 +91,6 @@ export class SubirImagenComponent {
 			}
 		});
 	}
-
 	cancelar() {
 		this.dialogRef.close(null);
 	}
