@@ -5,7 +5,7 @@ export interface Departamento {
   nombre_reducido: string,
 }
 
-export interface Actividad  {
+export interface Actividad {
   id?: number,
   descripcion: string,
 }

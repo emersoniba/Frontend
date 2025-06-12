@@ -16,13 +16,13 @@ export class DepartamentoService {
     return this.http.get<any[]>(this.url);
   }
   eliminarDepartamento(id: number): Observable<any> {
-    return this.http.delete(`${this.url}/departamentos/${id}/`);
+    return this.http.delete(`${this.url}${id}/`);
   }
   postDepartamento(data: Departamento): Observable<Departamento[]> {
-    return this.http.post<Departamento[]>(`${this.url}/departamentos/`, data);
+    return this.http.post<Departamento[]>(`${this.url}`, data);
   }
 
   putDepartamento(id: number, Departamento: Departamento): Observable<Departamento[]> {
-    return this.http.put<Departamento[]>(`${this.url}/departamentos/${id}/`, Departamento);
+    return this.http.put<Departamento[]>(`${this.url}${id}/`, Departamento);
   }
 }

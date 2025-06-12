@@ -17,19 +17,19 @@ export class TipoService {
   getTipos(): Observable<Tipo[]> {
     return this.http.get<Tipo[]>(this.apiUrl);
   }
+  deleteTipo(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}${id}/`);
+  }
   getTipoById(id: number): Observable<Tipo> {
     return this.http.get<Tipo>(`${this.apiUrl}/${id}`);
   }
 
-  createTipo(estado: Omit<Tipo, 'id'>): Observable<Tipo> {
-    return this.http.post<Tipo>(this.apiUrl, estado);
+  postTipo(data: Tipo): Observable<Tipo[]> {
+    return this.http.post<Tipo[]>(`${this.apiUrl}`, data);
   }
 
-  updateTipo(id: number, estado: Partial<Tipo>): Observable<Tipo> {
-    return this.http.put<Tipo>(`${this.apiUrl}/${id}`, estado);
+  putTipo(id: number, Tipo: Tipo): Observable<Tipo[]> {
+    return this.http.put<Tipo[]>(`${this.apiUrl}${id}/`, Tipo);
   }
 
-  deleteEstado(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
-  }
 }

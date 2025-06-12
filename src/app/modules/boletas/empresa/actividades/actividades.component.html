@@ -1,89 +1,117 @@
 <mat-tab-group>
-    <mat-tab label="ACTIVIDADES">
-        <button mat-raised-button color="accent" (click)="nuevaActividad()"><mat-icon>add_box</mat-icon>Nueva
-            Actividad</button>
-        <mat-card class="actividad-card" *ngFor="let actividad of dataActividad">
-            <mat-card-header>
-                <mat-card-title>{{ actividad.descripcion }}</mat-card-title>
-            </mat-card-header>
-            <mat-card-actions *ngIf="actividad.id !== undefined">
-                <button mat-icon-button color="primary" (click)="editarActividad(actividad.id!)" aria-label="Editar">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button color="warn" (click)="eliminaractividad(actividad.id!)" aria-label="Eliminar">
-                    <mat-icon>delete</mat-icon>
-                </button>
-            </mat-card-actions>
-        </mat-card>
 
+
+    <mat-tab label="ACTIVIDADES" class="actividades">
+        <div class="boton-crear">
+            <button mat-raised-button color="accent" (click)="nuevaActividad()">
+                <mat-icon>add_box</mat-icon> Nueva Actividad
+            </button>
+        </div>
+        <div class="card-container">
+            <mat-card class="actividad-card" *ngFor="let actividad of dataActividad">
+                <mat-card-header>
+                    <mat-card-title>{{ actividad.descripcion }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-actions *ngIf="actividad.id !== undefined">
+
+                    <button class="btn btn-warning" (click)="editarActividad(actividad.id!)" aria-label="Editar">
+                        <mat-icon>edit</mat-icon></button>
+                    <button class="btn btn-danger" (click)="eliminaractividad(actividad.id!)" aria-label="Eliminar">
+                        <mat-icon>delete</mat-icon></button>
+
+                </mat-card-actions>
+            </mat-card>
+        </div>
     </mat-tab>
+
     <mat-tab label="ENTIDADES FINANCIERAS">
+        <div class="boton-crear">
+            <button mat-raised-button color="accent"
+                (click)="nuevaEntidadFinanciera()"><mat-icon>add_box</mat-icon>Nueva
+                Entidad Financiera
+            </button>
+        </div>
+        <div class="card-container">
 
-        <mat-card class="example-card" appearance="outlined">
-            <mat-card-header>
-                <div mat-card-avatar class="example-header-image"></div>
-                <mat-card-title>Shiba Inu</mat-card-title>
-                <mat-card-subtitle>Dog Breed</mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-content>
-                <p> The </p>
-            </mat-card-content>
-            <mat-card-actions>
-                <button matButton>LIKE</button>
-                <button matButton>SHARE</button>
-            </mat-card-actions>
-        </mat-card>
-        <button mat-raised-button color="accent" (click)="nuevaActividad()"><mat-icon>add_box</mat-icon>Nueva
-            Actividad</button>
+            <mat-card class="entidadFinanciera-card" *ngFor="let entidadFinanciera of dataEntidadFinanciera">
+
+                <mat-card-header>
+                    <mat-card-title>{{ entidadFinanciera.nombre }}</mat-card-title>
+                </mat-card-header>
+
+                <mat-card-actions *ngIf="entidadFinanciera.id !== undefined">
+                    <button class="btn btn-warning" (click)="editarEntidadFinanciera(entidadFinanciera.id!)"
+                        aria-label="Editar">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+
+                    <button class="btn btn-danger" (click)="eliminarEntidadFinanciera(entidadFinanciera.id!)"
+                        aria-label="Eliminar">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+
+                </mat-card-actions>
+            </mat-card>
+        </div>
     </mat-tab>
+
     <mat-tab label="DEPARTAMENTOS">
-        <button mat-raised-button color="accent" (click)="nuevoDepartamento()"><mat-icon>add_box</mat-icon>Nuevo
-            Departamento</button>
-        <mat-card class="departamento-card" *ngFor="let departamento of dataDepartamento">
+        <div class="boton-crear">
+            <button mat-raised-button color="accent" (click)="nuevoDepartamento()"><mat-icon>add_box</mat-icon>Nuevo
+                Departamento</button>
+        </div>
+        <div class="card-container">
 
-            <mat-card-header>
-                <mat-card-title>{{ departamento.nombre }}</mat-card-title>
-                <mat-card-subtitle>{{ departamento.nombre_reducido }}</mat-card-subtitle>
+            <mat-card class="departamento-card" *ngFor="let departamento of dataDepartamento">
 
-            </mat-card-header>
+                <mat-card-header>
+                    <mat-card-title>{{ departamento.nombre }}</mat-card-title>
+                    <mat-card-subtitle>{{ departamento.nombre_reducido }}</mat-card-subtitle>
 
-            <mat-card-actions *ngIf="departamento.id !== undefined">
-                <button mat-icon-button color="primary" (click)="editarDepartamento(departamento.id!)"
-                    aria-label="Editar">
-                    <mat-icon>edit</mat-icon>
-                </button>
+                </mat-card-header>
 
-                <button mat-icon-button color="warn" (click)="eliminarDepartamento(departamento.id!)"
-                    aria-label="Eliminar">
-                    <mat-icon>delete</mat-icon>
-                </button>
+                <mat-card-actions *ngIf="departamento.id !== undefined">
 
-            </mat-card-actions>
-        </mat-card>
+                    <button class="btn btn-warning" (click)="editarDepartamento(departamento.id!)" aria-label="Editar">
+                        <mat-icon>edit</mat-icon>
+                    </button>
 
+                    <button class="btn btn-danger" (click)="eliminarDepartamento(departamento.id!)"
+                        aria-label="Eliminar">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+
+                </mat-card-actions>
+
+            </mat-card>
+        </div>
     </mat-tab>
 
     <mat-tab label="TIPO BOLETAS">
+        <div class="boton-crear">
+            <button mat-raised-button color="accent" (click)="nuevoTipoBoleta()"><mat-icon>add_box</mat-icon>Nuevo
+                Tipo de Boletas
+            </button>
+        </div>
+        <div class="card-container">
 
-        <button mat-raised-button color="accent" (click)="nuevaActividad()"><mat-icon>add_box</mat-icon>Nueva
-            Tipos de Boletas
-        </button>
+            <mat-card class="tipo-card" *ngFor="let tipo of dataTipo">
 
-        <mat-card class="tipo-card" *ngFor="let actividad of dataActividad">
+                <mat-card-header>
+                    <mat-card-title>{{ tipo.nombre }}</mat-card-title>
+                </mat-card-header>
 
-            <mat-card-header>
-                <mat-card-title>{{ actividad.descripcion }}</mat-card-title>
-            </mat-card-header>
+                <mat-card-actions *ngIf="tipo.id !== undefined">
+                    <button class="btn btn-warning" (click)="editarTipoBoleta(tipo.id!)" aria-label="Editar">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button class="btn btn-danger" (click)="eliminarTipo(tipo.id!)" aria-label="Eliminar">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-card-actions>
 
-            <mat-card-actions *ngIf="actividad.id !== undefined">
-                <button mat-icon-button color="primary" (click)="editarActividad(actividad.id!)" aria-label="Editar">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button color="warn" (click)="eliminaractividad(actividad.id!)" aria-label="Eliminar">
-                    <mat-icon>delete</mat-icon>
-                </button>
-            </mat-card-actions>
-
-        </mat-card>
+            </mat-card>
+        </div>
     </mat-tab>
+
 </mat-tab-group>

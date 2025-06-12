@@ -1,3 +1,6 @@
+import { Proyecto } from "./proyecto.model";
+
+
 export interface Estado {
   id: number,
   nombre: string,
@@ -11,15 +14,11 @@ export interface EntidadFinanciera {
   nombre: string,
 }
 
-export interface Proyecto {
-  id: number,
-  nombre: string,
-  descripcion: string,
-}
 export interface Tipo{
   id: number,
   nombre: string,
 }
+
 export interface Boleta {
   id?: number,
   numero?: string,

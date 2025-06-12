@@ -56,7 +56,6 @@
     }
 
     .mat-mdc-dialog-container .mat-mdc-dialog-title {
-        /*para los modales*/
         background-color: #4554a8fd;
         color: #fff !important;
     }
@@ -77,3 +76,4 @@
         margin-bottom: 20px;
         background: white;
     }
+
