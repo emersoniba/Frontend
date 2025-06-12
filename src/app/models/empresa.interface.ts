@@ -1,3 +1,4 @@
+import { Proyecto } from "./proyecto.model";
 
 export interface Departamento {
   id: number,
@@ -28,15 +29,4 @@ export interface nuevaEmpresa {
   representante_legal: string,
   correo: string,
   contacto: string,
-}
-
-export interface Proyecto {
-  id: number,
-  nombre: string,
-  descripcion: string,
-  entidad: Empresa,
-  departamento: Departamento,
-  fecha_creado: string,
-  fecha_finalizacion: string,
-
 }

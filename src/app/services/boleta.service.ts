@@ -65,4 +65,7 @@ export class BoletaService {
 			})
 		);
 	}
+	verBoletaPDF(id: number) {
+	return this.http.get(`${this.apiUrl}${id}/ver-pdf/`, { responseType: 'blob' });
+	}
 }
