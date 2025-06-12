@@ -1,0 +1,79 @@
+.modal-container {
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+}
+
+.card-custom {
+    border-radius: 16px;
+    padding: 1rem;
+}
+
+.mat-card-title {
+    font-weight: 600;
+}
+
+
+.btn-exportar-excel {
+    background-color: #4caf50 !important;
+    color: white !important;
+    padding: 0.5rem 1.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-exportar-excel:hover {
+    background-color: #73cc78 !important;
+}
+
+.btn-exportar-pdf {
+    background-color: #f44336 !important;
+    color: #ffffff !important;
+    padding: 0.5rem 1.5rem;
+   
+    transition: background-color 0.3s ease;
+}
+
+.btn-exportar-pdf:hover {
+    background-color: #d32f2f !important;
+}
+
+
+.modal-container {
+    padding: 20px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.card-custom {
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.filtros-especiales {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.mat-mdc-form-field {
+    width: 100%;
+}
+.mat-mdc-card-header {
+    padding: 22px ;
+}

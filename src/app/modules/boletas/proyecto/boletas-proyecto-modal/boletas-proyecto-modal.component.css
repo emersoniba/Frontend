@@ -1,0 +1,76 @@
+.mat-dialog-container {
+    border-radius: 8px !important;
+    padding: 24px !important;
+    max-width: 800px !important;
+}
+
+.mat-dialog-title {
+    margin: 0 0 16px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 1.5rem;
+    color: #2c3e50;
+}
+
+.mat-dialog-content {
+    max-height: 65vh;
+    overflow: auto;
+    padding: 0 16px !important;
+    margin: 0 -16px;
+}
+
+.total-info {
+    background-color: #f8f9fa;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    border-left: 4px solid #3498db;
+}
+
+.total-info strong {
+    margin-right: 8px;
+    color: #2c3e50;
+}
+
+.boletas-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+}
+
+.boletas-table th {
+    background-color: #f5f5f5;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 500;
+    color: #2c3e50;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.boletas-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: top;
+}
+
+.boletas-table tr:last-child td {
+    border-bottom: none;
+}
+
+.mat-dialog-actions {
+    padding: 16px 0 0 0 !important;
+    margin-top: 16px;
+    border-top: 1px solid #e0e0e0;
+    justify-content: flex-end;
+}
+
+.mat-dialog-actions button {
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.no-data-message {
+    text-align: center;
+    padding: 24px;
+    color: #7f8c8d;
+}

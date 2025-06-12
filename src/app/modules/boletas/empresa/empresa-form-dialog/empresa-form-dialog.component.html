@@ -1,0 +1,111 @@
+<h2 mat-dialog-title color="primary">
+    <mat-icon>business</mat-icon>
+    {{ esEdicion ? 'Editar Empresa' : 'Registrar Empresa' }}
+</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="formEmpresa">
+        <div class="row">
+
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Denominación</mat-label>
+                    <mat-icon matPrefix>business</mat-icon>
+                    <input matInput formControlName="denominacion" />
+                    @if (formEmpresa.get('denominacion')?.hasError('required')) {
+                    <mat-error>La denominación es obligatoria</mat-error>
+                    }
+                    @if (formEmpresa.get('denominacion')?.hasError('minlength')) {
+                    <mat-error>Debe tener al menos 5 caracteres</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>NIT</mat-label>
+                    <mat-icon matPrefix>badge</mat-icon>
+                    <input matInput formControlName="nit" />
+                    @if (formEmpresa.get('nit')?.hasError('required')) {
+                    <mat-error>El NIT es obligatorio</mat-error>
+                    }
+                    @if (formEmpresa.get('nit')?.hasError('pattern')) {
+                    <mat-error>Debe contener solo números</mat-error>
+                    }
+                    @if (formEmpresa.get('nit')?.hasError('backend')) {
+                    <mat-error>{{ formEmpresa.get('nit')?.getError('backend') }}</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Representante Legal</mat-label>
+                    <mat-icon matPrefix>person</mat-icon>
+                    <input matInput formControlName="representante_legal" />
+                    @if (formEmpresa.get('representante_legal')?.hasError('required')) {
+                    <mat-error>El representante legal es obligatorio</mat-error>
+                    }
+                    @if (formEmpresa.get('representante_legal')?.hasError('minlength')) {
+                    <mat-error>Debe tener al menos 5 caracteres</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Correo</mat-label>
+                    <mat-icon matPrefix>mail</mat-icon>
+                    <input matInput type="email" formControlName="correo" />
+                    @if (formEmpresa.get('correo')?.hasError('required')) {
+                    <mat-error>El correo es obligatorio</mat-error>
+                    }
+                    @if (formEmpresa.get('correo')?.hasError('email')) {
+                    <mat-error>Formato de correo inválido</mat-error>
+                    }
+                    @if (formEmpresa.get('correo')?.hasError('backend')) {
+                    <mat-error>{{ formEmpresa.get('correo')?.getError('backend') }}</mat-error>
+                    }
+
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-6 col-md-12 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Contacto</mat-label>
+                    <mat-icon matPrefix>phone</mat-icon>
+                    <input matInput formControlName="contacto" />
+                    @if (formEmpresa.get('contacto')?.hasError('required')) {
+                    <mat-error>El contacto es obligatorio</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-6 col-md-12 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Actividad</mat-label>
+                    <mat-icon matPrefix>work</mat-icon>
+                    <mat-select formControlName="actividad_id">
+                        @for (ac of dataActividad; track ac.id) {
+                        <mat-option [value]="ac.id">{{ ac.descripcion }}</mat-option>
+                        }
+                    </mat-select>
+                    @if (formEmpresa.get('actividad_id')?.hasError('required')) {
+                    <mat-error>Debe seleccionar una actividad</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="cancelar()">
+        <mat-icon>close</mat-icon> Cancelar
+    </button>
+    <button mat-raised-button color="primary" (click)="registrar()">
+        <mat-icon>{{ esEdicion ? 'save' : 'add' }}</mat-icon>
+        {{ esEdicion ? 'Actualizar cambios' : 'Registrar' }}
+    </button>
+</mat-dialog-actions>

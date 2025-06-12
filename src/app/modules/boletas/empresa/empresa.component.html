@@ -1,0 +1,73 @@
+<mat-toolbar color="primary">
+  <span>EMPRESAS</span>
+  <span class="spacer"></span>
+  <button mat-raised-button color="accent" 
+   (click)="nuevaEmpresa()"><mat-icon>add_box</mat-icon>Nueva Empresa</button>
+   <button mat-raised-button color="accent" (click)="abrirDialogoReporte()"matTooltip="Empresas">
+          <mat-icon>download</mat-icon> Exportar Empresas
+      </button>
+</mat-toolbar>
+
+<div class="ag-grid-container" style="margin: 8px 0;">
+  <ag-grid-angular 
+    style="width: 100%; height: 65%;" 
+    [gridOptions]="gridOptions" 
+    [rowData]="dataEmpresas"
+    (gridReady)="onGridReady($event)" 
+    [columnDefs]="gridOptions.columnDefs" 
+    [defaultColDef]="gridOptions.defaultColDef"
+    [detailCellRendererParams]="gridOptions.detailCellRendererParams" 
+    [isRowMaster]="gridOptions.isRowMaster"
+    [pagination]="gridOptions.pagination" 
+    [paginationPageSize]="gridOptions.paginationPageSize"
+    (cellClicked)="clickFila($event)" 
+    [theme]="theme"
+    class="ag-theme-alpine" 
+    rowSelection="single" 
+    (rowDoubleClicked)="abrirProyecto($event)"
+    >
+  </ag-grid-angular>
+</div>
+
+
+<div class="panel-container">
+  @if (empresaSeleccionada?.id && dataProyecto.length > 0) {
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Proyectos de la empresa {{ empresaSeleccionada.denominacion }}</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <mat-table [dataSource]="dataProyecto" class="mat-elevation-z2 proyectos-table">
+
+      <ng-container matColumnDef="nombre">
+        <mat-header-cell *matHeaderCellDef> Proyecto </mat-header-cell>
+        <mat-cell *matCellDef="let proyecto"> {{ proyecto.nombre }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="descripcion">
+        <mat-header-cell *matHeaderCellDef> Descripción </mat-header-cell>
+        <mat-cell *matCellDef="let proyecto"> {{ proyecto.descripcion }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="fecha_creado">
+        <mat-header-cell *matHeaderCellDef> Inicio </mat-header-cell>
+        <mat-cell *matCellDef="let proyecto"> {{ proyecto.fecha_creado | date }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="fecha_finalizacion">
+        <mat-header-cell *matHeaderCellDef> Finalización </mat-header-cell>
+        <mat-cell *matCellDef="let proyecto"> {{ proyecto.fecha_finalizacion | date }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="departamento">
+        <mat-header-cell *matHeaderCellDef> Departamento </mat-header-cell>
+        <mat-cell *matCellDef="let proyecto"> {{ proyecto.departamento?.nombre }} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="columnasProyecto"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: columnasProyecto;"></mat-row>
+    </mat-table>
+  </mat-expansion-panel>
+}
+
+</div>

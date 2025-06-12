@@ -1,0 +1,97 @@
+<h2 mat-dialog-title color="primary">
+  <mat-icon>business</mat-icon> Generar reporte boletas
+</h2>
+
+<mat-dialog-content>
+
+  <mat-card-header class="d-flex justify-content-between align-items-center">
+    <div>
+      <mat-card-subtitle>Puedes descargar el reporte en formato Excel o PDF</mat-card-subtitle>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="filterForm">
+      <div class="row mb-3" [class.disabled]="filterForm.get('usarFiltros')?.value">
+        <div class="col-md-6">
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label>Fecha Inicio</mat-label>
+            <input matInput [matDatepicker]="picker1" formControlName="fechaInicio">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label>Fecha Fin</mat-label>
+            <input matInput [matDatepicker]="picker2" formControlName="fechaFin">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <mat-checkbox formControlName="usarFiltros" class="mb-3">
+        Usar filtros especiales (Tipo de Boleta, Entidad Financiera, Estado de la boleta)
+      </mat-checkbox>
+
+      <div class="filtros-especiales" *ngIf="filterForm.get('usarFiltros')?.value">
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field appearance="fill" class="w-100">
+              <mat-label>Tipo</mat-label>
+              <mat-select formControlName="tiposSeleccionados" multiple>
+                <mat-option *ngFor="let tipo of tipos" [value]="tipo">{{tipo}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field appearance="fill" class="w-100">
+              <mat-label>Entidad Financiera</mat-label>
+              <mat-select formControlName="entidadesSeleccionadas" multiple>
+                <mat-option *ngFor="let entidad of entidades" [value]="entidad">{{entidad}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field appearance="fill" class="w-100">
+              <mat-label>Estado</mat-label>
+              <mat-select formControlName="estadosSeleccionados" multiple>
+                <mat-option *ngFor="let estado of estados" [value]="estado">{{estado}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <p class="mb-3">Total de boletas: <strong>{{ boletas.length }}</strong></p>
+      <p class="mb-3" *ngIf="filteredBoletas.length !== boletas.length">
+        Boletas filtradas: <strong>{{ filteredBoletas.length }}</strong>
+      </p>
+    </form>
+
+
+  </mat-card-content>
+
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+
+  <div class="d-flex gap-3">
+    <button mat-raised-button color="primary" (click)="dialogRef.close()">
+      <mat-icon>close</mat-icon> Cancelar
+    </button>
+
+    <button mat-raised-button color="primary" class="btn-exportar-excel" (click)="exportarExcel()"
+      [disabled]="filteredBoletas.length === 0">
+      <mat-icon>description</mat-icon> Exportar a Excel
+    </button>
+
+    <button mat-raised-button color="warn" class="btn-exportar-pdf"  (click)="exportarPDF()"
+      [disabled]="filteredBoletas.length === 0">
+      <mat-icon>picture_as_pdf</mat-icon> Exportar a PDF
+    </button>
+
+  </div>
+</mat-dialog-actions>

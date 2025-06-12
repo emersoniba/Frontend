@@ -1,0 +1,28 @@
+<div class="login-container">
+  <form [formGroup]="formLogin" (ngSubmit)="onActionClickLogin()">
+    <h2> Inicio de sesion</h2>
+
+    <div class="form-group">
+      <label for="username">Usuario: *</label>
+      <input id="username" formControlName="username" type="username" />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password: *</label>
+      <input id="password" formControlName="password" type="password" placeholder="••••••••" />
+    </div>
+
+    <div class="form-options">
+      <label>
+        <input type="checkbox" />
+        Recuerd
+      </label>
+      <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+    </div>
+
+    <button type="submit" [disabled]="formLogin.invalid">Inncio de sesion</button>
+
+    <div class="divider"></div>
+
+  </form>
+</div>

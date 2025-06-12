@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>Boletas del Proyecto</h2>
+
+<div *ngIf="!loading && boletas.length > 0" class="total-info">
+	<div><strong>Total de boletas:</strong> {{ boletas.length }}</div>
+	<div><strong>Monto total:</strong> {{ calcularTotal() | currency:'Bs. ' }}</div>
+</div>
+
+<mat-dialog-content>
+	<div *ngIf="loading" class="loading-spinner">
+		<mat-spinner diameter="40"></mat-spinner>
+	</div>
+
+	<table *ngIf="!loading && boletas.length > 0" class="boletas-table">
+		<thead>
+			<tr>
+				<th>Número</th>
+				<th>Tipo</th>
+				<th>Concepto</th>
+				<th>Monto</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let boleta of boletas">
+				<td>{{ boleta.numero || '-' }}</td>
+				<td>{{ boleta.tipo || '-' }}</td>
+				<td>{{ boleta.concepto || '-' }}</td>
+				<td>{{ boleta.monto | currency:'Bs. ' }}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<p *ngIf="!loading && boletas.length === 0" class="no-data-message">
+		No hay boletas registradas para este proyecto.
+	</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

@@ -1,0 +1,96 @@
+<div class="modal-container">
+  <div class="modal-header">
+    <h4 class="modal-title">📄 Reporte de Proyectos</h4>
+  </div>
+
+  <div class="modal-body">
+    <mat-card class="shadow card-custom">
+      <mat-card-header class="d-flex justify-content-between align-items-center">
+        <div class="w-100">
+          <mat-card-title class="text-primary text-left">Exportar Proyectos</mat-card-title>
+          <mat-card-subtitle class="text-muted text-left">Filtros para el reporte</mat-card-subtitle>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <!-- Filtros -->
+        <form [formGroup]="filterForm">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Fecha inicio</mat-label>
+                <input matInput [matDatepicker]="picker1" formControlName="fechaInicio" [disabled]="filterForm.get('usarFiltrosEspeciales')?.value">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Fecha fin</mat-label>
+                <input matInput [matDatepicker]="picker2" formControlName="fechaFin" [disabled]="filterForm.get('usarFiltrosEspeciales')?.value">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <mat-checkbox formControlName="usarFiltrosEspeciales" class="mb-3">
+            Usar filtros especiales
+          </mat-checkbox>
+
+          <div *ngIf="filterForm.get('usarFiltrosEspeciales')?.value" class="filtros-especiales">
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Entidades</mat-label>
+                  <mat-select formControlName="entidadesSeleccionadas" multiple>
+                    <mat-option>
+                      <ngx-mat-select-search 
+                        [formControl]="entidadesFilterCtrl" 
+                        placeholderLabel="Buscar entidad..."
+                        noEntriesFoundLabel="No se encontraron entidades">
+                      </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let entidad of entidadesFiltradasArray" [value]="entidad">
+                      {{entidad}}
+                    </mat-option>
+
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Departamentos</mat-label>
+                  <mat-select formControlName="departamentosSeleccionados" multiple>
+                    <mat-option>
+                      <ngx-mat-select-search 
+                        [formControl]="departamentosFilterCtrl" 
+                        placeholderLabel="Buscar departamento..."
+                        noEntriesFoundLabel="No se encontraron departamentos">
+                      </ngx-mat-select-search>
+                    </mat-option>
+                  <mat-option *ngFor="let depto of departamentosFiltradosArray" [value]="depto">
+                    {{depto}}
+                  </mat-option>
+
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <p class="mb-3 text-left">Proyectos filtrados: <strong>{{ filteredProyectos.length }}</strong> de {{ proyectos.length }}</p>
+        
+        <div class="d-flex gap-2 justify-content-start">
+          <button mat-raised-button class="btn-exportar-excel" (click)="exportarExcel()">
+            <i class="bi bi-file-earmark-excel-fill"></i> Exportar a Excel
+          </button>
+          <button mat-raised-button class="btn-exportar-pdf" (click)="exportarPdf()">
+            <i class="bi bi-file-earmark-pdf-fill"></i> Exportar a PDF
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

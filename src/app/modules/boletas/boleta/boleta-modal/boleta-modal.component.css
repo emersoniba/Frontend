@@ -1,0 +1,69 @@
+.mat-dialog-container {
+    border-radius: 4px !important;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.row {
+    display: flex;
+    gap: 15px;
+}
+
+.col-md-6 {
+    flex: 1;
+}
+
+mat-form-field {
+    margin-bottom: 15px;
+}
+
+mat-dialog-actions {
+    padding: 15px 0;
+    justify-content: flex-end;
+}
+
+mat-option input {
+    color: black !important;
+    background-color: white;
+    padding: 6px 10px;
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid #ccc;
+}
+
+mat-option input::placeholder {
+    color: black !important;
+    opacity: 1;
+}
+
+
+
+.boleta-form {
+    padding: 2px;
+}
+
+.row {
+    display: flex;
+    gap: 5px;
+    margin-bottom: -2px;
+}
+
+.col-md-6 {
+    flex: 1;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+mat-datepicker-toggle {
+    cursor: pointer;
+}
+
+input[matInput][readonly] {
+    cursor: pointer;
+}

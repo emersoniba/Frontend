@@ -1,0 +1,172 @@
+<h2 mat-dialog-title color="primary">
+    <mat-icon>person_add</mat-icon>
+    @if (esEdicion) { Editar Persona} @else { Registrar Persona }
+</h2>
+
+<mat-dialog-content>
+
+    <form [formGroup]="formPersona">
+        <div class="row">
+
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>CI</mat-label>
+                    <mat-icon matIconPrefix>badge</mat-icon>
+                    <input matInput formControlName="ci" [readonly]="esEdicion" />
+                    @if (formPersona.get('ci')?.hasError('required')) {
+                    <mat-error>El CI es obligatorio</mat-error>
+                    }
+                    @if (formPersona.get('ci')?.hasError('pattern')) {
+                    <mat-error>El CI debe contener solo números</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-6 col-md-12 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Departamento</mat-label>
+                    <mat-icon matIconPrefix>location_on</mat-icon>
+                    <mat-select formControlName="departamento_id">
+                        @for (ac of dataDepartamentos; track ac.id) {
+                        <mat-option [value]="ac.id">{{ ac.nombre }}</mat-option>
+                        }
+                    </mat-select>
+                    @if (formPersona.get('departamento_id')?.hasError('required')) {
+                    <mat-error>Debe seleccionar un departamento</mat-error>
+                    }
+                </mat-form-field>
+
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Nombres</mat-label>
+                    <mat-icon matIconPrefix>person</mat-icon>
+                    <input matInput formControlName="nombres" />
+                    @if (formPersona.get('nombres')?.hasError('required')) {
+                    <mat-error>Debe introducir al menos un nombre.</mat-error>
+                    }
+                    @if (formPersona.get('nombres')?.hasError('minlength')) {
+                    <mat-error>El nombre debe tener al menos 3 caracteres</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Paterno</mat-label>
+                    <mat-icon matIconPrefix>person_outline</mat-icon>
+                    <input matInput formControlName="apellido_paterno" />
+                    @if (formPersona.get('apellido_paterno')?.hasError('required')) {
+                    <mat-error>Debe introducir su apellido_paterno.</mat-error>
+                    }
+                    @if (formPersona.get('apellido_paterno')?.hasError('minlength')) {
+                    <mat-error>El apellido paterno debe tener al menos 3 caracteres</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Materno</mat-label>
+                    <mat-icon matIconPrefix>person_outline</mat-icon>
+                    <input matInput formControlName="apellido_materno" />
+                    @if (formPersona.get('apellido_materno')?.hasError('required')) {
+                    <mat-error>Debe introducir su apellido materno.</mat-error>
+                    }
+                    @if (formPersona.get('apellido_materno')?.hasError('minlength')) {
+                    <mat-error>El apellido paterno debe tener al menos 3 caracteres</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Correo</mat-label>
+                    <mat-icon matIconPrefix>email</mat-icon>
+                    <input matInput type="email" formControlName="correo" />
+                    @if (formPersona.get('correo')?.hasError('required')) {
+                    <mat-error>El correo es obligatorio</mat-error>
+                    }
+                    @if (formPersona.get('correo')?.hasError('email')) {
+                    <mat-error>Formato de correo inválido</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Cargo</mat-label>
+                    <mat-icon matIconPrefix>work</mat-icon>
+                    <input matInput formControlName="cargo" />
+                    @if (formPersona.get('cargo')?.hasError('required')) {
+                    <mat-error>El cargo es obligatorio</mat-error>
+                    }
+                    @if (formPersona.get('cargo')?.hasError('minlength')) {
+                    <mat-error>El cargo introducido debe tener al menos 5 caracteres</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Unidad</mat-label>
+                    <mat-icon matIconPrefix>apartment</mat-icon>
+                    <input matInput formControlName="unidad" />
+                    @if (formPersona.get('unidad')?.hasError('required')) {
+                    <mat-error>Debe introducir la unidad.</mat-error>
+                    }
+                    @if (formPersona.get('unidad')?.hasError('minlength')) {
+                    <mat-error>La unidad introducida debe tener al menos 5 caracteres</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Dirección</mat-label>
+                    <mat-icon matIconPrefix>home</mat-icon>
+                    <input matInput formControlName="direccion" />
+                    @if (formPersona.get('direccion')?.hasError('required')) {
+                    <mat-error>Debe introducir su dirección.</mat-error>
+                    }
+                    @if (formPersona.get('direccion')?.hasError('minlength')) {
+                    <mat-error>La direccion introducida debe tener al menos 5 caracteres</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-md-12 col-sm-12">
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Teléfono</mat-label>
+                    <mat-icon matIconPrefix>phone</mat-icon>
+                    <input matInput formControlName="telefono" />
+                    @if (formPersona.get('telefono')?.hasError('required')) {
+                    <mat-error>El teléfono es obligatorio</mat-error>
+                    }
+                    @if (formPersona.get('telefono')?.hasError('mixlength')) {
+                    <mat-error>El teléfono introducido debe tener como máximo 8 dígitos</mat-error>
+                    }
+                    @if (formPersona.get('telefono')?.hasError('minlength')) {
+                    <mat-error>El teléfono introducido debe tener como mínimo 7 dígitos</mat-error>
+                    }
+                     @if (formPersona.get('telefono')?.hasError('pattern')) {
+                    <mat-error>El teléfono introducido debe tener solo dígitos</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="cancelar()">
+        <mat-icon>close</mat-icon> Cancelar
+    </button>
+
+    <button mat-raised-button color="primary" (click)="registrar()">
+        <mat-icon>
+            @if (esEdicion) {save} @else {person_add}
+        </mat-icon>
+        @if (esEdicion) { Guardar cambios } @else {  Registrar Persona }
+    </button>
+</mat-dialog-actions>

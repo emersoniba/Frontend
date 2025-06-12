@@ -1,0 +1,32 @@
+<h2 mat-dialog-title> <mat-icon>group</mat-icon> Editar Roles</h2>
+
+<mat-dialog-content [formGroup]="form">
+
+	<mat-form-field appearance="fill" class="w-100">
+
+		<mat-label><mat-icon class="me-1">security</mat-icon> Roles</mat-label>
+		<mat-select formControlName="roles" multiple>
+
+			<mat-option disabled>
+				<ngx-mat-select-search placeholderLabel="Buscar roles..." [formControl]="rolFiltroControl"
+					noEntriesFoundLabel="No se encontraron roles ">
+				</ngx-mat-select-search>
+			</mat-option>
+
+			@for (rol of rolesFiltradosList; track rol.id) {
+			<mat-option [value]="rol.id">{{ rol.nombre }}</mat-option>
+			}
+
+		</mat-select>
+
+		@if (form.get('roles')?.hasError('required') || form.get('roles')?.hasError('minlength')) {
+		<mat-error><mat-icon class="me-1">error</mat-icon>Debde seleccionar al menos un rol.</mat-error>
+		}
+
+	</mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button (click)="cancelar()"> <mat-icon class="me-1">close</mat-icon>Cancelar</button>
+	<button mat-raised-button color="primary" (click)="submit()"> <mat-icon>save</mat-icon>Guardar cambios</button>
+</mat-dialog-actions>

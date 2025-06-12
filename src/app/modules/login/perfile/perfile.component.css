@@ -1,0 +1,40 @@
+mat-card {
+  margin: 1rem;
+  padding: 1rem;
+}
+
+mat-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.perfil-foto {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 8px;
+  border: 2px solid #c1bdfa;
+  margin: 20px; 
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

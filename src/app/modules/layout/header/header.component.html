@@ -1,0 +1,28 @@
+<div class="header-basic">
+	<header class="header-container">
+		<div *ngIf="perfil" class="perfil-wrapper">
+			<div class="btn-group me-3">
+				<div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
+					<button type="button" class="btn btn-outline-profile">
+						<img [src]="imagenPreview" alt="Avatar" />
+						{{ perfil.usuario?.username || 'Sin usuario' }}
+					</button>
+					<button type="button" class="btn btn-outline-profile dropdown-toggle-split"
+						ngbDropdownToggle></button>
+					<div class="dropdown-menu" ngbDropdownMenu>
+						<button ngbDropdownItem>
+							<p class="nombre">{{ perfil.nombres }} {{ perfil.apellido_paterno }} {{
+								perfil.apellido_materno }}</p>
+							<p class="cargo">{{ perfil.cargo }}</p>
+						</button>
+						<hr />
+						<button (click)="logout()" ngbDropdownItem><mat-icon>directions_run</mat-icon>Cerrar
+							sesión</button>
+						<button (click)="PerfilUsuario()" ngbDropdownItem><mat-icon>account_circle</mat-icon>Mi
+							Perfil</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+</div>
