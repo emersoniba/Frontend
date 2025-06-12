@@ -40,7 +40,7 @@
         <button mat-raised-button color="accent" (click)="nuevoDepartamento()"><mat-icon>add_box</mat-icon>Nuevo
             Departamento</button>
         <mat-card class="departamento-card" *ngFor="let departamento of dataDepartamento">
-            
+
             <mat-card-header>
                 <mat-card-title>{{ departamento.nombre }}</mat-card-title>
                 <mat-card-subtitle>{{ departamento.nombre_reducido }}</mat-card-subtitle>
@@ -63,5 +63,27 @@
 
     </mat-tab>
 
-    <mat-tab label="ESTADO BOLETAS"> </mat-tab>
+    <mat-tab label="TIPO BOLETAS">
+
+        <button mat-raised-button color="accent" (click)="nuevaActividad()"><mat-icon>add_box</mat-icon>Nueva
+            Tipos de Boletas
+        </button>
+
+        <mat-card class="tipo-card" *ngFor="let actividad of dataActividad">
+
+            <mat-card-header>
+                <mat-card-title>{{ actividad.descripcion }}</mat-card-title>
+            </mat-card-header>
+
+            <mat-card-actions *ngIf="actividad.id !== undefined">
+                <button mat-icon-button color="primary" (click)="editarActividad(actividad.id!)" aria-label="Editar">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="eliminaractividad(actividad.id!)" aria-label="Eliminar">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-card-actions>
+
+        </mat-card>
+    </mat-tab>
 </mat-tab-group>

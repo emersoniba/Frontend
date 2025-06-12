@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy,Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { AgGridModule } from 'ag-grid-angular';
 import { Subscription } from 'rxjs';
@@ -7,20 +7,20 @@ import { Subscription } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { AllCommunityModule, GridOptions, GridReadyEvent, ModuleRegistry, themeMaterial, ValueGetterParams } from 'ag-grid-community';
+import { GridReadyEvent, themeMaterial } from 'ag-grid-community';
 import { MaterialModule } from '../../../../shared/app.material';
 
 import { ErrorHandlerService } from '../../../../services/error-handler.service';
-import { BotonesComponent } from '../botones/botones.component';
 
 import Swal from 'sweetalert2';
+import { Departamento } from '../../../../models/auth.interface';
 import { Actividad } from '../../../../models/empresa.interface';
 import { ActividadService } from '../../../../services/actividad.service';
-import { ActividadFormDialogComponent } from './actividad-form-dialog/actividad-form-dialog.component';
-import { Departamento } from '../../../../models/auth.interface';
 import { DepartamentoService } from '../../../../services/departamento.service';
+import { ActividadFormDialogComponent } from './actividad-form-dialog/actividad-form-dialog.component';
 import { DepartamentoFormDialogComponent } from './departamento-form-dialog/departamento-form-dialog.component';
-
+import { Tipo } from '../../../../models/boleta.model';
+import { TipoService } from '../../../../services/tipo.service';
 
 @Component({
   selector: 'app-actividades',
@@ -36,46 +36,21 @@ import { DepartamentoFormDialogComponent } from './departamento-form-dialog/depa
 export class ActividadesComponent {
   public dataActividad: Actividad[]=[] as Actividad[];
   private actividadSubscriptor?: Subscription;
+
+  public dataTipo: Tipo[]=[] as Tipo[];
+  private tipoSubscriptor?: Subscription;
+
   public gridApi: any;
   public theme = themeMaterial;
 
   public dataDepartamento: Departamento[]=[] as Departamento[];
   private departamentoSubscriptor?: Subscription;
 
-  
-
-/*
-  gridOptions: GridOptions = {
-    pagination: true,
-    paginationPageSize: 6,
-    paginationPageSizeSelector: [6, 10, 20, 50, 100],
-    detailRowAutoHeight: true,
-    domLayout: 'autoHeight',
-    detailCellRenderer: 'agDetailCellRenderer',
-    columnDefs: [
-      { field: 'descripcion', headerName: 'Descripcion', filter: true, floatingFilter: true , minWidth: 300, maxWidth: 300},
-      { headerName: 'Acciones', cellRenderer: BotonesComponent, field: 'id', width: 130, minWidth: 130 },
-    ],
-    context: {
-      componentParent: this
-    },
-    defaultColDef: {
-      flex: 1,
-      minWidth: 80,
-      resizable: true
-    },
-    animateRows: true,
-    rowSelection: 'single',
-    localeText: localeEs,
-    paginationNumberFormatter(params) {
-      return params.value.toLocaleString()
-    },
-  };
-*/
   constructor(
 
     private readonly actividadService: ActividadService,
     private departamentoService: DepartamentoService,
+    private readonly tipoService: TipoService,
     private dialog: MatDialog,
     private errorHandler: ErrorHandlerService
 
@@ -85,11 +60,13 @@ export class ActividadesComponent {
 
     this.getActividad();
     this.getDepartamentos();
+    this.getTipo();
   }
 
   public ngOnDestroy(): void {
     this.departamentoSubscriptor?.unsubscribe();
     this.actividadSubscriptor?.unsubscribe();
+    this.tipoSubscriptor?.unsubscribe();
     if (this.gridApi) {
       this.gridApi.destroy();
     }
@@ -108,6 +85,14 @@ export class ActividadesComponent {
     });
   }
 
+  public getTipo(): void{
+    this.tipoSubscriptor= this.tipoService.getTipos().subscribe({
+      next: (response)=>{
+        this.dataTipo= response;
+      },
+      error: (error)=>this.errorHandler.handleError(error, 'Error, no se cargaron los tipos de boletas')
+    });
+  }
 
   public nuevaActividad(actividad?: Actividad): void {
     const dialogRef = this.dialog.open(ActividadFormDialogComponent, {
@@ -124,6 +109,7 @@ export class ActividadesComponent {
     });
   }
 
+  
   public eliminaractividad(id: number): void {
     Swal.fire({
       title: '¿Estás seguro?',
