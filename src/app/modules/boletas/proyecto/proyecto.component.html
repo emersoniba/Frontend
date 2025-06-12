@@ -1,30 +1,25 @@
-<mat-card>
-	<mat-card-header>
-		<mat-card-title>Gestión de Proyectos</mat-card-title>
-		<mat-card-subtitle>Listado de todos los proyectos</mat-card-subtitle>
-	</mat-card-header>
+<div class="container">
+	<mat-card>
+		<mat-card-header>
+			<mat-card-title>Gestión de Proyectos</mat-card-title>
+			<mat-card-subtitle>Listado de todos los proyectos</mat-card-subtitle>
+		</mat-card-header>
+		<mat-card-content>
+			<div class="controls-container">
+				<button mat-raised-button color="primary" (click)="abrirModalCrear()">
+					<mat-icon>add</mat-icon> Nuevo Proyecto
+				</button>
+				<button mat-raised-button color="accent" (click)="abrirDialogoReporte()">
+					<mat-icon>download</mat-icon> Exportar Proyectos
+				</button>
+			</div>
 
-	<mat-card-actions style="display: flex; justify-content: space-between; align-items: center;">
+			<ag-grid-angular style="width: 100%; height: 500px;" [theme]="theme" [gridOptions]="gridOptions"
+				[rowData]="proyectos" [pagination]="true" (gridReady)="onGridReady($event)">
+			</ag-grid-angular>
 
-		<button mat-raised-button color="primary" (click)="abrirModalCrear()">
-			<mat-icon>add</mat-icon> Nuevo Proyecto
-		</button>
-		<button mat-raised-button color="accent" (click)="abrirDialogoReporte()">
-			<mat-icon>download</mat-icon> Exportar Proyectos
-		</button>
-	</mat-card-actions>
+		</mat-card-content>
 
-	<mat-card-content>
+	</mat-card>
 
-		<ag-grid-angular
-			style="width: 100%; height: 500px;"
-			[theme]="theme"
-			[gridOptions]="gridOptions"
-			[rowData]="proyectos"
-			[pagination]="true"
-			(gridReady)="onGridReady($event)">
-		</ag-grid-angular>
-
-	</mat-card-content>
-
-</mat-card>
+</div>

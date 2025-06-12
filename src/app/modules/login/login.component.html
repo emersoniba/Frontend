@@ -1,8 +1,10 @@
 <div class="login-container">
   <form [formGroup]="formLogin" (ngSubmit)="onActionClickLogin()">
-    <h2> Inicio de sesion</h2>
+    <h2> Inicio de sesión</h2>
 
-    <div class="form-group">
+
+
+    <div class="form-group" appearance="fill" > 
       <label for="username">Usuario: *</label>
       <input id="username" formControlName="username" type="username" />
     </div>
@@ -15,14 +17,12 @@
     <div class="form-options">
       <label>
         <input type="checkbox" />
-        Recuerd
+        Recuerdame
       </label>
-      <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+
     </div>
 
-    <button type="submit" [disabled]="formLogin.invalid">Inncio de sesion</button>
-
-    <div class="divider"></div>
+    <button type="submit" [disabled]="formLogin.invalid">Inicia sesión</button>
 
   </form>
 </div>

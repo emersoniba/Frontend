@@ -4,7 +4,8 @@
 			<div class="btn-group me-3">
 				<div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
 					<button type="button" class="btn btn-outline-profile">
-						<img [src]="imagenPreview" alt="Avatar" />
+						<img [src]="imagenPreview ? imagenPreview : 'assets/img/perfil.png'" alt="Avatar"
+							class="perfil-foto" />
 						{{ perfil.usuario?.username || 'Sin usuario' }}
 					</button>
 					<button type="button" class="btn btn-outline-profile dropdown-toggle-split"

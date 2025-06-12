@@ -1,27 +1,22 @@
-import { Injectable } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CanActivate, Router } from '@angular/router';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthGuard implements CanActivate {
 
-  constructor(
-    private readonly router: Router,
-    private readonly dialog: MatDialog
-  ) { }
+export const authGuard: CanActivateFn = (route, state) => {
 
-  canActivate(): boolean {
-    const token = localStorage.getItem('tkn-boletas');
+  const authService = inject(AuthService);
+  const dialog = inject(MatDialog);
+  const router = inject(Router);
+  const token = localStorage.getItem('tkn-boletas');
 
-    if (token) {
-      return true;
-    } else {
-      this.dialog.closeAll();
-      this.router.navigate(['/login']);
-      this.dialog.closeAll();
-      return false;
-    }
+  if (token) {
+    return true;
+  } else {
+    dialog.closeAll();
+    router.navigate(['/login']);
+    dialog.closeAll();
+    return false;
   }
-}
+};

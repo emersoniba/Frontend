@@ -1,14 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MaterialModule } from '../../../../shared/app.material';
+
+import { ErrorHandlerService } from '../../../../services/error-handler.service';
 import { PersonaService } from '../../../../services/persona.service';
+
+
 @Component({
 	selector: 'app-subir-imagen',
 	standalone: true,
-	imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatButtonModule, MatIconModule],
+	imports: [CommonModule, MaterialModule, ReactiveFormsModule,],
 	templateUrl: './subir-imagen.component.html',
 	styleUrl: './subir-imagen.component.css'
 })
@@ -23,21 +27,25 @@ export class SubirImagenComponent {
 	constructor(
 		private fb: FormBuilder,
 		private personaService: PersonaService,
-
+		private errorHandler: ErrorHandlerService,
 		private dialogRef: MatDialogRef<SubirImagenComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: { ci: string, imagenActual: string }
 	) {
 		this.form = this.fb.group({});
 		this.ci = data.ci;
-		this.imagenActual = data.imagenActual;
 
+		if (data.imagenActual) {
+			this.imagenActual = data.imagenActual.startsWith('data:')
+				? data.imagenActual
+				: `data:image/jpeg;base64,${data.imagenActual}`;
+		}
 	}
-
 
 	ngOnInit(): void {
-		this.obtenerImagenActual();
+		if (!this.imagenActual) {
+			this.obtenerImagenActual();
+		}
 	}
-
 
 	obtenerImagenActual(): void {
 		this.personaService.getPerfil().subscribe({
@@ -49,12 +57,9 @@ export class SubirImagenComponent {
 						: `data:image/jpeg;base64,${base64}`;
 				}
 			},
-			error: (err) => {
-				console.error('Error al obtener imagen del perfil', err);
-			}
+			error: (error) => this.errorHandler.handleError(error, 'No se pudieron cargar los roles')
 		});
 	}
-
 
 	convertirImagen(event: Event): void {
 		const input = event.target as HTMLInputElement;
@@ -71,22 +76,23 @@ export class SubirImagenComponent {
 
 	enviarImagen(): void {
 		if (!this.imagenBase64) {
-
 			alert('Primero seleccione una imagen');
 			return;
 		}
 		this.personaService.subirImagen(this.ci, this.imagenBase64).subscribe({
 			next: (resp) => {
-				console.log('Imagen subida', resp);
 				this.dialogRef.close(true);
+				window.location.reload();
 			},
-			error: (err) => {
-				console.error('Error al subir imagen', err);
+			error: (error) => {
+				this.errorHandler.handleError(error, 'No se pudieron cargar los roles');
 				this.dialogRef.close(false);
 			}
 		});
 	}
+
 	cancelar() {
 		this.dialogRef.close(null);
 	}
+
 }

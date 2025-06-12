@@ -2,11 +2,8 @@ import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { routes } from './app.routes';
-import { RolesGuard } from './guards/roles.guard';
-
 import { BrowserModule } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { AuthGuard } from './guards/auth.guard';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { tokenInterceptor } from './interceptors/token.interceptor';
 
@@ -14,15 +11,16 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(
       withInterceptors([
-        authInterceptor, tokenInterceptor
+        authInterceptor, tokenInterceptor,
       ])
     ),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withHashLocation()),
     importProvidersFrom(),
     importProvidersFrom(BrowserModule, HttpClientModule),
-    AuthGuard, RolesGuard,
+    //AuthGuard,
     provideAnimations()
   ]
 };
+
 

@@ -1,23 +1,23 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
 import { AgGridModule } from 'ag-grid-angular';
 import { Subscription } from 'rxjs';
 
-import { ValueGetterParams, GridReadyEvent, GridOptions, AllCommunityModule, ModuleRegistry, themeMaterial } from 'ag-grid-community';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MaterialModule } from '../../../shared/app.material';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { AllCommunityModule, GridOptions, GridReadyEvent, ModuleRegistry, themeMaterial, ValueGetterParams } from 'ag-grid-community';
+import { MaterialModule } from '../../../shared/app.material';
 
 import { Empresa, Proyecto } from '../../../models/empresa.interface';
 import { EmpresaService } from '../../../services/empresa.service';
 
+import { ErrorHandlerService } from '../../../services/error-handler.service';
 import { BotonesComponent } from './botones/botones.component';
 import { EmpresaFormDialogComponent } from './empresa-form-dialog/empresa-form-dialog.component';
 import { ReporteEmpresaComponent } from './reporte-empresa/reporte-empresa.component';
-import { ErrorHandlerService } from '../../../services/error-handler.service';
 
 import Swal from 'sweetalert2';
 import { localeEs } from '../../../shared/app.locale.es.grid';
@@ -145,7 +145,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
 
   public abrirDialogoReporte(): void {
     this.dialog.open(ReporteEmpresaComponent, {
-      width: '450px',
+      width: '480px',
       data: { empresas: this.dataEmpresas }
     });
   }

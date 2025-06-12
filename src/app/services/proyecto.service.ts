@@ -12,7 +12,6 @@ import { environment } from '../../environment/environment';
 export class ProyectoService {
 	private apiUrl = `${environment.apiUrl}/proyectos/`;
 
-
 	constructor(private http: HttpClient) { }
 
 	getProyectos(): Observable<Proyecto[]> {

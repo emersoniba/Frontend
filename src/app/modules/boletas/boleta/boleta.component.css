@@ -1,19 +1,110 @@
+.leyenda-vencimiento {
+    margin: 15px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
 
-.ag-theme-alpine .ag-cell {
-  white-space: normal;
-  line-height: 1.5;
+.leyenda-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.leyenda-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.dias-restantes {
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    text-align: center;
+    white-space: normal !important;
+    line-height: 1.5 !important;
+    padding-top: 0%;
+    padding-left: 0%;
+}
+
+.dias-verde {
+    background-color: #d4edda;
+    color: #5dca76;
+    line-height: 1.5;
+}
+
+.dias-amarillo {
+    background-color: #fff3cd;
+    color: #e7b624;
+    line-height: 1.5;
 }
 
 
-.grid-container {
-    flex: 1;
+.dias-rojo {
+    background-color: #f8d7da;
+    color: #e90e24;
+    line-height: 1.5;
+}
+
+.dias-vencido {
+    background-color: #f5c6cb;
+    color: #705f61;
+    text-decoration: line-through;
+    line-height: 1.5;
+}
+
+.ag-theme-alpine .ag-cell {
+    white-space: normal !important;
+    line-height: 1.5 !important;
+}
+
+
+.proyecto {
+    text-align: center;
+    white-space: normal !important;
+    line-height: 1.5 !important; 
+}
+
+@media (max-width: 768px) {
+    .controls-container {
+        flex-direction: column;
+    }
+
+    .search-field,
+    .new-button {
+        width: 100%;
+    }
+
+    .ag-theme-alpine {
+        --ag-font-size: 12px;
+    }
+
+    .ag-theme-alpine .ag-cell {
+        padding: 8px 10px;
+    }
+}
+
+
+
+
+
+.controls-container {
     display: flex;
-    flex-direction: column;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 20px;
-    background: white;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.ag-theme-alpine .ag-cell {
+    white-space: normal;
+    line-height: 1.5;
 }
 
 .ag-theme-alpine {
@@ -41,6 +132,13 @@
     align-items: center;
 }
 
+.ag-theme-alpine .ag-cell.final-column {
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    line-height: 1.5;
+}
+
 
 .ag-theme-alpine .ag-row {
     border-bottom: 1px solid #e0e0e0;
@@ -58,132 +156,41 @@
 }
 
 
-.ag-body-horizontal-scroll {
-    position: relative;
-    z-index: 2;
-}
-
-.ag-body-horizontal-scroll-viewport {
-    overflow-x: auto !important;
-}
-
-
-.edit-btn,
-.delete-btn {
-    margin: 0 2px;
-    padding: 4px 8px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: background-color 0.2s;
-    white-space: nowrap;
-
-}
-.controls-container {
-  display: flex;
-  justify-content: flex-end; 
-  align-items: center; 
-  margin-bottom: 20px;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-
-.search-field {
+.grid-container {
     flex: 1;
-    min-width: 250px;
-}
-
-.custom-paginator {
-    margin-top: auto;
-    background-color: #f5f5f5;
-    border-radius: 4px;
-    padding: 10px 0;
-    position: sticky;
-    bottom: 0;
-}
-
-.footer-container {
-    margin-top: auto;
-    padding: 15px 0;
-    border-top: 1px solid #e0e0e0;
-}
-
-
-
-
-@media (max-width: 768px) {
-    .controls-container {
-        flex-direction: column;
-    }
-    .search-field,
-    .new-button {
-        width: 100%;
-    }
-    .ag-theme-alpine {
-        --ag-font-size: 12px;
-    }
-    .ag-theme-alpine .ag-cell {
-        padding: 8px 10px;
-    }
-}
-
-
-
-.dias-restantes {
-    font-weight: bold;
-    padding: 4px 8px;
-    border-radius: 4px;
-    display: inline-block;
-    text-align: center;
-    line-height: 1.5;
-}
-
-.dias-verde {
-    background-color: #d4edda;
-    color: #5dca76;
-    line-height: 1.5;
-}
-
-.dias-amarillo {
-    background-color: #fff3cd;
-    color: #e7b624;
-    line-height: 1.5;
-}
-
-.dias-rojo {
-    background-color: #f8d7da;
-    color: #e90e24;
-    line-height: 1.5;
-}
-
-.dias-vencido {
-    background-color: #f5c6cb;
-    color: #705f61;
-    text-decoration: line-through;
-    line-height: 1.5;
-}
-
-
-.leyenda-vencimiento {
-    margin: 15px 0;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-.leyenda-item {
     display: flex;
-    align-items: center;
-    margin: 5px 0;
+    flex-direction: column;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    background: white;
 }
 
-.leyenda-color {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    margin-right: 10px;
-    display: inline-block;
+.mat-mdc-card {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    position: relative;
+    border-style: solid;
+    border-width: 0cap;
+    background-color: #e3e9e400 !important;
+    border-radius: 0%;
+    padding: 0%, 0%;
+
+}
+
+.main-content[_ngcontent-ng-c626675616] {
+    flex: 1;
+    padding: 0rem;
+    background-color: #e6e6e6;
+    overflow-y: auto;
+}
+
+
+
+.ag-horizontal-left-spacer {
+    width: 0px;
+    max-width: 0px;
+    min-width: 0px;
 }

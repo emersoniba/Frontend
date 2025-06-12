@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { Boleta, Estado, EntidadFinanciera } from '../models/boleta.model';
 import { environment } from '../../environment/environment';
 import { ResponseData } from '../models/response.model';
@@ -39,7 +39,7 @@ export class BoletaService {
 	}
 
 	verBoletaPDF(id: number) {
-	return this.http.get(`${this.apiUrl}${id}/ver-pdf/`, { responseType: 'blob' });
+		return this.http.get(`${this.apiUrl}${id}/ver-pdf/`, { responseType: 'blob' });
 	}
 
 }

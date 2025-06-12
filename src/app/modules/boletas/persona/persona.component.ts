@@ -200,7 +200,6 @@ export class PersonaComponent implements OnInit, OnDestroy {
 					}
 				});
 			},
-			//error: () => {Swal.fire('Error', 'No se pudieron cargar los roles', 'error');}
 			error: (error) => this.errorHandler.handleError(error, 'No se pudieron cargar los roles')
 		});
 	}

@@ -1,5 +1,10 @@
-<h2 mat-dialog-title>{{ isEditMode ? 'Editar Proyecto' : 'Nuevo Proyecto' }}</h2>
+<h2 mat-dialog-title color="primary">
+	<mat-icon>business</mat-icon>
+	{{ isEditMode ? 'Editar Proyecto' : 'Nuevo Proyecto'}}
+</h2>
+
 <mat-dialog-content>
+
 	<form [formGroup]="proyectoForm" class="modal-form">
 
 		<mat-form-field appearance="fill" class="w-100">
@@ -60,10 +65,11 @@
 
 	</form>
 </mat-dialog-content>
-
 <mat-dialog-actions align="end">
-	<button mat-button (click)="onCancel()">Cancelar</button>
-	<button mat-raised-button color="primary" [disabled]="proyectoForm.invalid" (click)="onSubmit()">
-		{{ isEditMode ? 'Actualizar' : 'Crear' }}
+	<button mat-raised-button (click)="onCancel()">
+		<mat-icon>close</mat-icon> Cancelar
 	</button>
+	<button mat-raised-button color="primary" (click)="onSubmit()">
+		<mat-icon> {{ isEditMode ? 'save' : 'add' }}</mat-icon>
+		{{ isEditMode ? 'Actualizar' : 'Crear' }} </button>
 </mat-dialog-actions>

@@ -10,7 +10,7 @@ import { ReplaySubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { provideNativeDateAdapter } from '@angular/material/core';
 
 import { MaterialModule } from '../../../../shared/app.material';
@@ -42,10 +42,11 @@ export class ReporteProyectoComponent implements OnInit, OnDestroy {
   protected _onDestroy = new Subject<void>();
 
   constructor(
+  
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
-    //private datePipe: DatePipe,
-    //private dialogRef: MatDialogRef<ReporteProyectoComponent>
+    public dialogRef: MatDialogRef<ReporteProyectoComponent>
+    
   ) {
     this.proyectos = data.proyectos.map((proyecto: any) => {
       return {

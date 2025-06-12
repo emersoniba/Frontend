@@ -42,7 +42,6 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
           Swal.fire('Sesión expirada', 'Por favor vuelve a iniciar sesión.', 'info');
         }
       }
-
       return throwError(() => error);
     })
   );

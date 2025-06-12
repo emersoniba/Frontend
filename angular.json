@@ -13,6 +13,30 @@
 				"build": {
 					"builder": "@angular-devkit/build-angular:application",
 					"options": {
+						"allowedCommonJsDependencies": [
+							"dompurify",
+							"jspdf",
+							"core-js/modules/web.dom-collections.iterator.js",
+							"core-js/modules/es.array.reduce.js",
+							"core-js/modules/es.string.ends-with.js",
+							"jspdf-autotable",
+							"file-saver",
+							"moment",
+							"core-js/modules/es.regexp.to-string.js",
+							"sweetalert2",
+							"core-js/modules/es.promise.js",
+							"core-js/modules/es.string.match.js",
+							"core-js/modules/es.string.replace.js",
+							"core-js/modules/es.string.starts-with.js",
+							"core-js/modules/es.array.iterator.js",
+							"core-js/modules/es.string.split.js",
+							"raf",
+							"core-js/modules/es.string.trim.js",
+							"rgbcolor",
+							"core-js/modules/es.array.index-of.js",
+							"core-js/modules/es.string.includes.js",
+							"core-js/modules/es.array.reverse.js"
+						],
 						"outputPath": "dist/frontend",
 						"index": "src/index.html",
 						"browser": "src/main.ts",
@@ -41,13 +65,13 @@
 							"budgets": [
 								{
 									"type": "initial",
-									"maximumWarning": "500kB",
-									"maximumError": "1MB"
+									"maximumWarning": "2mb",
+									"maximumError": "2MB"
 								},
 								{
 									"type": "anyComponentStyle",
-									"maximumWarning": "4kB",
-									"maximumError": "8kB"
+									"maximumWarning": "2mb",
+									"maximumError": "2mb"
 								}
 							],
 							"outputHashing": "all"

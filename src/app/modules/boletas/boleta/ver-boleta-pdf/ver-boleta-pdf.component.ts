@@ -5,9 +5,10 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ErrorHandlerService } from '../../../../services/error-handler.service';
+import { MaterialModule } from '../../../../shared/app.material';
 @Component({
   selector: 'app-ver-boleta-pdf',
-  imports: [CommonModule, MatDialogModule],
+  imports: [CommonModule, MatDialogModule, MaterialModule],
   templateUrl: './ver-boleta-pdf.component.html',
   styleUrl: './ver-boleta-pdf.component.css'
 })

@@ -5,10 +5,10 @@ import { AuthService } from '../services/auth.service';
 
 export const tokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn) => {
 
-  const authService = inject(AuthService);//nhn
+  const authService = inject(AuthService);
   const token = localStorage.getItem('tkn-boletas');
 
-  if (req.url.includes('/login/')|| req.url.includes('/login/reset-password/')|| req.url.includes('/olvidaste-contrasenia/')) {
+  if (req.url.includes('/login/')){
     return next(req);
   }
   if (token) {

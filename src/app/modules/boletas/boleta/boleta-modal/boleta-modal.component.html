@@ -149,7 +149,7 @@
 
 <input #fileInput type="file" style="display: none" accept=".pdf" (change)="onFileSelected($event)">
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close> <mat-icon>close</mat-icon>Cancelar</button>
+  <button mat-raised-button mat-dialog-close> <mat-icon>close</mat-icon>Cancelar</button>
   <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="boletaForm.invalid">
     <mat-icon>
       @if (isEditing) {save} @else {add_box}

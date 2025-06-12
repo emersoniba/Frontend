@@ -1,19 +1,27 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PageEvent } from '@angular/material/paginator';
 import { AgGridModule } from 'ag-grid-angular';
-import { ColDef, GridApi, GridOptions, GridReadyEvent, ICellRendererParams } from 'ag-grid-community';
+import { GridApi, GridOptions, GridReadyEvent, ICellRendererParams, themeMaterial } from 'ag-grid-community';
 import Swal from 'sweetalert2';
 
+import { Subscription } from 'rxjs';
 import { Boleta } from '../../../models/boleta.model';
 import { BoletaService } from '../../../services/boleta.service';
 import { ErrorHandlerService } from '../../../services/error-handler.service';
-import { ReporteBoletasComponent } from './reporte-boletas/reporte-boletas.component';
+import { MaterialModule } from '../../../shared/app.material';
 import { BoletaModalComponent } from './boleta-modal/boleta-modal.component';
 import { BotonesComponent } from './botones/botones.component';
+import { ReporteBoletasComponent } from './reporte-boletas/reporte-boletas.component';
 
-import { MaterialModule } from '../../../shared/app.material';
+import { OnDestroy } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+
+import { localeEs } from '../../../shared/app.locale.es.grid';
+ModuleRegistry.registerModules([AllCommunityModule]);
+
 
 @Component({
   standalone: true,
@@ -21,103 +29,108 @@ import { MaterialModule } from '../../../shared/app.material';
   templateUrl: './boleta.component.html',
   styleUrls: ['./boleta.component.css'],
   encapsulation: ViewEncapsulation.None,
-  imports: [CommonModule, AgGridModule, MaterialModule],
+  imports: [CommonModule, AgGridModule, MaterialModule,
+    ReactiveFormsModule,
+    MatExpansionModule,
+  ],
   providers: [DatePipe]
 })
-export class BoletaComponent implements OnInit {
-  boletas: Boleta[] = [];
-  filteredBoletas: Boleta[] = [];
-  rowData: Boleta[] = [];
+
+
+export class BoletaComponent implements OnInit, OnDestroy {
+  public theme = themeMaterial;
+  public dataBoletas: Boleta[] = [] as Boleta[];
+  private boletaSubscriptor?: Subscription;
+
   loading = false;
   private gridApi!: GridApi;
 
-  pageSize = 10;
-  pageIndex = 0;
-  totalRecords = 0;
-  pageSizeOptions = [3, 5, 10, 25, 100];
-
-  columnDefs: ColDef[] = [
-    {
-      headerName: 'Acciones',
-      cellRenderer: BotonesComponent,
-      field: 'id',
-      width: 133,
-      minWidth: 133,
-      maxWidth:133,
-      pinned: 'left',
-      lockPinned: true,
-      suppressMovable: true,
-      suppressSizeToFit: true,
-    },
-    {
-      headerName: 'Días para Vencimiento', field: 'dias_para_vencimiento', width: 150,
-      cellRenderer: (params: ICellRendererParams) => {
-        const dias = params.value;
-        if (dias === undefined || dias === null) return '-';
-        let texto = '', clase = '';
-        if (dias > 15) {
-          texto = `Faltan ${dias} días hábiles`; clase = 'dias-verde';
-        } else if (dias > 3) {
-          texto = `Faltan ${dias} días hábiles`; clase = 'dias-amarillo';
-        } else if (dias >= 0) {
-          texto = `Faltan ${dias} días hábiles`; clase = 'dias-rojo';
-        } else {
-          texto = `Venció hace ${Math.abs(dias)} días hábiles`; clase = 'dias-vencido';
-        }
-        return `<span class="dias-restantes ${clase}">${texto}</span>`;
-      }
-    },
-    {
-      headerName: 'Estado', field: 'estado.nombre', width: 120,
-      cellRenderer: (params: ICellRendererParams) => {
-        const icon = params.data.estado?.icono || 'info';
-        const nombre = params.data.estado?.nombre || '';
-        return `<span><span class="material-icons" style="font-size: 18px;">${icon}</span> ${nombre}</span>`;
-      },
-      valueGetter: (params) => params.data.estado?.nombre || ''
-    },
-    { headerName: 'Número', field: 'numero', minWidth: 150, flex: 1, filter: true, floatingFilter: true },
-    { headerName: 'Tipo', field: 'tipo_boleta.nombre', minWidth: 150, flex: 2, filter: true, floatingFilter: true },
-    { headerName: 'Concepto', field: 'concepto', minWidth: 150, flex: 2, filter: true, floatingFilter: true },
-    {
-      headerName: 'Entidad Financiera', field: 'entidad_financiera.nombre', minWidth: 150, flex: 2,
-      filter: true, floatingFilter: true, valueGetter: (params) => params.data.entidad_financiera?.nombre || ''
-    },
-    {
-      headerName: 'Proyecto', field: 'proyecto.nombre', minWidth: 160, maxWidth: 160,
-      filter: true, floatingFilter: true, valueGetter: (params) => params.data.proyecto?.nombre || ''
-    },
-    { headerName: 'Observaciones', field: 'observaciones', minWidth: 150, flex: 2, filter: true, floatingFilter: true },
-    { headerName: 'Fecha Inicio', field: 'fecha_inicio', width: 90, valueFormatter: (p) => this.formatDate(p.value) },
-    { headerName: 'Fecha Fin', field: 'fecha_finalizacion', width: 90, valueFormatter: (p) => this.formatDate(p.value) },
-    { headerName: 'CITE', field: 'cite', width: 30 },
-    { headerName: 'Monto', field: 'monto', width: 70, valueFormatter: (p) => `$${p.value?.toLocaleString() || '0'}` },
-    { headerName: 'Nota Ejecución', field: 'nota_ejecucion', width: 40 },
-  ];
 
   gridOptions: GridOptions = {
-    defaultColDef: {
-      resizable: true,
-      sortable: true,
-      filter: true,
-      wrapText: true,
-      autoHeight: true,
-      flex: 1,
-      minWidth: 150,
-      cellStyle: { 'white-space': 'normal', 'line-height': '1.5' }
-    },
-    rowClassRules: {
-      'boleta-odd-row': (params: any) => params.node.rowIndex % 2 === 0,
-      'boleta-even-row': (params: any) => params.node.rowIndex % 2 !== 0,
-    },
-    rowSelection: 'single',
-    suppressHorizontalScroll: false,
-    animateRows: true,
     pagination: true,
-    paginationPageSize: this.pageSize,
+    paginationPageSize: 6,
+    paginationPageSizeSelector: [6, 10, 20, 50, 100],
+    detailRowAutoHeight: true,
+    domLayout: 'autoHeight',
+    detailCellRenderer: 'agDetailCellRenderer',
     suppressScrollOnNewData: true,
-    domLayout: 'normal',
-    ensureDomOrder: true,
+    columnDefs: [
+      {
+        //pinned: 'left',
+        headerName: 'Días para Vencimiento', field: 'dias_para_vencimiento', width: 150, maxWidth: 150, minWidth: 150, flex: 2,
+        cellRenderer: (params: ICellRendererParams) => {
+          const dias = params.value;
+          if (dias === undefined || dias === null) return '-';
+          let texto = '', clase = '';
+          if (dias > 15) {
+            texto = `Faltan ${dias} días hábiles`; clase = 'dias-verde';
+          } else if (dias > 3) {
+            texto = `Faltan ${dias} días hábiles`; clase = 'dias-amarillo';
+          } else if (dias >= 0) {
+            texto = `Faltan ${dias} días hábiles`; clase = 'dias-rojo';
+          } else {
+            texto = `Venció hace ${Math.abs(dias)} días hábiles`; clase = 'dias-vencido';
+          }
+          return `<span class="dias-restantes ${clase}">${texto}</span>`;
+        }
+      },
+      
+      {
+        headerName: 'Estado', field: 'estado.nombre', width: 140, maxWidth: 140, minWidth: 140,
+        cellRenderer: (params: ICellRendererParams) => {
+          const icon = params.data.estado?.icono || 'info';
+          const nombre = params.data.estado?.nombre || '';
+          return `<span><span class="material-icons" style="font-size: 18px;">${icon}</span> ${nombre}</span>`;
+        },
+        valueGetter: (params) => params.data.estado?.nombre || ''
+      },
+      { headerName: 'Número', field: 'numero', minWidth: 150, flex: 1, filter: true, floatingFilter: true },
+      { headerName: 'Tipo', field: 'tipo_boleta.nombre', minWidth: 170, flex: 2, filter: true, floatingFilter: true },
+      { headerName: 'Concepto', field: 'concepto', minWidth: 150, flex: 2, filter: true, floatingFilter: true },
+      {
+        headerName: 'Entidad Financiera', field: 'entidad_financiera.nombre', minWidth: 150, flex: 2,
+        filter: true, floatingFilter: true, valueGetter: (params) => params.data.entidad_financiera?.nombre || ''
+      },
+      {
+        headerName: 'Proyecto', field: 'proyecto.nombre', minWidth: 160, maxWidth: 160, flex: 2,
+        filter: true, floatingFilter: true, valueGetter: (params) => params.data.proyecto?.nombre || '',   cellClass: 'proyecto',
+      },
+      { headerName: 'Observaciones', field: 'observaciones', minWidth: 150, flex: 2, filter: true, floatingFilter: true },
+      { headerName: 'Fecha Inicio', field: 'fecha_inicio', width: 90, valueFormatter: (p) => this.formatDate(p.value), minWidth: 120, },
+      { headerName: 'Fecha Fin', field: 'fecha_finalizacion', width: 90, valueFormatter: (p) => this.formatDate(p.value), minWidth: 120, },
+      { headerName: 'Cite', field: 'cite', minWidth: 100, flex: 2, filter: true, floatingFilter: true },
+      {
+        headerName: 'Monto',
+        field: 'monto',
+        width: 120,
+        valueFormatter: (p) => {
+          const value = Number(p.value);
+          if (isNaN(value)) return '$0';
+          return `$${value.toLocaleString('es-BO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        },
+        minWidth: 120,
+      },
+      { headerName: 'Nota Ejecución', field: 'nota_ejecucion', width: 100, minWidth: 100 },
+      {
+        headerName: 'Acciones', cellRenderer: BotonesComponent, field: 'id',
+         width: 148, minWidth: 148, maxWidth: 148, pinned: 'right',
+      },
+
+    ],
+    context: {
+      componentParent: this
+    },
+    defaultColDef: {
+      flex: 1,
+      minWidth: 80,
+      resizable: true
+    },
+    animateRows: true,
+    rowSelection: 'single',
+    localeText: localeEs,
+    paginationNumberFormatter(params) {
+      return params.value.toLocaleString()
+    },
   };
 
   constructor(
@@ -131,49 +144,38 @@ export class BoletaComponent implements OnInit {
     this.cargarBoletas();
   }
 
+  public ngOnDestroy(): void {
+    this.boletaSubscriptor?.unsubscribe();
+    if (this.gridApi) {
+      this.gridApi.destroy();
+    }
+  }
+
   formatDate(dateString: string): string {
     if (!dateString) return '';
     return this.datePipe.transform(dateString, 'dd/MM/yyyy') || '';
   }
 
-  onGridReady(params: GridReadyEvent): void {
+  public onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
-    this.gridApi.sizeColumnsToFit();
+
   }
 
-  cargarBoletas(): void {
-    this.loading = true;
-    this.boletaService.getBoletas().subscribe({
-      next: (data) => {
-        this.boletas = data;
-        this.filteredBoletas = [...data];
-        this.totalRecords = data.length;
-        this.applyPagination();
-        this.loading = false;
+  public cargarBoletas(): void {
+    this.boletaSubscriptor = this.boletaService.getBoletas().subscribe({
+      next: (response) => {
+        this.dataBoletas = response;
       },
-      error: (error) => {
-        this.errorHandler.handleError(error, 'No se pudieron cargar las boletas');
-        this.loading = false;
-      }
+      error: (error) => this.errorHandler.handleError(error, 'Ocurrió un error al cargar las boletas.')
     });
   }
 
-  applyPagination(): void {
-    const start = this.pageIndex * this.pageSize;
-    const end = start + this.pageSize;
-    this.rowData = this.filteredBoletas.slice(start, end);
-  }
 
-  onPageChange(event: PageEvent): void {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.applyPagination();
-  }
 
   abrirDialogoReporte(): void {
     this.dialog.open(ReporteBoletasComponent, {
       width: '800px',
-      data: { boletas: this.rowData }
+      data: { boletas: this.dataBoletas }
     });
   }
 
@@ -219,18 +221,15 @@ export class BoletaComponent implements OnInit {
   }
 
   public clikFila(event: any): void {
-		const boleta = event.data;
-		const action = event.event?.target?.closest('button')?.getAttribute('data-action');
+    const boleta = event.data;
+    const action = event.event?.target?.closest('button')?.getAttribute('data-action');
 
-		if (!action || boleta.id === undefined) return;
+    if (!action || boleta.id === undefined) return;
 
-		if (action === 'editar') {
-			this.abrirModalEditar(boleta)
-		} else if (action === 'eliminar') {
-			this.eliminarBoleta(boleta.id)
-		}
-	}
-
-
-
+    if (action === 'editar') {
+      this.abrirModalEditar(boleta)
+    } else if (action === 'eliminar') {
+      this.eliminarBoleta(boleta.id)
+    }
+  }
 }

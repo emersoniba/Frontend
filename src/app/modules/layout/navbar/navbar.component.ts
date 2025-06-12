@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { RolesService } from '../../../services/roles.service';
-import { PersonaService } from '../../../services/persona.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Persona } from '../../../models/auth.interface';
-import Swal from 'sweetalert2';
-import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { MatIcon } from '@angular/material/icon';
+import { Component, OnInit } from '@angular/core';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
+import { RouterLink } from '@angular/router';
+
+import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
+
+import { Persona, Rol } from '../../../models/auth.interface';
+import { PersonaService } from '../../../services/persona.service';
+
+
 @Component({
 	selector: 'app-navbar',
 	imports: [RouterLink, CommonModule, MatIconModule, MatIcon, MatTooltip],
@@ -29,9 +30,7 @@ export class NavbarComponent implements OnInit {
 
 
 	constructor(
-		private rolesService: RolesService,
 		private readonly personaService: PersonaService,
-		private readonly fb: FormBuilder
 	) { }
 
 	ngOnInit(): void {
@@ -41,15 +40,16 @@ export class NavbarComponent implements OnInit {
 	ngOnDestroy(): void {
 		this.perfilSubscriptor?.unsubscribe();
 	}
-
-	tieneRol(rolId: number): boolean {
-		return this.rolesService.hasRoleId(rolId);
+	
+	tieneRol(rol: Rol): boolean {
+		if (!this.perfil?.roles) return false;
+		return this.perfil.roles.some(r => r.id === rol.id);
 	}
 
 	tieneAlgunRol(roles: number[]): boolean {
-		return roles.some(r => this.rolesService.hasRoleId(r));
+		if (!this.perfil?.roles) return false;
+		return roles.some(r => this.perfil?.roles?.some(rol => rol.id === r));
 	}
-
 
 	public cargarPerfil(): void {
 		this.perfilSubscriptor = this.personaService.getPerfil().subscribe({

@@ -2,10 +2,12 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertasService } from '../../../services/alertas.service';
 import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-historial-alertas',
   templateUrl: './historial-alertas.component.html',
+  imports: [CommonModule],
   styleUrls: ['./historial-alertas.component.scss']
 })
 export class HistorialAlertasComponent implements OnInit {

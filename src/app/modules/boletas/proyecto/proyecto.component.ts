@@ -78,7 +78,7 @@ export class ProyectoComponent implements OnInit, OnDestroy {
 				headerName: 'Acciones',
 				cellRenderer: BotonesProyectoComponent,
 				field: 'id',
-				width: 190
+				width: 160, maxWidth: 160, minWidth: 160
 			}
 		],
 		context: {

@@ -1,0 +1,64 @@
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+body,
+html {
+    margin: 0;
+    min-height: 100vh;
+    padding: 0 0 30px;
+    position: relative
+}
+
+.material-icons {
+    direction: ltr;
+    display: inline-block;
+    font-family: Material Icons;
+    -webkit-font-feature-settings: "liga";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: normal;
+    line-height: 1;
+    text-transform: none;
+    white-space: nowrap;
+    -webkit-font-smoothing: antialiased
+}
+
+body,
+html {
+    height: 100%
+}
+
+body {
+    font-family: Roboto, Helvetica Neue, sans-serif;
+    margin: 0
+}
+
+.mat-mdc-dialog-surface {
+    border-radius: 6px !important
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: #fdfdfd00 !important
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-title {
+    background-color: #4554a8fd;
+    color: #fff !important
+}
+
+.mat-mdc-dialog-actions.mat-mdc-dialog-actions-align-end,
+.mat-mdc-dialog-actions[align=end] {
+    background-color: #fffefe;
+    justify-content: flex-end
+}
+
+.grid-container {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-bottom: 20px;
+    overflow: hidden
+}

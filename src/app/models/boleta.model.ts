@@ -1,14 +1,14 @@
 export interface Estado {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  color: string;
-  icono: string;
+  id: number,
+  nombre: string,
+  descripcion: string,
+  color: string,
+  icono: string,
 }
 
 export interface EntidadFinanciera {
-  id: number;
-  nombre: string;
+  id: number,
+  nombre: string,
 }
 
 export interface Proyecto {
