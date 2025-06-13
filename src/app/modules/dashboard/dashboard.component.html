@@ -1,14 +1,13 @@
-
 <div class="stats-container">
   <mat-card class="stat-card verde">
     <mat-card-header>
       <mat-card-title>Más de 15 días para vencer</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-        <div class="stat-value">
+      <div class="stat-value">
         <mat-icon class="stat-icon">check_circle</mat-icon>
         {{ vencimientoStats.masDe15Dias }}
-        </div>
+      </div>
       <div class="stat-description">Todas las boletas</div>
     </mat-card-content>
   </mat-card>
@@ -41,28 +40,29 @@
   </mat-card>
 </div>
 <div class="charts-container">
-  <!-- Gráfico de estados -->
+
   <div class="chart-wrapper">
     <h3>Grafico de Estados de Boletas</h3>
     <div id="chartdiv" style="width: 100%; height: 400px;"></div>
-<div class="botones-exportar">
-   <div class="controls-container" style="display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 16px;">
-				<button mat-raised-button color="accent" (click)="exportChart1()">
-					<mat-icon>download</mat-icon> Descargar gráfico 
-				</button>
-			</div>
-</div>
+    <div class="botones-exportar">
+      <div class="controls-container" style="display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 16px;">
+        <button mat-raised-button color="accent" (click)="exportChart1()">
+          <mat-icon>download</mat-icon> Descargar gráfico
+        </button>
+
+      </div>
+    </div>
   </div>
   <!-- Gráfico de tipos -->
   <div class="chart-wrapper">
     <h3>Graficos de Tipos de Boletas</h3>
     <div id="chartipos" style="width: 100%; height: 400px;"></div>
-<!---->
+    <!---->
     <div class="controls-container" style="display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 16px;">
-				<button mat-raised-button color="accent" (click)="exportChart2()">
-					<mat-icon>download</mat-icon> Descargar gráfico 2
-				</button>
-			</div>
+      <button mat-raised-button color="accent" (click)="exportChart2()">
+        <mat-icon>download</mat-icon> Descargar gráfico 2
+      </button>
+    </div>
     <!---->
   </div>
 </div>

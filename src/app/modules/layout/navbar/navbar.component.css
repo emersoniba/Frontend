@@ -8,6 +8,7 @@ nav {
 	padding-top: 12px;
 	z-index: auto;
 	overflow-y: auto;
+
 }
 
 nav ul {
@@ -61,7 +62,38 @@ nav a mat-icon {
 		display: block;
 		text-align: center;
 	}
+
+	nav {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 70px;/*/*/
+		height: 100%;
+		padding-top: 60px;/**/
+		z-index: 1000;
+		overflow-y: auto;
+		transition: width 0.3s ease;
+	}
+
+	.main-layout {
+		margin-left: 70px;
+	}
+
+	nav.collapsed {
+		width: 70px;
+	}
 }
+
+@media (max-width: 480px) {
+	.descripcion-perfil {
+		display: none;
+	}
+
+	.nombre, .cargo {
+		font-size: 0.7rem;
+	}
+}
+
 
 .perfil-foto {
 	width: 150px;

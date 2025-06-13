@@ -12,6 +12,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { DateAdapter } from '@angular/material/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MaterialModule } from '../../../../shared/app.material';
 
 import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
@@ -21,7 +22,7 @@ import autoTable from 'jspdf-autotable';
 
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { ReplaySubject, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { materialize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-reporte-proyecto',
@@ -36,7 +37,8 @@ import { takeUntil } from 'rxjs/operators';
     MatDatepickerModule,
     MatSelectModule,
     MatCheckboxModule,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+    MaterialModule,
   ],
   templateUrl: './reporte-proyecto.component.html',
   styleUrl: './reporte-proyecto.component.css',
@@ -56,14 +58,15 @@ export class ReporteProyectoComponent implements OnInit, OnDestroy {
   entidadesFiltradas: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   departamentosFiltrados: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   protected _onDestroy = new Subject<void>();
-  
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private datePipe: DatePipe,
-    private dialogRef: MatDialogRef<ReporteProyectoComponent>,
+
+    public dialogRef: MatDialogRef<ReporteProyectoComponent>,
     @Inject(MAT_DATE_LOCALE) private _dateLocale: string,
-		private _dateAdapter: DateAdapter<Date>
+    private _dateAdapter: DateAdapter<Date>
   ) {
     this.proyectos = data.proyectos.map((proyecto: any) => {
       return {
@@ -85,7 +88,7 @@ export class ReporteProyectoComponent implements OnInit, OnDestroy {
     this.filterForm.valueChanges.subscribe(() => {
       this.aplicarFiltros();
     });
-    		this._dateAdapter.setLocale('es-ES');
+    this._dateAdapter.setLocale('es-ES');
 
   }
 
@@ -188,18 +191,18 @@ export class ReporteProyectoComponent implements OnInit, OnDestroy {
   private parseFecha(fecha: any): Date | null {
     if (!fecha) return null;
     if (fecha instanceof Date && !isNaN(fecha.getTime())) {
-        return new Date(fecha.getTime());
+      return new Date(fecha.getTime());
     }
     if (typeof fecha === 'string' && fecha.match(/^\d{4}-\d{2}-\d{2}/)) {
-        return new Date(fecha + 'T12:00:00Z');
+      return new Date(fecha + 'T12:00:00Z');
     }
     if (typeof fecha === 'string' && fecha.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
-        const [dd, mm, yyyy] = fecha.split('/');
-        return new Date(`${yyyy}-${mm}-${dd}T12:00:00Z`);
+      const [dd, mm, yyyy] = fecha.split('/');
+      return new Date(`${yyyy}-${mm}-${dd}T12:00:00Z`);
     }
     const parsed = new Date(fecha);
     return isNaN(parsed.getTime()) ? null : parsed;
-}
+  }
 
   exportarExcel(): void {
     if (!this.proyectos || this.proyectos.length === 0) {
@@ -370,39 +373,39 @@ export class ReporteProyectoComponent implements OnInit, OnDestroy {
     doc.save('reporte_proyectos_con_boletas.pdf');
   }
 
- private formatFecha(fechaStr: string | Date): string {
+  private formatFecha(fechaStr: string | Date): string {
     if (!fechaStr) return '';
-    
-    try {
-        let fecha: Date;
-        
-        if (fechaStr instanceof Date) {
-            fecha = new Date(fechaStr.getTime()); // Clonar para no modificar el original
-        } 
-        else if (typeof fechaStr === 'string' && fechaStr.includes('T')) {
-            fecha = new Date(fechaStr);
-        } 
-        else if (typeof fechaStr === 'string' && fechaStr.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
-            const [dd, mm, yyyy] = fechaStr.split('/');
-            return fechaStr; 
-        }
-        else {
-            fecha = new Date(fechaStr);
-        }
 
-        const offset = fecha.getTimezoneOffset() * 60000;
-        const fechaAjustada = new Date(fecha.getTime() + offset);
-        
-        const dia = fechaAjustada.getDate().toString().padStart(2, '0');
-        const mes = (fechaAjustada.getMonth() + 1).toString().padStart(2, '0');
-        const anio = fechaAjustada.getFullYear();
-        
-        return `${dia}/${mes}/${anio}`;
+    try {
+      let fecha: Date;
+
+      if (fechaStr instanceof Date) {
+        fecha = new Date(fechaStr.getTime()); // Clonar para no modificar el original
+      }
+      else if (typeof fechaStr === 'string' && fechaStr.includes('T')) {
+        fecha = new Date(fechaStr);
+      }
+      else if (typeof fechaStr === 'string' && fechaStr.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+        const [dd, mm, yyyy] = fechaStr.split('/');
+        return fechaStr;
+      }
+      else {
+        fecha = new Date(fechaStr);
+      }
+
+      const offset = fecha.getTimezoneOffset() * 60000;
+      const fechaAjustada = new Date(fecha.getTime() + offset);
+
+      const dia = fechaAjustada.getDate().toString().padStart(2, '0');
+      const mes = (fechaAjustada.getMonth() + 1).toString().padStart(2, '0');
+      const anio = fechaAjustada.getFullYear();
+
+      return `${dia}/${mes}/${anio}`;
     } catch (e) {
-        console.error('Error al formatear fecha:', e);
-        return '';
+      console.error('Error al formatear fecha:', e);
+      return '';
     }
-}
+  }
   convertImageToBase64(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const img = new Image();

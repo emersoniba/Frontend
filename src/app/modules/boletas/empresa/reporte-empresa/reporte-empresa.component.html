@@ -1,82 +1,78 @@
-<div class="modal-container">
-  <div class="modal-header">
-    <h4 class="modal-title"><mat-icon>archive</mat-icon> Reporte de empresa</h4>
+<h2 mat-dialog-title color="primary">
+  <mat-icon>business</mat-icon> Generar reporte boletas
+</h2>
+
+<mat-dialog-content>
+
+  <mat-card-header class="d-flex justify-content-between align-items-center">
+    <div>
+      <mat-card-subtitle>Puedes descargar el reporte en formato Excel o PDF</mat-card-subtitle>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="filterForm">
+      <mat-form-field appearance="fill" class="w-100 mb-3">
+        <mat-label>Nombre de empresa</mat-label>
+        <mat-select formControlName="nombreSeleccionado">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="nombreFilterCtrl" placeholderLabel="Buscar empresa..."
+              noEntriesFoundLabel="No se encontraron empresas">
+            </ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let nombre of nombresFiltrados | async" [value]="nombre">
+            {{nombre}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="w-100 mb-3">
+        <mat-label>NIT</mat-label>
+        <mat-select formControlName="nitSeleccionado">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="nitFilterCtrl" placeholderLabel="Buscar NIT..."
+              noEntriesFoundLabel="No se encontraron NITs">
+            </ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let nit of nitsFiltrados | async" [value]="nit">
+            {{nit}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="w-100 mb-3">
+        <mat-label>Actividad</mat-label>
+        <mat-select formControlName="actividadSeleccionada">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="actividadFilterCtrl" placeholderLabel="Buscar actividad..."
+              noEntriesFoundLabel="No se encontraron actividades">
+            </ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let actividad of actividadesFiltradas | async" [value]="actividad">
+            {{actividad}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+
+    <p class="mb-3 text-left">Empresas filtradas: <strong>{{ filteredEmpresas.length }}</strong> de {{
+      empresas.length }}</p>
+
+  </mat-card-content>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <div class="d-flex gap-3">
+    <button mat-raised-button color="primary" (click)="dialogRef.close()">
+      <mat-icon>close</mat-icon> Cancelar
+    </button>
+
+    <button mat-raised-button color="primary" class="btn-exportar-excel" (click)="generarExcel()"
+      [disabled]="filteredEmpresas.length === 0">
+      <mat-icon>description</mat-icon> Exportar a Excel
+    </button>
+
+    <button mat-raised-button color="warn" class="btn-exportar-pdf" (click)="generarPDF()"
+      [disabled]="filteredEmpresas.length === 0">
+      <mat-icon>picture_as_pdf</mat-icon> Exportar a PDF
+    </button>
   </div>
-
-  <div class="modal-body">
-    <mat-card class="shadow card-custom">
-      <mat-card-header class="d-flex justify-content-between align-items-center">
-        <div class="w-100">
-          <mat-card-title class="text-primary h5 text-left">Exportar empresas</mat-card-title>
-          <mat-card-subtitle class="text-muted text-left">Filtros para el reporte</mat-card-subtitle>
-        </div>
-      </mat-card-header>
-
-      <mat-card-content>
-        <form [formGroup]="filterForm">
-          <!-- Filtro por nombre -->
-          <mat-form-field appearance="outline" class="w-100 mb-3">
-            <mat-label>Nombre de empresa</mat-label>
-            <mat-select formControlName="nombreSeleccionado">
-              <mat-option>
-                <ngx-mat-select-search 
-                  [formControl]="nombreFilterCtrl" 
-                  placeholderLabel="Buscar empresa..."
-                  noEntriesFoundLabel="No se encontraron empresas">
-                </ngx-mat-select-search>
-              </mat-option>
-              <mat-option *ngFor="let nombre of nombresFiltrados | async" [value]="nombre">
-                {{nombre}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <!-- Filtro por NIT -->
-          <mat-form-field appearance="outline" class="w-100 mb-3">
-            <mat-label>NIT</mat-label>
-            <mat-select formControlName="nitSeleccionado">
-              <mat-option>
-                <ngx-mat-select-search 
-                  [formControl]="nitFilterCtrl" 
-                  placeholderLabel="Buscar NIT..."
-                  noEntriesFoundLabel="No se encontraron NITs">
-                </ngx-mat-select-search>
-              </mat-option>
-              <mat-option *ngFor="let nit of nitsFiltrados | async" [value]="nit">
-                {{nit}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <!-- Filtro por actividad -->
-          <mat-form-field appearance="outline" class="w-100 mb-3">
-            <mat-label>Actividad</mat-label>
-            <mat-select formControlName="actividadSeleccionada">
-              <mat-option>
-                <ngx-mat-select-search 
-                  [formControl]="actividadFilterCtrl" 
-                  placeholderLabel="Buscar actividad..."
-                  noEntriesFoundLabel="No se encontraron actividades">
-                </ngx-mat-select-search>
-              </mat-option>
-              <mat-option *ngFor="let actividad of actividadesFiltradas | async" [value]="actividad">
-                {{actividad}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </form>
-
-        <p class="mb-3 text-left">Empresas filtradas: <strong>{{ filteredEmpresas.length }}</strong> de {{ empresas.length }}</p>
-        
-        <div class="d-flex gap-2 justify-content-start">
-         <button mat-raised-button class="btn-exportar-excel"  (click)="generarExcel()" [disabled]="filteredEmpresas.length === 0">
-            <i class="bi bi-file-earmark-excel-fill"></i> Exportar a Excel
-          </button>
-           <button mat-raised-button class="btn-exportar-pdf"(click)="generarPDF()" [disabled]="filteredEmpresas.length === 0">
-            <i class="bi bi-file-earmark-pdf-fill"></i> Exportar a PDF
-          </button>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
-</div>
+</mat-dialog-actions>
