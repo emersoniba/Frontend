@@ -148,7 +148,7 @@ export class EmpresaComponent implements OnInit, OnDestroy {
     this.empresaService.getEmpresasConProyectosAll().subscribe({
       next: (response) => {
         this.dialog.open(ReporteEmpresaComponent, {
-          width: '450px',
+          width: '480px',
           data: {
             empresas: response.data,
             proyectos: [] 

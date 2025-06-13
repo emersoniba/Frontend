@@ -8,12 +8,12 @@ import { CommonModule } from '@angular/common';
 //
 import * as am5exporting from "@amcharts/amcharts5/plugins/exporting";
 import { MatIconModule } from '@angular/material/icon';
-
+import { MaterialModule } from '../../shared/app.material';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [MatCardModule, CommonModule,MatIconModule],
+  imports: [MatCardModule, CommonModule, MatIconModule, MaterialModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -214,11 +214,13 @@ export class DashboardComponent implements OnDestroy {
     series.labels.template.setAll({
       fontSize: 14
     });
-    series.labels.template.set("text", "{category}: {value} ({percentage.formatNumber('0.0')}%)");
+    series.labels.template.set("text", "{category}: {value} ({percentage.formatNumber('00.00')}%)");
+    
     am5exporting.Exporting.new(root, {
       filePrefix: "grafico_tipos_boleta",
       menu: am5exporting.ExportingMenu.new(root, {}),
     });
+
     this.rootChart2 = root;
   }
   exportChart1() {

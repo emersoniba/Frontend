@@ -33,18 +33,11 @@ export class PersonaService {
 	deletePersona(ci: number): Observable<any> {
 		return this.http.delete(`${this.url}/personas/${ci}/`)
 	}
-	
-	deleteUsuario(ci: number): Observable<any> {
-		return this.http.delete(`${this.url}/personas/eliminar_usuario/${ci}/`)
-	}
 
 	putPersona(ci: number, persona: any): Observable<any> {
 		return this.http.put(`${this.url}/personas/${ci}/`, persona);
 	}
 	
-	putPersonal(ci: number, persona: any): Observable<any> {
-		return this.http.put(`${this.url}/personas/${ci}/editar_persona`, persona);
-	}
 	
 	postPersona(data: Persona): Observable<any> {
 		return this.http.post(`${this.url}/personas/`, data);
@@ -60,14 +53,6 @@ export class PersonaService {
 
 	postEditarRolPersona(ci: string, data: { roles: number[] }): Observable<any> {
 		return this.http.post(`${this.url}/personas/${ci}/editar_rol/`, data);
-	}
-
-	putreactivarPersona(ci: number, body: any): Observable<any> {
-		return this.http.put(`${this.url}/personas/${ci}/confirmar_habilitacion/`, body);
-	}
-
-	getRolesPorPersona(personaId: number): Observable<Rol[]> {
-		return this.http.get<Rol[]>(`${this.url}/personas/${personaId}/roles/`);
 	}
 
 	subirImagen(ci: string, imagenBase64: string) {

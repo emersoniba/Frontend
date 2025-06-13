@@ -1,240 +1,9 @@
-.footer-container {
-    margin-top: auto;
-    padding: 15px 0;
-    border-top: 1px solid #e0e0e0;
-}
-
-.grid-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 20px;
-    background: white;
-}
-
-.main-content {
-    padding: 2rem;
-    min-height: 100vh;
-    box-sizing: border-box;
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 24px;
-    margin-top: 24px;
-}
-
-.proyecto-card {
-    padding: 20px;
-    border: 1.5px solid #dcdcdc;
-    border-left: 5px solid #3f51b5;
-    border-radius: 12px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.proyecto-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-}
-
-.proyecto-card h3 {
-    margin-top: 0;
-    color: #3f51b5;
-    font-size: 1.2rem;
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 6px;
-    margin-bottom: 10px;
-}
-
-.actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.modal-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.mat-form-field {
-    margin-bottom: 15px;
-    display: block;
-}
-
-.full-width {
-    width: 100%;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.loading {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 20px 0;
-}
-
-.ag-theme-alpine {
-    --ag-grid-size: 8px;
-    --ag-list-item-height: 30px;
-    --ag-font-size: 14px;
-}
-
-.ag-theme-alpine .ag-details-row {
-    padding: 20px;
-    background-color: #f9f9f9;
-}
-
-mat-form-field.compact-search {
-    width: 220px;
-    margin-right: 16px;
-}
-
-mat-form-field.compact-search .mat-form-field-wrapper {
-    padding-bottom: 0;
-}
-
-mat-form-field.compact-search .mat-form-field-infix {
-    padding: 0.5em 0;
-    border-top: 0;
-}
-
-mat-form-field.compact-search .mat-form-field-flex {
-    padding: 0 0.75em 0 0.75em;
-}
-
-mat-form-field.compact-search .mat-form-field-outline {
-    top: 0;
-}
-
-mat-form-field.compact-search .mat-icon {
-    font-size: 18px;
-    margin-right: 8px;
-    color: rgba(0, 0, 0, 0.54);
-}
-
-ag-grid-angular {
-    flex: 1;
-    min-height: 400px;
-}
-
-
-.controls-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 20px;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.ag-root-wrapper {
-    border: none !important;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-}
-
-
-
-.controls-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 10px;
-    gap: 10px;
-    flex-wrap: wrap;
-}
 
 .ag-theme-alpine .ag-cell {
-    white-space: normal;
-    line-height: 1.5;
+    white-space: normal !important;
+    line-height: 1.5 !important;
 }
 
-
-.grid-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px !important;
-    overflow: hidden;
-    margin-bottom: 20px;
-    background: white;
-}
-
-
-.dias-restantes {
-    font-weight: bold;
-    padding: 4px 8px;
-    border-radius: 4px;
-    display: inline-block;
-    text-align: center;
-    line-height: 1.5;
-}
-
-.dias-verde {
-    background-color: #d4edda;
-    color: #5dca76;
-    line-height: 1.5;
-}
-
-.dias-amarillo {
-    background-color: #fff3cd;
-    color: #e7b624;
-    line-height: 1.5;
-}
-
-
-.dias-rojo {
-    background-color: #f8d7da;
-    color: #e90e24;
-    line-height: 1.5;
-}
-
-.dias-vencido {
-    background-color: #f5c6cb;
-    color: #705f61;
-    text-decoration: line-through;
-    line-height: 1.5;
-}
-
-.leyenda-vencimiento {
-    margin: 15px 0;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-.leyenda-item {
-    display: flex;
-    align-items: center;
-    margin: 5px 0;
-}
-
-.leyenda-color {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    margin-right: 10px;
-    display: inline-block;
-}
 
 @media (max-width: 768px) {
     .controls-container {
@@ -255,12 +24,13 @@ ag-grid-angular {
     }
 }
 
+
 .controls-container {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin-bottom: 10px;
-    gap: 10px;
+    margin-bottom: 8px;
+    gap: 1px;
     flex-wrap: wrap;
 }
 
@@ -268,18 +38,6 @@ ag-grid-angular {
     white-space: normal;
     line-height: 1.5;
 }
-
-.grid-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    overflow: hidden;
-    margin-bottom: 20px;
-    background: white;
-}
-
 
 .ag-theme-alpine {
     --ag-border-color: #e0e0e0;
@@ -306,6 +64,13 @@ ag-grid-angular {
     align-items: center;
 }
 
+.ag-theme-alpine .ag-cell.final-column {
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    line-height: 1.5;
+}
+
 
 .ag-theme-alpine .ag-row {
     border-bottom: 1px solid #e0e0e0;
@@ -316,18 +81,48 @@ ag-grid-angular {
 }
 
 .ag-theme-alpine .ag-cell {
-    padding: 10px 15px;
+    padding: 10px 1px;
     display: flex;
     align-items: center;
     line-height: 1.5;
 }
 
 
-.ag-body-horizontal-scroll {
-    position: relative;
-    z-index: 2;
+.grid-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    background: white;
 }
 
-.ag-body-horizontal-scroll-viewport {
-    overflow-x: auto !important;
+.mat-mdc-card {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    position: relative;
+    border-style: solid;
+    border-width: 0cap;
+    background-color: #e3e9e400 !important;
+    border-radius: 0%;
+    padding: 0%, 0%;
+
+}
+
+.main-content[_ngcontent-ng-c626675616] {
+    flex: 1;
+    padding: 9rem;
+    background-color: #bd1616;
+    overflow-y: auto;
+}
+
+
+
+.ag-horizontal-left-spacer {
+    width: 0px;
+    max-width: 0px;
+    min-width: 0px;
 }
