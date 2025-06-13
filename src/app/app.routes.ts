@@ -50,7 +50,7 @@ export const routes: Routes = [
 			},
 			{
 				path: 'dashboard',
-				loadComponent: () => import('./modules/boletas/dashboard/dashboard.component').then(m => m.DashboardComponent),
+				loadComponent: () => import('./modules/dashboard/dashboard.component').then(m => m.DashboardComponent),
 				canActivate: [authGuard]
 
 			},
